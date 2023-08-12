@@ -4,16 +4,13 @@
 {% block htmltitle %} {% if page and page.meta and
 page.meta.title %}
 <title>
-	{{ page.meta.title }} ⚡️ SolidJS с примерами кода
+	{{ page.meta.title }} ⚡️ Solid с примерами кода
 </title>
 {% elif page and page.title and not page.is_homepage %}
-<title>
-	{{ page.title }} ⚡️ SolidJS с примерами кода
-</title>
+<title>{{ page.title }} ⚡️ Solid с примерами кода</title>
 {% else %}
 <title>
-	Справочник разработчика SolidJS с
-	примерами кода
+	Справочник разработчика Solid с примерами кода
 </title>
 {% endif %} {% endblock %}
 
@@ -80,9 +77,10 @@ page.meta.source %} {% include "partials/source-link.html"
 							: 'light';
 
 					/* Instruct Giscus to change theme */
-					var frame = document.querySelector(
-						'.giscus-frame'
-					);
+					var frame =
+						document.querySelector(
+							'.giscus-frame'
+						);
 					frame.contentWindow.postMessage(
 						{
 							giscus: {

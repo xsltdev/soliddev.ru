@@ -1,14 +1,14 @@
 ---
 title: Главная
-description: React Native
+description: Solid
 hide:
     - toc
     - navigation
 ---
 
-# ![React](react.svg){: style="height:42px;width:42px;vertical-align:middle;"} Справочник React Native
+# ![Solid](solid.svg){: style="height:42px;width:42px;vertical-align:middle;"} Справочник Solid
 
-[**React Native** :octicons-link-external-16:](https://reactnative.dev/) — это фреймворк с открытым исходным кодом для создания приложений для Android и iOS с использованием [React](https://reactdev.ru/).
+[**Solid** :octicons-link-external-16:](https://www.solidjs.com/) — это фронтенд-фреймворк для создания веб-приложений. Он создан для разработчиков, и мы хотим, чтобы документация соответствовала этому, как с точки зрения удобства для начинающих, так и с точки зрения демонстрации удобства использования фреймворка.
 
 <div class="grid cards" style="margin-top: 1.6em" markdown>
 
@@ -56,11 +56,9 @@ hide:
     [![Typescript](ts.svg){: style="height:16px;width:16px;vertical-align:middle;"} Typescript](https://scriptdev.ru/) &nbsp;&nbsp;&nbsp;
     [![Angular](angular.svg){: style="height:16px;width:16px;vertical-align:middle;"} Angular](https://angdev.ru/) &nbsp;&nbsp;&nbsp;
     [![React](react.svg){: style="height:16px;width:16px;vertical-align:middle;"} React](https://reactdev.ru/) &nbsp;&nbsp;&nbsp;
-    **[![React Native](rn.svg){: style="height:16px;width:16px;vertical-align:middle;"} React Native](https://reactnativedev.ru/)** &nbsp;&nbsp;&nbsp;
+    [![Solid](solid.svg){: style="height:16px;width:16px;vertical-align:middle;"} Solid](https://soliddev.ru/) &nbsp;&nbsp;&nbsp;
+    [![React Native](rn.svg){: style="height:16px;width:16px;vertical-align:middle;"} React Native](https://reactnativedev.ru/) &nbsp;&nbsp;&nbsp;
     [![Node.js](nodejs.svg){: style="height:16px;width:16px;vertical-align:middle;"} Node.js](https://nodejsdev.ru/) &nbsp;&nbsp;&nbsp;
     [![Python 3](python.svg){: style="height:16px;width:16px;vertical-align:middle;"} Python 3](https://py3dev.ru/) &nbsp;&nbsp;&nbsp;
     [![XSLT](xslt.svg){: style="height:16px;width:16px;vertical-align:middle;"} XSLT](https://xsltdev.ru/) &nbsp;&nbsp;&nbsp;
     [![БД](db.svg){: style="height:16px;width:16px;vertical-align:middle;"} Базы данных](https://dbasedev.ru/) &nbsp;&nbsp;&nbsp;
-
-<!-- https://github.com/software-mansion/react-native-reanimated -->
-<!-- https://github.com/react-native-community/hooks -->

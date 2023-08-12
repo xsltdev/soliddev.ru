@@ -1,8 +1,8 @@
-site_name: Справочник SolidJS
+site_name: Справочник Solid
 site_url: https://soliddev.ru/
-site_description: Справочник SolidJS разработчика
+site_description: Справочник Solid разработчика
 site_author: soliddev.ru
-copyright: (C) 2023, Справочник SolidJS разработчика
+copyright: (C) 2023, Справочник Solid разработчика
 
 repo_name: 'Справочник на Github'
 repo_url: 'https://github.com/xsltdev/soliddev.ru'
@@ -35,8 +35,8 @@ theme:
         - navigation.indexes
         - content.action.edit
         - content.code.copy
-    favicon: solidjs.svg
-    logo: solidjs.svg
+    favicon: solid.svg
+    logo: solid.svg
 
 extra:
     generator: false
@@ -53,9 +53,9 @@ extra:
         - icon: fontawesome/brands/react
           link: 'https://reactdev.ru/'
           name: React docs
-        - icon: fontawesome/brands/solid
+        - icon: simple/solid
           link: 'https://soliddev.ru/'
-          name: SolidJS docs
+          name: Solid sdocs
         - icon: fontawesome/solid/mobile-screen
           link: 'https://reactnativedev.ru/'
           name: React Native docs
