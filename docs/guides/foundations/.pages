@@ -1,0 +1,8 @@
+title: Основы
+nav:
+    - why-solid.md
+    - thinking-solid.md
+    - javascript-for-solid.md
+    - solid-primitives.md
+    - typescript-for-solid.md
+    - understanding-components.md

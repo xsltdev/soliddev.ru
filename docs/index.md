@@ -12,39 +12,13 @@ hide:
 
 <div class="grid cards" style="margin-top: 1.6em" markdown>
 
--   :simple-react:{ .lg .middle } **React Native** <small>0.72</small>
+-   :simple-solid:{ .lg .middle } **Soli.js**
 
     ***
 
     Перевод официальной документации
 
-    [:octicons-arrow-right-24: Гайды](rn/index.md)
-
-    [:octicons-arrow-right-24: Компоненты](rn/components-and-apis.md)
-
-    [:octicons-arrow-right-24: API](rn/accessibilityinfo.md)
-
-    [:octicons-arrow-right-24: Архитектура](rn/architecture-overview.md)
-
--   :material-comment-account-outline:{ .lg .middle } **Сообщество**
-
-    ***
-
-    Компоненты и API React Native от сообщества
-
-    [:octicons-arrow-right-24: API и компоненты](community/index.md)
-
-    [:octicons-arrow-right-24: React Navigation](community/react-navigation.6/getting-started.md) <small>6.x</small>
-
-    :octicons-arrow-right-24: Reanimated <small>3.x</small>
-
--   :material-tools:{ .lg .middle } **Инструменты**
-
-    ***
-
-    [:octicons-arrow-right-24: Каталог сообщества :octicons-link-external-16:](https://reactnative.directory/)
-
-    [:octicons-arrow-right-24: Инструмент обновления :octicons-link-external-16:](https://react-native-community.github.io/upgrade-helper/)
+    [:octicons-arrow-right-24: Руководство](./guides/foundations/why-solid.md)
 
 </div>
 

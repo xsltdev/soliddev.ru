@@ -2,5 +2,5 @@ User-agent: *
 Allow: /
 Clean-param: query
 
-Host: https://reactnativedev.ru/
-Sitemap: https://reactnativedev.ru/sitemap.xml
+Host: https://soliddev.ru/
+Sitemap: https://soliddev.ru/sitemap.xml
