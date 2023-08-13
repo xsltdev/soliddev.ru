@@ -1,16 +1,18 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: Solid Transiton Group - это библиотека анимации, предназначенная для создания плавных переходов между состояниями
+---
 
-<Title>Solid Transition Group</Title>
+# Solid Transition Group
 
-Solid Transiton Group is an animation library made to help you create smooth transitions between states. That means it makes it easier to animate elements in and out of the DOM.
+**Solid Transiton Group** - это библиотека анимации, предназначенная для создания плавных переходов между состояниями. Это означает, что с ее помощью легче анимировать элементы, входящие и выходящие из DOM.
 
-## Installation
+## Установка
 
 ```bash
 npm install solid-transition-group
 ```
 
-OR
+или
 
 ```bash
 yarn add solid-transition-group
@@ -18,11 +20,11 @@ yarn add solid-transition-group
 
 ## Transition
 
-The `<Transition>` component is a wrapper component that serves transition effects to a single child component. The `<Transition>` component only applies the transition behavior to the wrapped content inside; it doesn't render an extra DOM element, or show up in the inspected component hierarchy.
+Компонент `<Transition>` - это компонент-обертка, который обеспечивает эффекты перехода для одного дочернего компонента. Компонент `<Transition>` применяет поведение перехода только к обернутому внутри него содержимому; он не создает дополнительного элемента DOM и не отображается в проверяемой иерархии компонентов.
 
-Here's an example of a simple transition using both CSS and JS animations:
+Приведем пример простого перехода с использованием CSS- и JS-анимации:
 
-```jsx
+```js
 // simple CSS animation
 <Transition name="slide-fade">{show() && <div>Hello</div>}</Transition>
 
@@ -45,87 +47,92 @@ Here's an example of a simple transition using both CSS and JS animations:
 </Transition>
 ```
 
-This is what the CSS for `'slide-fade'` looks like:
+Вот как выглядит CSS для `'slide-fade'`:
 
 ```css
 .slide-fade-enter-active,
 .slide-fade-exit-active {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 .slide-fade-enter,
 .slide-fade-exit-to {
-  transform: translateX(10px);
-  opacity: 0;
+    transform: translateX(10px);
+    opacity: 0;
 }
 ```
 
-#### Props
+### Свойства
 
-| Name             | Type                   | Default          | Description                                                                                                                                                                       |
-| ---------------- | ---------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| name             | `string`               | `undefined`      | The name of the transition used to generate transition CSS class names. For example the name fade will auto expand to fade-enter, fade-enter-active, fade-exit, fade-exit-active. |
-| appear           | `boolean`              | `false`            | Whether to apply the transition on the initial render of the component.                                                                                                           |
-| mode             | `'in-out' \\ 'out-in'` | `'simultaneous'` | The transition mode that controls the timing sequence of the leaving/entering transitions.                                                                                        |
-| enterActiveClass | `string`               | `undefined`      | The CSS class name to apply to the element during the enter transition.                                                                                                           |
-| enterClass       | `string`               | `undefined`      | The CSS class name to apply to the element before the enter transition.                                                                                                           |
-| enterToClass     | `string`               | `undefined`      | The CSS class name to apply to the element after the enter transition.                                                                                                            |
-| exitActiveClass  | `string`               | `undefined`      | The CSS class name to apply to the element during the exit transition.                                                                                                            |
-| exitClass        | `string`               | `undefined`      | The CSS class name to apply to the element before the exit transition.                                                                                                            |
-| exitToClass      | `string`               | `undefined`      | The CSS class name to apply to the element after the exit transition.                                                                                                             |
+| Имя              | Тип                  | По умолчанию     | Описание                                                                                                                                                                                         |
+| ---------------- | -------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| name             | `string`             | `undefined`      | Имя перехода, используемое для генерации имен CSS-классов переходов. Например, имя `fade` будет автоматически расширяться до `fade-enter`, `fade-enter-active`, `fade-exit`, `fade-exit-active`. |
+| appear           | `boolean`            | `false`          | Применять ли переход при начальном рендеринге компонента.                                                                                                                                        |
+| mode             | `'in-out', 'out-in'` | `'simultaneous'` | Режим перехода, который управляет временной последовательностью переходов выхода/входа.                                                                                                          |
+| enterActiveClass | `string`             | `undefined`      | Имя CSS-класса, который будет применяться к элементу во время перехода enter.                                                                                                                    |
+| enterClass       | `string`             | `undefined`      | Имя класса CSS, применяемое к элементу перед переходом enter.                                                                                                                                    |
+| enterToClass     | `string`             | `undefined`      | Имя класса CSS, которое будет применяться к элементу после перехода enter.                                                                                                                       |
+| exitActiveClass  | `string`             | `undefined`      | Имя CSS-класса, применяемое к элементу во время перехода exit.                                                                                                                                   |
+| exitClass        | `string`             | `undefined`      | Имя CSS-класса, применяемого к элементу перед переходом на выход.                                                                                                                                |
+| exitToClass      | `string`             | `undefined`      | Имя класса CSS, которое будет применяться к элементу после перехода выхода.                                                                                                                      |
 
-#### Events
+### События
 
-| Name          | Type                                      | Description                                                               |
-| ------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
-| onEnter       | `(el:Element, done: () => void) => void`  | Callback function that will be called when the enter transition starts.   |
-| onBeforeEnter | `(el:Element) => void`                    | Callback function that will be called before the enter transition starts. |
-| onAfterEnter  | `(el:Element) => void`                    | Callback function that will be called after the enter transition starts.  |
-| onExit        | `(el:Element, done: () => void ) => void` | Callback function that will be called when the exit transition starts.    |
-| onBeforeExit  | `(el:Element) => void`                    | Callback function that will be called before the exit transition starts.  |
-| onAfterExit   | `(el:Element) => void`                    | Callback function that will be called after the exit transition starts.   |
+| Имя             | Тип                                       | Описание                                                                         |
+| --------------- | ----------------------------------------- | -------------------------------------------------------------------------------- |
+| `onEnter`       | `(el:Element, done: () => void) => void`  | Функция обратного вызова, которая будет вызвана, когда начнется переход `enter`. |
+| `onBeforeEnter` | `(el:Element) => void`                    | Функция обратного вызова, которая будет вызвана до начала перехода `enter`.      |
+| `onAfterEnter`  | `(el:Element) => void`                    | Функция обратного вызова, которая будет вызвана после начала перехода `enter`.   |
+| `onExit`        | `(el:Element, done: () => void ) => void` | Функция обратного вызова, которая будет вызвана после начала перехода `exit`.    |
+| `onBeforeExit`  | `(el:Element) => void`                    | Функция обратного вызова, которая будет вызвана перед началом перехода `exit`.   |
+| `onAfterExit`   | `(el:Element) => void`                    | Функция обратного вызова, которая будет вызвана после начала перехода выхода.    |
 
 ## TransitionGroup
 
-`<TransitionGroup>` is a wrapper component that serves transition effects to multiple child components. The `<TransitionGroup>` only applies the transition behavior to the wrapped content inside; it doesn't render an extra DOM element, or show up in the inspected component hierarchy.
+`<TransitionGroup>` - это компонент-обертка, который обеспечивает эффекты перехода для нескольких дочерних компонентов. Компонент `<TransitionGroup>` применяет поведение перехода только к содержимому, находящемуся внутри обертки; он не создает дополнительного элемента DOM и не отображается в проверяемой иерархии компонентов.
 
-`<TransitionGroup>` supports moving transitions via CSS transform. When a child's position on screen has changed after an update, it will get applied a moving CSS class (auto generated from the name attribute or configured with the move-class attribute). If the CSS transform property is "transition-able" when the moving class is applied, the element will be smoothly animated to its destination using the FLIP technique.
+`<TransitionGroup>` поддерживает перемещение переходов с помощью трансформации CSS. При изменении положения дочернего компонента на экране после обновления к нему будет применен перемещаемый CSS-класс (автоматически сгенерированный из атрибута name или настроенный с помощью атрибута move-class). Если в момент применения класса перемещения свойство CSS transform имеет значение "transition-able", то элемент будет плавно анимирован до места назначения с использованием техники FLIP.
 
-```jsx
+```js
 <ul>
-  <TransitionGroup name="slide">
-    <For each={state.items}>{(item) => <li>{item.text}</li>}</For>
-  </TransitionGroup>
+    <TransitionGroup name="slide">
+        <For each={state.items}>
+            {(item) => <li>{item.text}</li>}
+        </For>
+    </TransitionGroup>
 </ul>
 ```
 
-The above code will slide each item into view when it is added to the list or when the list is reordered. And below is the CSS for the `'slide'` transition:
+Приведенный выше код будет выдвигать каждый элемент на экран при добавлении его в список или при изменении порядка списка. Ниже приведен CSS для перехода `'slide'`:
 
 ```css
 .slide-move {
-  transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
 }
 .slide-enter-active,
 .slide-exit-active {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 .slide-enter,
 .slide-exit-to {
-  transform: translateX(10px);
-  opacity: 0;
+    transform: translateX(10px);
+    opacity: 0;
 }
 ```
 
-#### Props
+### Свойства
 
-The only difference between `<TransitionGroup>` and `<Transition>` is that `<TransitionGroup>` has an additional `'moveClass'` prop that overwrites the CSS class applied during the moving transition.
+Единственное различие между `<TransitionGroup>` и `<Transition>` заключается в том, что `<TransitionGroup>` имеет дополнительное свойство `'moveClass'`, которое перезаписывает CSS-класс, применяемый при переходе.
 
-#### Events
+### События
 
-`<TransitionGroup>` also supports the same events as `<Transition>`.
+`<TransitionGroup>` также поддерживает те же события, что и `<Transition>`.
 
-<Aside>
-  For more information on Solid Transition Group please visit the <a href="https://github.com/solidjs/solid-transition-group"> GitHub Repo</a>.
+!!!note ""
 
-For more information on the FLIP technique please visit <a href="https://aerotwist.com/blog/flip-your-animations/">Aerotwist</a>.
+    Дополнительную информацию о Solid Transition Group можно найти в [GitHub Repo](https://github.com/solidjs/solid-transition-group).
 
-</Aside>
+    Более подробную информацию о методике FLIP можно найти на сайте [Aerotwist](https://aerotwist.com/blog/flip-your-animations/).
+
+## Ссылки
+
+-   [Solid Transition Group](https://docs.solidjs.com/guides/how-to-guides/animations-in-solid/solid-transition-group)
