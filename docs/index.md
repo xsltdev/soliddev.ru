@@ -12,7 +12,7 @@ hide:
 
 <div class="grid cards" style="margin-top: 1.6em" markdown>
 
--   :simple-solid:{ .lg .middle } **Soli.js**
+-   :simple-solid:{ .lg .middle } **Solid.js**
 
     ***
 
