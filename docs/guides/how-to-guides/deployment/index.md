@@ -1,7 +1,14 @@
-import Grid from './components/SectionGrid'
+# Развертывание проекта Solid
 
-<Title>Deploying Your Solid Project</Title>
+Готовы ли вы запустить свой новый проект Solid на всеобщее обозрение? В этом разделе мы расскажем о том, как это сделать с помощью некоторых наиболее популярных служб развертывания.
 
-Are you ready to launch your new Solid project for the whole world to see? In this section we'll be explaining how you can go about doing just that with the use of some of the most popular deployment services out there.
+<div class="grid cards" markdown>
 
-<Grid/>
+-   :simple-vercel: Развертывание в **[Vercel](./deploying-to-vercel.md)**
+-   :simple-netlify: Развертывание в **[Netlify](./deploying-to-netlify.md)**
+-   :simple-firebase: Развертывание в **[Firebase](./deploying-to-firebase.md)**
+-   :simple-amazonaws: Развертывание в AWS с помощью **[Flightcontrol](./deploying-to-flightcontrol.md)**
+-   :simple-cloudflare: Развертывание в **[Cloudflare](./deploying-to-cloudflare.md)**
+-   :simple-railway: Развертывание в **[Railway](./deploying-to-railway.md)**
+
+</div>

@@ -1,67 +1,71 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: Здесь мы будем использовать Vercel для развертывания нашего проекта Solid
+---
 
-<Title>Deploying To Vercel</Title>
+# Развертывание на Vercel
 
-Here we're going to use [Vercel](https://vercel.com/home) to deploy our Solid project. 
+Здесь мы будем использовать [Vercel](https://vercel.com/home) для развертывания нашего проекта Solid.
 
-If you haven't heard of Vercel, it's a platform where developers can host their frontend projects. For more information on Vercel and what they do make sure to visit their [website](https://vercel.com/home).
+Если вы еще не слышали о Vercel, то это платформа, на которой разработчики могут размещать свои фронтенд-проекты. Для получения более подробной информации о Vercel и о том, чем она занимается, обязательно посетите их [сайт](https://vercel.com/home).
 
-## Connecting Vercel with Your Online Git Repository
+## Соединение Vercel с вашим онлайн-репозиторием Git
 
-With Vercel you can make use of GitHub's continuous integration actions. When connecting Vercel with your GitHub repo there's no further configuration that needs to be done in order to host and update the site on Vercel, Vercel automatically detects pushes to the branch specified and builds the project based on the commands specified within the `package.json`.
+С помощью Vercel можно использовать действия непрерывной интеграции GitHub. При подключении Vercel к репозиторию GitHub не требуется дополнительных настроек для размещения и обновления сайта на Vercel, Vercel автоматически обнаруживает пуши в указанную ветку и собирает проект, основываясь на командах, указанных в `package.json`.
 
-Here's a quick step by step guide to get your Solid online repo code up and running on Vercel
+Ниже приводится краткое пошаговое руководство по созданию и запуску онлайн-репо Solid на Vercel
 
-**Note:** We will be making use of GitHub as an example.
+**Примечание:** В качестве примера мы будем использовать GitHub.
 
-**Step 1:** Log into or sign up on Vercel using your GitHub account. The log in page should look similar to this.
+**Шаг 1:** Войдите или зарегистрируйтесь на Vercel, используя свою учетную запись GitHub. Страница входа должна выглядеть примерно так.
 
-<img src="/images/how-to-guides/deployment/vercel-login.png"/>
+![Шаг 1](vercel-login.png)
 
-**Step 2:** Add a new project to your Vercel account. Once logged in you will be redirected to a dashboard. In that dashboard click on the button at the top right corner and select `Add New Project`. 
+**Шаг 2:** Добавьте новый проект в свою учетную запись Vercel. После входа в систему вы будете перенаправлены на приборную панель. На этой панели нажмите на кнопку в правом верхнем углу и выберите `Add New Project`.
 
-From there you will be redirected to a page that looks similar to this 
+После этого вы будете перенаправлены на страницу, которая выглядит следующим образом
 
-<img src="/images/how-to-guides/deployment/vercel-import-repo.png"/>
+![Шаг 2](vercel-import-repo.png)
 
-select `Continue with GitHub`, but feel free to use whichever online repository service you make use of that is also offered here.
+Выберите `Continue with GitHub`, но не стесняйтесь использовать любой другой сервис онлайн-репозиториев, который вы используете и который также предлагается здесь.
 
-**Step 3:** Next you should see a list of some of your repos, if not you can make use of the search bar to search for a particular one.
+**Шаг 3:** Далее должен появиться список ваших репозиториев, если его нет, то можно воспользоваться строкой поиска.
 
-Once you've chosen a repository, just click on the `import` button.
+Выбрав репозиторий, просто нажмите на кнопку `import`.
 
-**Final Step:** Once you've imported your Solid project repository you will be redirected to this screen 
+**Завершающий шаг:** После импорта репозитория проекта Solid вы будете перенаправлены на следующее окно
 
-<img src="/images/how-to-guides/deployment/vercel-deploy.png"/>
+![Шаг 3](vercel-deploy.png)
 
-Just hit deploy and you're all set. If you have any environment variables make sure to add them to the environment variables field.
+Просто нажмите кнопку развернуть, и все готово. Если у вас есть какие-либо переменные окружения, обязательно добавьте их в поле переменных окружения.
 
-Once it's done building and deploying you will be redirected to a screen that looks like this. The square on the left is going to be a screenshot of your site.
+После завершения сборки и развертывания вы будете перенаправлены на экран, который выглядит следующим образом. Квадрат слева будет представлять собой скриншот вашего сайта.
 
-<img src="/images/how-to-guides/deployment/vercel-deploy-done.png"/>
+![Завершающий шаг](vercel-deploy-done.png)
 
-clicking on the generated image will lead you to your live Solid site.
+Щелчок на сгенерированном изображении приведет вас на ваш живой сайт Solid.
 
-## Using The Vercel CLI
+## Использование Vercel CLI
 
-**Step 1:** Install the Vercel CLI using pnpm, yarn or npm
+**Шаг 1:** Установите Vercel CLI с помощью pnpm, yarn или npm
 
 ```bash
 npm i -g vercel
-# or 
+# or
 pnpm i -g vercel
 # or
 yarn global add vercel
 ```
 
-**Step 2:** Run the `vercel` command in your project directory and login using any of the supported login options
+**Шаг 2:** Запустите команду `vercel` в каталоге проекта и войдите в систему, используя любой из поддерживаемых вариантов входа
 
 ```bash
 vercel
 ```
 
-Follow the instructions prompted by the command line tool. Once done your project should be deployed to Vercel. (e.g [solid.vercel.app](#))
+Следуйте инструкциям, предлагаемым инструментом командной строки. После этого ваш проект должен быть развернут в Vercel. (например, `solid.vercel.app`)
 
-<Aside>
-  For more information, build and deployment instructions, and features visit the <Link href="https://vercel.com/docs" target="_blank">Vercel documentation</Link>
-</Aside>
+Дополнительную информацию, инструкции по сборке и развертыванию, а также описание возможностей можно найти в [документации Vercel](https://vercel.com/docs).
+
+## Ссылки
+
+-   [Deploying To Vercel](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-vercel)

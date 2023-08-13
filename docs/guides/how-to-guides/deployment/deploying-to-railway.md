@@ -1,14 +1,16 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: Здесь мы будем использовать Railway для развертывания нашего проекта Solid
+---
 
-<Title>Deploying To Railway</Title>
+# Развертывание на Railway
 
-Here we're going to use [Railway](https://railway.app) to deploy our Solid project.
+Здесь мы будем использовать [Railway](https://railway.app) для развертывания нашего проекта Solid.
 
-If you haven't heard of Railway, it's a platform where developers can host their web/cloud projects. For more information on Railway and what they offer make sure to visit their [website](https://railway.app).
+Если вы еще не слышали о Railway, то это платформа, на которой разработчики могут размещать свои веб-проекты в облаке. Для получения более подробной информации о Railway и о том, что они предлагают, обязательно посетите их [сайт](https://railway.app).
 
-## First Step: Changing The Start Command
+## Первый шаг: Изменение команды Start
 
-With Railway we'll need to make use of a different `start` command in our package.json. Instead of it being `vite` we'll have to make use of `npx http-server ./dist`. As you've noticed we'll have to built the app in correct order to get the `dist` folder, so it would be better to make use of the unedited `dev` command when developing locally and leave the `start` command to be used when deploying to Railway. Here's a quick look at what this might look like in your package.json
+При использовании Railway нам потребуется использовать другую команду `start` в файле `package.json`. Вместо `vite` мы должны использовать `npx http-server ./dist`. Как вы заметили, для получения папки `dist` нам придется собрать приложение в правильном порядке, поэтому при локальной разработке лучше использовать неотредактированную команду `dev`, а команду `start` оставить для использования при развертывании на Railway. Вот краткий обзор того, как это может выглядеть в вашем `package.json`.
 
 ```diff
 ...
@@ -24,51 +26,39 @@ With Railway we'll need to make use of a different `start` command in our packag
 ...
 ```
 
-Once you've done that, we'll be good to go. Let's head over to [Railway](https://railway.app/)
+После этого можно приступать к работе. Давайте перейдем на сайт [Railway](https://railway.app/)
 
-## Connecting Railway with Your Online Git Repository
+## Связь Railway с вашим онлайн-репозиторием Git
 
-Railway allows us to make use of GitHub's continuous integration actions. When connecting Railway to your GitHub repo there's no further configuration needed, unless you would like to make use of environment variables and change build commands of the project. Railway is able to automatically detect commits to which ever branch you specified to make use of for deployment.
+Railway позволяет нам использовать действия непрерывной интеграции GitHub. При подключении Railway к репозиторию GitHub не требуется дополнительной настройки, если только вы не хотите использовать переменные окружения и изменять команды сборки проекта. Railway способен автоматически определять коммиты в ту ветку, которую вы указали для развертывания.
 
-**Note:** We will be making use of GitHub as an example.
+**Примечание:** В качестве примера мы будем использовать GitHub.
 
-**Step 1:** Log into or sign up on Railway using your GitHub account. Railway is fairly easy to sign up to, as soon has you get to their [homepage](https://railway.app) click on `Start a New Project` and you should be navigated to the GitHub Connection page. The page should look something like this
+**Шаг 1:** Войдите или зарегистрируйтесь на сайте Railway, используя свою учетную запись GitHub. Регистрация на Railway довольно проста: как только вы попадете на их [домашнюю страницу](https://railway.app), щелкните на `Start a New Project`, и вы окажетесь на странице подключения к GitHub. Страница должна выглядеть примерно так
 
-<img
-  src="/images/how-to-guides/deployment/railway-new-project.png"
-  alt="railway new project creation"
-/>
+![Создание нового проекта](railway-new-project.png)
 
-Once you select GitHub you will be redirected to GitHub to authorize Railway.
+После выбора GitHub вы будете перенаправлены на GitHub для авторизации Railway.
 
-**Step 2:** After authorizing Railway to be installed in your repositories, you will be redirected back to the Railway website where you can select the repository containing your Solid project. The screen should look something like this
+**Шаг 2:** После авторизации Railway для установки в ваши репозитории вы будете перенаправлены обратно на сайт Railway, где сможете выбрать репозиторий, содержащий ваш проект Solid. Экран должен выглядеть примерно так
 
-<img
-  src="/images/how-to-guides/deployment/railway-select-project.png"
-  alt="Project selection screen"
-/>
+![Экран выбора проекта](railway-select-project.png)
 
-Once you've selected the repository containing your Solid project you can click on the `Deploy Now` button or choose to add any environment variables your app might be making use of.
+После выбора репозитория, содержащего проект Solid, можно нажать кнопку `Deploy Now` или добавить переменные окружения, которые может использовать ваше приложение.
 
-**Step 3:** Once you've done all that all that's left is to wait for the deployment to successfully build and deploy. If your deployment passes without any hiccups you should see a screen like this.
+**Шаг 3:** После того как все это сделано, остается только дождаться успешной сборки и развертывания. Если развертывание прошло без каких-либо заминок, вы должны увидеть следующее окно.
 
-<img
-  src="/images/how-to-guides/deployment/railway-deploy-success.png"
-  alt="Successful deployment screen"
-/>
+![Экран успешного развертывания](railway-deploy-success.png)
 
-As you may have noticed a domain will not be automatically assigned to your project after deployment. With Railway you'll have to go to the settings and manually generate a domain. Here's what that looks like
+Как вы могли заметить, домен не будет автоматически назначен проекту после развертывания. В случае с Railway вам придется зайти в настройки и вручную сгенерировать домен. Вот как это выглядит
 
-<img
-  src="/images/how-to-guides/deployment/railway-generate-domain.png"
-  alt="Generate domain"
-/>
+![Сгенерировать домен](railway-generate-domain.png)
 
-And voila, your new Solid project should be deployed at the generated domain and ready to go.
+И вуаля, ваш новый проект Solid должен быть развернут на сгенерированном домене и готов к работе.
 
-## Using The Railway CLI
+## Использование Railway CLI
 
-**Step 1:** Install the Railway CLI using pnpm, yarn or npm
+**Шаг 1:** Установите Railway CLI с помощью pnpm, yarn или npm
 
 ```bash
 npm i -g @railway/cli
@@ -78,25 +68,28 @@ pnpm i -g @railway/cli
 yarn global add @railway/cli
 ```
 
-**Step 2:** Log into Railway using the Railway CLI
+**Шаг 2:** Войдите в систему Railway с помощью интерфейса Railway CLI
+
 ```bash
 railway login
 ```
 
-**Step 3:** You can choose to link your Solid local project to an already existing Railway project using `railway link` or you could choose to create a new Railway project using `railway init` and answer the command prompts that appear in the terminal.
+**Шаг 3:** Вы можете связать локальный проект Solid с уже существующим проектом Railway с помощью команды `railway link` или создать новый проект Railway с помощью команды `railway init` и ответить на появившиеся в терминале командные подсказки.
 
-**Step 4:** Once you've done that you can deploy your project to Railway using the following command
+**Шаг 4:** После этого можно развернуть проект в Railway с помощью следующей команды
 
 ```bash
 railway up
-# or 
+# or
 railway up --detach # if you don't want to see the logs outputted
 ```
 
-And voila, your project is up and ready to go!
+И вуаля, ваш проект запущен и готов к работе!
 
-<Aside>
-  {" "}
-  For more information on how to make use of Railway to deploy your project, check
-  out their <Link href="https://docs.railway.app" target="_blank">documentation website</Link>
-</Aside>
+!!!note ""
+
+    Более подробную информацию о том, как использовать Railway для развертывания проекта, можно найти на сайте [документация](https://docs.railway.app).
+
+## Ссылки
+
+-   [Deploying To Railway](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-railway)

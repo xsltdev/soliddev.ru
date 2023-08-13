@@ -1,0 +1,9 @@
+title: Развертывание
+nav:
+    - index.md
+    - deploying-to-vercel.md
+    - deploying-to-netlify.md
+    - deploying-to-firebase.md
+    - deploying-to-flightcontrol.md
+    - deploying-to-cloudflare.md
+    - deploying-to-railway.md

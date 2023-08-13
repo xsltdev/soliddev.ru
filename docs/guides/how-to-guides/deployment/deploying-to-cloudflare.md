@@ -1,75 +1,74 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: Здесь мы будем использовать Cloudflare Pages для развертывания нашего проекта Solid
+---
 
-<Title>Deploying To Cloudflare</Title>
+# Развертывание на Cloudflare
 
-Here we're going to use [Cloudflare Pages](https://pages.cloudflare.com/) to deploy our Solid project.
+Здесь мы будем использовать [Cloudflare Pages](https://pages.cloudflare.com/) для развертывания нашего проекта Solid.
 
-Cloudflare Pages is a JAMstack platform for frontend developers to collaborate and deploy their websites. For clarification JAMstack stands for Javascript, APIs and Markup. 
+Cloudflare Pages - это платформа JAMstack для совместной работы фронтенд-разработчиков и развертывания их сайтов. Для пояснения JAMstack означает Javascript, API и разметка.
 
-For more information on what you can do with Cloudflare Pages, visit their [website](https://pages.cloudflare.com/).
+Более подробную информацию о том, что можно сделать с помощью Cloudflare Pages, можно найти на их [сайте](https://pages.cloudflare.com/).
 
-## Connecting Cloudflare with Your Online Git Repository
+## Соединение Cloudflare с вашим онлайн-репозиторием Git
 
-With Cloudflare Pages you can make use of GitHubs continuous integration feature. When you connect your GitHub repository to Cloudflare, it's able to watch for pushes and merges to whichever branch you have specified to build from and re-build your project based on any changes made.
+С помощью Cloudflare Pages можно использовать функцию непрерывной интеграции GitHubs. Когда вы подключаете свой репозиторий GitHub к Cloudflare, он может следить за пушами и слияниями в указанную вами ветку и пересобирать ваш проект на основе всех внесенных изменений.
 
-Here's a quick step by step guide to get your Solid online repo up and running on Cloudflare Pages
+Вот краткое пошаговое руководство по запуску онлайн-репозитория Solid на Cloudflare Pages
 
-**Note:** We will be making use of GitHub as an example. However, Cloudflare allows you to connect your GitLab repos as well.
+**Примечание:** В качестве примера мы будем использовать GitHub. Однако Cloudflare позволяет подключать и репозитории GitLab.
 
-**Step 1:** Log into or sign up for [Cloudflare](https://dash.cloudflare.com/login) using your email address. The log in screen should look something like this.
+**Шаг 1:** Войдите или зарегистрируйтесь на сайте [Cloudflare](https://dash.cloudflare.com/login), используя свой адрес электронной почты. Окно входа должно выглядеть примерно так.
 
-<img src="/images/how-to-guides/deployment/cloudflare-login.png" />
+![Шаг 1](cloudflare-login.png)
 
-**Step 2:** Once you're logged in or signed up, navigate to `Pages` using the left navigation bar, after that add a new project to your Cloudflare Pages dashboard by clicking the `Create a project` button and selecting `Connect to Git`.
+**Шаг 2:** После того как вы вошли в систему или зарегистрировались, перейдите в раздел `Pages` с помощью левой панели навигации, после чего добавьте новый проект в панель Cloudflare Pages, нажав кнопку `Create a project` и выбрав `Connect to Git`.
 
-Once you've done that you should be navigated to a screen that looks similar to this.
+После этого вы должны перейти на экран, выглядящий примерно так.
 
-<img src="/images/how-to-guides/deployment/cloudflare-dashboard.png" />
+![Шаг 2](cloudflare-dashboard.png)
 
-**Step 3:** Connect your GitHub. In this step you can choose to install Cloudflare Pages into all your repositories or you could select which repositories to install Cloudflare Pages into. It's up to you, feel free to choose whichever option best suits your workflow 🙂.
+**Шаг 3:** Подключите свой GitHub. На этом шаге вы можете выбрать установку Cloudflare Pages во все ваши репозитории или выбрать, в какие репозитории устанавливать Cloudflare Pages. Решать вам, выбирайте тот вариант, который лучше всего подходит для вашего рабочего процесса 🙂 .
 
-Once you've connected your GitHub, you should see a page like this
+После подключения GitHub у вас должна появиться страница следующего вида
 
-<img src="/images/how-to-guides/deployment/cloudflare-after-connection.png" />
+![Шаг 3](cloudflare-after-connection.png)
 
-**Step 4:** Once you've connected and chosen your repository, now all that's left is to setup how the project is built. If you clicked the `Begin setup` button you should see the following screen.
+**Шаг 4:** После подключения и выбора репозитория осталось только настроить сборку проекта. Если вы нажали кнопку `Начать настройку`, то должны увидеть следующее окно.
 
-<img src="/images/how-to-guides/deployment/cloudflare-setup.png" />
+![Шаг 4](cloudflare-setup.png)
 
-The project name will correspond with the repo name. Make sure that the `Build command` field contains what you make use of in order to build your project, which should be the default `npm run build`. The `Build output directory` field should have the value of `dist`.
+Имя проекта будет соответствовать имени репозитория. Убедитесь, что в поле `Команда сборки` указано то, что вы используете для сборки проекта, по умолчанию это должна быть команда `npm run build`. Поле `Выводной каталог сборки` должно иметь значение `dist`.
 
-<Aside>
-  Note: Make sure to add the environment variable of <code>NODE_VERSION</code> with
-  the value of whichever version of Node.js you are making use of on your
-  machine. If you fail to do this your build will fail as Cloudflare Pages makes use of a Node.js version older than v13 which does not properly support Vite, the bundler for Solid projects.
-</Aside>
+!!!note ""
 
-Hit `Save and Deploy` when you're done.
+    Обязательно добавьте в переменную окружения `NODE_VERSION` значение той версии Node.js, которую вы используете на своей машине. Если этого не сделать, сборка завершится неудачей, так как Cloudflare Pages использует Node.js версии старше v13, которая не поддерживает Vite, бандлер для проектов Solid.
 
-**Final Step:** Once you're done with all that just wait a few minutes and voila your Solid project should be deployed on Cloudflare Pages with a URL similar to this `project_name.pages.dev`.
+Нажмите кнопку `Save and Deploy`, когда закончите.
 
+\*\*После этого подождите несколько минут, и вуаля - ваш проект Solid должен быть развернут на Cloudflare Pages с URL-адресом, похожим на этот `project_name.pages.dev`.
 
-## Using The Wrangler CLI 
+## Использование Wrangler CLI
 
-Wrangler is a command-line tool used for building Cloudflare workers. Here are some steps you can follow to deploy your Solid project on Cloudflare using Wrangler
+Wrangler - это инструмент командной строки, используемый для создания рабочих станций Cloudflare. Вот несколько шагов, которые можно выполнить для развертывания проекта Solid на Cloudflare с помощью Wrangler
 
-**Step 1:** Install Wrangler CLI
+**Шаг 1:** Установите Wrangler CLI
 
 ```bash
-npm i -g wrangler 
+npm i -g wrangler
 # or
-pnpm i -g wrangler 
-# or 
-yarn global add wrangler 
+pnpm i -g wrangler
+# or
+yarn global add wrangler
 ```
 
-**Step 2:** Log into wrangler using cloudflare 
+**Шаг 2:** Войдите в wrangler, используя cloudflare
 
 ```bash
-wrangler login 
+wrangler login
 ```
 
-**Step 3:** Build the project and deploy using wrangler
+**Шаг 3:** Сборка проекта и развертывание с помощью wrangler
 
 ```bash
 npm run build
@@ -77,10 +76,14 @@ npm run build
 npx wrangler pages publish dist
 ```
 
-Once you're done you should see a link printed in the terminal, however most times that link does not work. You will have to go into your cloudflare pages dashboard and get the deployed link from there. It's usually in the format `project-name.pages.dev`. 
+После этого в терминале должна появиться ссылка, однако в большинстве случаев эта ссылка не работает. Приходится заходить в панель управления страницами cloudflare и получать развернутую ссылку оттуда. Обычно она имеет формат `project-name.pages.dev`.
 
-<Aside> 
-  Footnote: when making use of Cloudflare <code>Speed -> Optimization</code> settings in your Cloudflare website dashboard, make sure to have the <code>Auto Minity</code> option turned off. This is because minifying and getting rid of comments breaks hydration.
-  <br/>
-  Feel free to visit the <Link href="https://cloudflare.com" target="_blank">Cloudflare</Link> or <Link target="_blank" href="https://developers.cloudflare.com/workers/wrangler/get-started/">Wrangler</Link> website for more information or just to find out the cool things they could help you do.
-</Aside>
+!!!note ""
+
+    Сноска: при использовании настроек Cloudflare `Speed -> Optimization` в панели управления сайтом Cloudflare убедитесь, что опция `Auto Minity` выключена. Это связано с тем, что минификация и избавление от комментариев нарушают гидратацию.
+
+    Посетите сайт [Cloudflare](https://cloudflare.com) или [Wrangler](https://developers.cloudflare.com/workers/wrangler/get-started/), чтобы получить дополнительную информацию или просто узнать, какие интересные вещи они могут помочь вам сделать.
+
+## Ссылки
+
+-   [Deploying To Cloudflare](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-cloudflare)

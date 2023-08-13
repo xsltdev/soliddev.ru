@@ -1,16 +1,18 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: Здесь мы будем использовать сервис Firebase's hosting для размещения нашего проекта Solid
+---
 
-<Title> Deploying To Firebase </Title>
+# Развертывание на Firebase
 
-Here we're going to use [Firebase's hosting](https://firebase.google.com/products/hosting) service to host our Solid project.
+Здесь мы будем использовать сервис [Firebase's hosting](https://firebase.google.com/products/hosting) для размещения нашего проекта Solid.
 
-If you haven't heard of Firebase, it's an app development platform run by Google. For more information on Firebase and the services it offers make sure to visit their [website](https://firebase.google.com/).
+Если вы еще не слышали о Firebase, то это платформа для разработки приложений, управляемая компанией Google. Для получения более подробной информации о Firebase и предлагаемых ею услугах обязательно посетите их [веб-сайт](https://firebase.google.com/).
 
-Before proceeding make sure that you have created a project in your Firebase console which you will use to host your Solid project. For guidance on how to do this follow the first step of [this guide](https://firebase.google.com/docs/web/setup#create-firebase-project-and-app).
+Прежде чем приступить к работе, убедитесь, что в консоли Firebase создан проект, который будет использоваться для размещения проекта Solid. Как это сделать, описано в первом шаге [данного руководства](https://firebase.google.com/docs/web/setup#create-firebase-project-and-app).
 
-## Using The Firebase CLI Tool
+## Использование инструмента Firebase CLI
 
-**Step 1:** Make sure you have [`firebase-tools`](https://www.npmjs.com/packages/firebase-tools) properly installed
+**Шаг 1:** Убедитесь, что у вас правильно установлен [`firebase-tools`](https://www.npmjs.com/packages/firebase-tools)
 
 ```bash
 npm i -g firebase-tools
@@ -20,39 +22,41 @@ pnpm i -g firebase-tools
 yarn global add firebase-tools
 ```
 
-**Step 2:** Run the `firebase login` command, and make sure that you are logged into your Firebase account where you created the Firebase project that you will be using to host your Solid project.
+**Шаг 2:** Выполните команду `firebase login` и убедитесь, что вы вошли в свою учетную запись Firebase, в которой был создан проект Firebase, используемый для размещения проекта Solid.
 
-**Step 3:** In your Solid project root directory, add two files namely `firebase.json` and `.firebaserc`.
+**Шаг 3:** В корневой каталог проекта Solid добавьте два файла: `firebase.json` и `.firebaserc`.
 
-In `firebase.json` copy the following code:
-
-```json
-{
-  "hosting": {
-    "public": "dist",
-    "ignore": []
-  }
-}
-```
-
-And in `.firebaserc` copy the following code:
+В файле `firebase.json` скопируйте следующий код:
 
 ```json
 {
-  "projects": {
-    "default": "<YOUR_FIREBASE_PROJECT_ID>"
-  }
+    "hosting": {
+        "public": "dist",
+        "ignore": []
+    }
 }
 ```
 
-**Step 4:** Run `npm run build` then run `firebase deploy`. Once the deploy command is done running you should see a message like this on your command line
+И в `.firebaserc` скопируйте следующий код:
 
-<img src="/images/how-to-guides/deployment/firebase-deploy-done.png" />
+```json
+{
+    "projects": {
+        "default": "<YOUR_FIREBASE_PROJECT_ID>"
+    }
+}
+```
 
-The `Hosting URL` is the live deployment of your project. Feel free to visit it and see your work in action.
+**Шаг 4:** Запустите команду `npm run build` и выполните команду `firebase deploy`. После выполнения команды deploy в командной строке должно появиться сообщение следующего вида
 
-<Aside>
-  {" "}
-  For more information on Firebase and to learn about what other cool things you
-  can build with Solid and Firebase feel free to visit the <Link href="https://firebase.google.com/docs/web" target="_blank">Firebase documentation</Link>
-</Aside>
+![Шаг 4](firebase-deploy-done.png)
+
+URL `Hosting URL` - это реальное развертывание вашего проекта. Не стесняйтесь посетить его и посмотреть на свою работу в действии.
+
+!!!note ""
+
+    Более подробную информацию о Firebase и о том, какие еще интересные вещи можно создавать с помощью Solid и Firebase, можно найти на сайте [Firebase documentation](https://firebase.google.com/docs/web)
+
+## Ссылки
+
+-   [Deploying To Firebase](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-firebase)

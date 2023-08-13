@@ -1,71 +1,79 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: Здесь мы будем использовать Netlify для развертывания нашего проекта Solid
+---
 
-<Title>Deploying To Netlify</Title>
+# Развертывание в Netlify
 
-Here we're going to use [Netlify](https://netlify.com) to deploy our Solid project.
+Здесь мы будем использовать [Netlify](https://netlify.com) для развертывания нашего проекта Solid.
 
-If you haven't heard of Netlify, it's a platform where developers can host their projects whether they be websites, APIs or more. For more information on Netlify and what they offer, make sure to visit their [website](https://netlify.com).
+Если вы еще не слышали о Netlify, то это платформа, на которой разработчики могут размещать свои проекты, будь то веб-сайты, API и т.д. Для получения более подробной информации о Netlify и предлагаемых ею возможностях обязательно посетите их [сайт](https://netlify.com).
 
-## Connecting Netlify with Your Online Git Repository
+## Соединение Netlify с вашим онлайн-репозиторием Git
 
-With Netlify you can make use of GitHub's continuous development actions. When connecting Netlify with your GitHub repo there's no further configuration that needs to be done in order to host and update the site on Netlify, Netlify automatically detects pushes to the branch specified and builds the project based on the commands specified in the `package.json` and the settings in the Netlify build settings. 
+С помощью Netlify вы можете использовать возможности GitHub по непрерывной разработке. При подключении Netlify к вашему репозиторию GitHub не требуется никакой дополнительной настройки для размещения и обновления сайта на Netlify. Netlify автоматически обнаруживает пуши в указанную ветку и собирает проект на основе команд, указанных в `package.json`, и настроек в настройках сборки Netlify.
 
-Here's a quick step by step guide to get your Solid online repo code up and running on Netlify.
+Вот краткое пошаговое руководство по установке и запуску кода из онлайн-репо Solid в Netlify.
 
-**Note:** We will be making use of GitHub as an example. However, you can make use of other online git providers.
+**Примечание:** В качестве примера мы будем использовать GitHub. Однако вы можете использовать и другие онлайн-провайдеры git.
 
-**Step 1:** Log into or sign up on Netlify using your GitHub account. You can log in or create an account [here](https://app.netlify.com).
+**Шаг 1:** Войдите или зарегистрируйтесь на Netlify, используя свою учетную запись GitHub. Войти или создать учетную запись можно [здесь](https://app.netlify.com).
 
-**Step 2:** The dashboard should look similar to this once you have logged in or signed up. 
+**Шаг 2:** После входа или регистрации приборная панель должна выглядеть примерно так.
 
-<img src="/images/how-to-guides/deployment/netlify-dashboard.png" alt="Image of the Netlify dashboard"/>
+![Изображение приборной панели Netlify](netlify-dashboard.png)
 
-Click on `Add new site` to add your new Solid project. 
+Нажмите на кнопку `Добавить новый сайт`, чтобы добавить ваш новый проект Solid.
 
-**Step 3:** Connect your Git provider to Netlify to see a list of your repos that can be deployed to Netlify.
+**Шаг 3:** Подключите ваш Git-провайдер к Netlify, чтобы увидеть список ваших репозиториев, которые могут быть развернуты в Netlify.
 
-<img src="/images/how-to-guides/deployment/netlify-connect-import.png" alt="Image of how to connect your Git provider to Netlify"/>
+![Изображение подключения Git-провайдера к Netlify](netlify-connect-import.png)
 
-After selecting your Git provider and the project you want to deploy, let's setup the build settings which are located within the site settings as shown in the next step.
+После выбора Git-провайдера и проекта, который вы хотите развернуть, давайте настроим параметры сборки, которые находятся в настройках сайта, как показано на следующем шаге.
 
-**Step 4:** The site settings screen should look something like this 
+**Шаг 4:** Экран настроек сайта должен выглядеть следующим образом
 
-<img src="/images/how-to-guides/deployment/netlify-deploy.png" alt="Image of Netlify site deploy settings"/>
+![Изображение настроек развертывания сайта Netlify](netlify-deploy.png)
 
-The only setting that we need to change here is the value of `publish directory`, this needs to be changed from `netlify` to `dist` as that is where Solid places the final build files. 
+Единственная настройка, которую нам нужно изменить, это значение `publish directory`, его нужно изменить с `netlify` на `dist`, так как именно туда Solid помещает конечные файлы сборки.
 
-After that just hit deploy and wait a few minutes for the site to build and you're done!
+После этого просто нажмите кнопку deploy и подождите несколько минут, пока сайт соберется, и все готово!
 
-## Using the Netlify CLI
+## Использование Netlify CLI
 
-**Step 1:** Install the Netlify CLI using pnpm, yarn or npm
+**Шаг 1:** Установите Netlify CLI с помощью pnpm, yarn или npm
 
 ```bash
 npm i -g netlify-cli
-# or 
+# or
 pnpm i -g netlify-cli
 # or
 yarn global add netlify-cli
 ```
 
-<Aside>
-  Before carrying out the next step make sure that you have your Netlify account setup and that you've created a team. As this will help you setup your project and deploy it.
-</Aside>
+!!!note ""
 
-**Step 2:** Run the `netlify init` command in your project directory and login using any of the supported login options (e.g GitHub)
+    Перед выполнением следующего шага убедитесь, что у вас настроена учетная запись Netlify и создана команда. Это поможет вам настроить проект и развернуть его.
+
+**Шаг 2:** Выполните команду `netlify init` в каталоге проекта и войдите в систему, используя любой из поддерживаемых вариантов входа (например, GitHub).
 
 ```bash
 netlify init
 ```
 
-Follow the instructions prompted by the command line tool.
+Следуйте инструкциям, выдаваемым инструментом командной строки.
 
-**Note:** Make sure that you set the value of the prompt `Directory to deploy (blank for current dir):` to `dist` as that is where Solid by default places the built project files. 
+!!!note "Примечание"
 
-Once done answering all the prompts generated by the CLI, you should see this at the end to show that your project has been successfully configured.
+    Убедитесь, что в подсказке `Directory to deploy (blank for current dir):` установлено значение `dist`, поскольку именно туда Solid по умолчанию помещает собранные файлы проекта.
 
-<img src="/images/how-to-guides/deployment/netlify-cli-success.png" alt="Netlify CLI image"/>
+После того как вы ответите на все запросы, выдаваемые CLI, вы должны увидеть следующее сообщение, свидетельствующее об успешной настройке проекта.
 
-<Aside>
-  For more information and further build and deployment instructions and features visit the <Link href="https://docs.netlify.com/" target="_blank">Netlify documentation</Link>
-</Aside>
+![Netlify CLI image](netlify-cli-success.png)
+
+!!!note ""
+
+    Более подробную информацию и инструкции по сборке и развертыванию, а также описание возможностей можно найти в [документации Netlify](https://docs.netlify.com/).
+
+## Ссылки
+
+-   [Deploying To Netlify](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-netlify)

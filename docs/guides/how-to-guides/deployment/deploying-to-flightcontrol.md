@@ -1,100 +1,96 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: Здесь мы будем использовать Flightcontrol для развертывания нашего проекта Solid
+---
 
-<Title>Deploying to AWS via Flightcontrol</Title>
+# Развертывание в AWS с помощью Flightcontrol
 
-Here, we're going to use [Flightcontrol](https://www.flightcontrol.dev/?ref=solid) to deploy our Solid project.
+Здесь мы будем использовать [Flightcontrol](https://www.flightcontrol.dev/?ref=solid) для развертывания нашего проекта Solid.
 
-If you haven't heard of Flightcontrol, it's a platform that fully automates deployments to Amazon Web Services (AWS). For more information on Flightcontrol and what they offer, visit [flightcontrol.dev](https://www.flightcontrol.dev/?ref=solid).
+Если вы еще не слышали о Flightcontrol, то это платформа, полностью автоматизирующая развертывание на Amazon Web Services (AWS). Более подробную информацию о Flightcontrol и ее возможностях можно найти на сайте [flightcontrol.dev](https://www.flightcontrol.dev/?ref=solid).
 
-## Connecting Flightcontrol with Your Online Git Repository
+## Соединение Flightcontrol с вашим онлайн-репозиторием Git
 
-With Flightcontrol, you can make use of GitHub's continuous development actions. When connecting Flightcontrol to your GitHub repo, there's no further configuration that needs to be done.
+С помощью Flightcontrol можно использовать возможности GitHub по непрерывной разработке. При подключении Flightcontrol к репозиторию GitHub не требуется никакой дополнительной настройки.
 
-Flightcontrol automatically detects pushes to the branch specified and builds the project based on the commands specified in the `package.json` and the settings in the Flightcontrol build settings.
+Flightcontrol автоматически обнаруживает пуши в указанную ветку и собирает проект на основе команд, указанных в `package.json`, и настроек в настройках сборки Flightcontrol.
 
-Here's a quick step by step guide to get your Solid online repo code up and running on Flightcontrol.
+Ниже приводится краткое пошаговое руководство по работе с онлайн-репо Solid на Flightcontrol.
 
-**Step 1:** Log into or sign up on Flightcontrol.
+**Шаг 1:** Войдите или зарегистрируйтесь на Flightcontrol.
 
-**Step 2:** Connect your Github account to Flightcontrol.
+**Шаг 2:** Подключите свой аккаунт Github к Flightcontrol.
 
-<img src="/images/how-to-guides/deployment/flightcontrol-connect-github.png" alt="Image of Connect Github page"/>
+![Изображение страницы подключения Github](flightcontrol-connect-github.png)
 
-<Aside>
-  For more information on how to connect your github account, visit{" "}
-  <Link
-    href="https://www.flightcontrol.dev/docs/getting-started/connecting-github?ref=solid"
-    target="_blank"
-  >
-    Connecting GitHub Accounts to Flightcontrol
-  </Link>
-</Aside>
+!!!note ""
 
-## Option 1: Using Dashboard
+    Для получения дополнительной информации о том, как подключить учетную запись github, посетите [Connecting GitHub Accounts to Flightcontrol](https://www.flightcontrol.dev/docs/getting-started/connecting-github?ref=solid)
 
-**Step 1:** Create a Flightcontrol project from the Dashboard. Select a repository for the source.
+## Вариант 1: Использование Dashboard
 
-**Step 2:** Select the GUI Config Type.
+**Шаг 1:** Создайте проект Flightcontrol в Dashboard. Выберите репозиторий для исходного кода.
 
-**Step 3:** Add a static site service by clicking the `Add a Static Site` option.
+**Шаг 2:** Выберите тип GUI-конфигурации.
 
-<img src="/images/how-to-guides/deployment/flightcontrol-services.png" alt="Image of the Flightcontrol sevices"/>
+**Шаг 3:** Добавьте сервис статического сайта, нажав на опцию `Add a Static Site`.
 
-**Step 4:** Add an output directory, `dist`.
+![Изображение Flightcontrol sevices](flightcontrol-services.png)
 
-**Step 5:** Add any environment variables your project might need.
+**Шаг 4:** Добавьте выходной каталог `dist`.
 
-<img src="/images/how-to-guides/deployment/flightcontrol-static-website.png" alt="Image of the Flightcontrol Static Website"/>
+**Шаг 5:** Добавьте все переменные окружения, которые могут понадобиться проекту.
 
-**Step 6:** Link your AWS Account.
+![Изображение статического сайта Flightcontrol](flightcontrol-static-website.png)
 
-<img src="/images/how-to-guides/deployment/Flightcontrol-link-AWS.png" alt="Image of how to link AWS account on Flightcontrol"/>
+**Шаг 6:** Подключите свой аккаунт AWS.
 
-**Step 7:** Submit the new project form.
+![Изображение того, как связать AWS-аккаунт на Flightcontrol](Flightcontrol-link-AWS.png)
 
-## Option 2: Using Code
+**Шаг 7:** Отправьте форму нового проекта.
 
-Use the flightcontrol.json configuration for the project
+## Вариант 2: Использование кода
 
-**Step 1:** Create a Flightcontrol project from your dashboard. Select a repository for the source.
+Используйте конфигурацию `flightcontrol.json` для проекта
 
-**Step 2:** Select the flightcontrol.json Config Type.
+**Шаг 1:** Создайте проект Flightcontrol на панели управления. Выберите репозиторий для исходного кода.
 
- <img src="/images/how-to-guides/deployment/flightcontrol-config-option.png" alt="Image of config options on Flightcontrol"/>
+**Шаг 2:** Выберите тип конфигурации `flightcontrol.json`.
 
-**Step 3:** Add a new file at the root of your repository called `flightcontrol.json`. Here's an example configuration that creates a static site service for your Solid app:
+![Изображение опций конфигурации на Flightcontrol](flightcontrol-config-option.png)
 
-```json filename="flightcontrol.json"
+**Шаг 3:** Добавьте в корень вашего репозитория новый файл `flightcontrol.json`. Вот пример конфигурации, создающей сервис статических сайтов для приложения Solid:
+
+```json
 {
-  "$schema": "https://app.flightcontrol.dev/schema.json",
-  "environments": [
-    {
-      "id": "production",
-      "name": "Production",
-      "region": "us-west-2",
-      "source": {
-        "branch": "main"
-      },
-      "services": [
+    "$schema": "https://app.flightcontrol.dev/schema.json",
+    "environments": [
         {
-          "id": "my-static-solid",
-          "buildType": "nixpacks",
-          "name": "My static solid site",
-          "type": "static",
-          "domain": "solid.yourapp.com",
-          "outputDirectory": "dist",
-          "singlePageApp": true
+            "id": "production",
+            "name": "Production",
+            "region": "us-west-2",
+            "source": {
+                "branch": "main"
+            },
+            "services": [
+                {
+                    "id": "my-static-solid",
+                    "buildType": "nixpacks",
+                    "name": "My static solid site",
+                    "type": "static",
+                    "domain": "solid.yourapp.com",
+                    "outputDirectory": "dist",
+                    "singlePageApp": true
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
-<Aside>
-  For more information, build and deployment instructions, and features visit
-  the{" "}
-  <Link href="https://www.flightcontrol.dev/docs?ref=solid" target="_blank">
-    Flightcontrol documentation
-  </Link>
-</Aside>
+!!!note ""
+
+    Более подробную информацию, инструкции по сборке и развертыванию, а также описание возможностей можно найти на сайте [Flightcontrol documentation](https://www.flightcontrol.dev/docs?ref=solid)
+
+## Ссылки
+
+-   [Deploying to AWS via Flightcontrol](https://docs.solidjs.com/guides/how-to-guides/deployment/deploying-to-flightcontrol)
