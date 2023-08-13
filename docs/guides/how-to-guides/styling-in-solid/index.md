@@ -1,89 +1,115 @@
-<Title>Styling in Solid</Title>
+---
+description: Стилизация приложений Solid аналогична стилизации HTML. Поэтому если вы когда-нибудь использовали CSS или встроенные стили, то вы уже знаете, как оформлять приложения Solid
+---
 
-Styling Solid apps is the same as styling HTML. So if you’ve ever used CSS or inline styles, you’ll already know how to style your Solid apps. 💡 This guide will teach you the basic concepts for styling your Solid apps as well as some advanced APIs such as `classList` and `JSX.CSSProperties`.
+# Стилизация в Solid
 
-We also have guides for [CSS Modules](css-modules), [Sass](sass), [Tailwind CSS](tailwind-css), [UnoCSS](unocss), and [WindiCSS](windicss).
+Стилизация приложений Solid аналогична стилизации HTML. Поэтому если вы когда-нибудь использовали CSS или встроенные стили, то вы уже знаете, как оформлять приложения Solid. 💡 В этом руководстве вы узнаете об основных концепциях стилизации приложений Solid, а также о некоторых продвинутых API, таких как `classList` и `JSX.CSSProperties`.
 
-## The Basics
+У нас также есть руководства по [CSS Modules](css-modules.md), [Sass](sass.md), [Tailwind CSS](tailwind-css.md), [UnoCSS](unocss.md) и [WindiCSS](windicss.md).
 
-We use the `class` and `style` attributes to style elements. The `class` attribute, referred to as classes, are useful for declaratively styling one or more elements using CSS (Cascading Stylesheets). The `style` attribute, referred to as inline styles, are useful for imperatively styling one and only one element.
+## Основы
 
-In general, we advise you to use classes as much as possible as they are statically optimized and self-documenting. That being said, inline styles are useful for prototyping, setting CSS variables using runtime values, and overriding classes. Use what makes sense for you and don’t be afraid to experiment. 🙂
+Для стилизации элементов мы используем атрибуты `class` и `style`. Атрибут `class`, называемый классом, полезен для декларативной стилизации одного или нескольких элементов с помощью CSS (каскадных таблиц стилей). Атрибут `style`, называемый инлайн-стилями, используется для императивного стилевого оформления одного и только одного элемента.
 
-## Hands On with Inline Styles
+В целом, мы советуем как можно чаще использовать классы, поскольку они статически оптимизированы и самодокументированы. Тем не менее, встроенные стили полезны для создания прототипов, установки переменных CSS с помощью значений времени выполнения и переопределения классов. Используйте то, что имеет для вас смысл, и не бойтесь экспериментировать 🙂 .
 
-The `style` attribute provides a way to imperatively style one and only one element and set CSS variables using runtime values. Solid supports using the `style` attribute as both strings and objects. In practice, this means you can write `<div style="color: red;">` and `<div style={{ "color": "red" }}>`. These inputs provide the same outputs.
+## Работа со встроенными стилями
 
-Style strings are more concise and portable (you can use them in and outside of Solid). Style objects are more verbose but offer benefits such as intellisense for autocompletion and type safety (if you are using an IDE such as VS Code — no added extensions are needed). If you want portability, styling strings are probably better for you. If you want intellisense such as autocompletion, type safety, etc. style objects are probably better for you.
+Атрибут `style` предоставляет возможность императивно стилизовать один и только один элемент и задавать CSS-переменные, используя значения времени выполнения. Solid поддерживает использование атрибута `style` как в виде строк, так и в виде объектов. На практике это означает, что вы можете написать `<div style="color: red;">` и `<div style={{"color": "red" }}>`. Эти входы обеспечивают одинаковые выходы.
 
-Note that style strings and style objects always use `kebab-case` syntax. This means `<div style={{ backgroundColor: "red" }}>` interpolates as `<div style="backgroundColor: red;">` which is invalid CSS. Solid always interpolates CSS properties as-is.
+Строки стилей более лаконичны и переносимы (их можно использовать как в Solid, так и за его пределами). Объекты стилей более многословны, но обладают такими преимуществами, как intellisense для автозавершения и безопасность типов (если вы используете IDE, например VS Code, то никаких дополнительных расширений не требуется). Если вам нужна переносимость, то, вероятно, лучше использовать стилирующие строки. Если вам нужен intellisense, такой как автодополнение, безопасность типов и т.д., то лучше использовать объекты стилей.
 
-This code should give you an idea of what styling using style strings and style objects looks like:
+Обратите внимание, что строки стилей и объекты стилей всегда используют синтаксис `kebab-case`. Это означает, что `<div style={{ backgroundColor: "red" }}>` интерполируется как `<div style="backgroundColor: red;">`, что является некорректным CSS. Solid всегда интерполирует CSS-свойства как есть.
 
-```jsx
+Этот код должен дать вам представление о том, как выглядит стилизация с использованием стилевых строк и стилевых объектов:
+
+```js
 // This component is styled using inline styles as strings.
 function StyledStringComponent() {
-  const backgroundColor = "yellow";
-  const fontWeight = "bold";
+    const backgroundColor = 'yellow';
+    const fontWeight = 'bold';
 
-  return (
-    <>
-      <div style={`background-color: ${backgroundColor};`}>
-        <h1 style={`color: red; font-weight: ${fontWeight};`}>
-          Hello World in red
-        </h1>
+    return (
+        <>
+            <div
+                style={`background-color: ${backgroundColor};`}
+            >
+                <h1
+                    style={`color: red; font-weight: ${fontWeight};`}
+                >
+                    Hello World in red
+                </h1>
 
-        <h1 style="color: rgb(0, 255, 0); padding: 20px;">
-          Hello World in green
-        </h1>
+                <h1 style="color: rgb(0, 255, 0); padding: 20px;">
+                    Hello World in green
+                </h1>
 
-        <h1 style="color: blue;">Hello World in blue</h1>
-      </div>
-    </>
-  );
+                <h1 style="color: blue;">
+                    Hello World in blue
+                </h1>
+            </div>
+        </>
+    );
 }
 
 // This component is styled using inline styles as objects.
 function StyledObjectComponent() {
-  const backgroundColor = "yellow";
-  const fontWeight = "bold";
+    const backgroundColor = 'yellow';
+    const fontWeight = 'bold';
 
-  return (
-    <>
-      <div style={{ "background-color": backgroundColor }}>
-        <h1 style={{ color: "red", "font-weight": fontWeight }}>
-          Hello World in red
-        </h1>
+    return (
+        <>
+            <div
+                style={{
+                    'background-color': backgroundColor,
+                }}
+            >
+                <h1
+                    style={{
+                        color: 'red',
+                        'font-weight': fontWeight,
+                    }}
+                >
+                    Hello World in red
+                </h1>
 
-        <h1 style={{ color: "rgb(0, 255, 0)", padding: "20px" }}>
-          Hello World in green
-        </h1>
+                <h1
+                    style={{
+                        color: 'rgb(0, 255, 0)',
+                        padding: '20px',
+                    }}
+                >
+                    Hello World in green
+                </h1>
 
-        <h1 style={{ color: "blue" }}>Hello World in blue</h1>
-      </div>
-    </>
-  );
+                <h1 style={{ color: 'blue' }}>
+                    Hello World in blue
+                </h1>
+            </div>
+        </>
+    );
 }
 ```
 
-Note that every CSS property can be used as inline styles, ranging from simple `background-color` all the way to complex `mask-mode`.
+Обратите внимание, что каждое свойство CSS может быть использовано в качестве встроенного стиля, начиная от простого `background-color` и заканчивая сложным `mask-mode`.
 
-## Hands On with Classes
+## Работа с классами
 
-The `class` attribute provides a way to declaratively style one or more elements using CSS (Cascading Stylesheets). Additionally, Solid supports `classList` to conditionally toggle classes based on runtime values.
+Атрибут `class` предоставляет возможность декларативно стилизовать один или несколько элементов с помощью CSS (каскадных таблиц стилей). Кроме того, Solid поддерживает функцию `classList` для условного переключения классов на основе значений во время выполнения программы.
 
-In general, we advise you to use classes as much as possible as they are statically optimized and self-documenting. That being said, inline styles are useful for prototyping, setting CSS variables using runtime values, and overriding classes. Use what makes sense for you and don’t be afraid to experiment. 🙂
+В целом, мы советуем как можно чаще использовать классы, поскольку они статически оптимизированы и самодокументированы. Тем не менее, встроенные стили полезны для создания прототипов, установки переменных CSS с использованием значений времени выполнения и переопределения классов. Используйте то, что имеет смысл для вас, и не бойтесь экспериментировать 🙂 .
 
-If you are just getting started, you can colocate `<style>` tags to help you prototype classes side-by-side with your HTML. There are several reasons you wouldn’t want to do this for production, but for prototyping it’s a useful way to get started. Note that the community provides packages such as [solid-styled](https://github.com/lxsmnsyc/solid-styled) which scopes CSS much the same way as scoped styles in Vue, Svelte, and Astro.
+Если вы только начинаете, то можете разместить теги `<style>`, которые помогут вам создавать прототипы классов рядом с HTML. Есть несколько причин, по которым вы не захотите делать этого для производства, но для создания прототипов это полезный способ начать. Обратите внимание, что сообщество предоставляет такие пакеты, как [solid-styled](https://github.com/lxsmnsyc/solid-styled), которые определяют границы CSS точно так же, как и границы стилей в Vue, Svelte и Astro.
 
-Here’s an example of a simple card component:
+Вот пример простого компонента карты:
 
-```jsx
+```js
 // Card.jsx
 function Card() {
-  return (
-    <>
-      <style>{`
+    return (
+        <>
+            <style>{`
       .grid { display: grid; }
       .grid.grid-center { place-items: center; }
       .screen { min-height: 100vh; }
@@ -97,59 +123,59 @@ function Card() {
       }
     `}</style>
 
-      <div class="grid grid-center screen">
-        <div class="card">Hello, world!</div>
-      </div>
-    </>
-  );
+            <div class="grid grid-center screen">
+                <div class="card">Hello, world!</div>
+            </div>
+        </>
+    );
 }
 ```
 
-Let’s say we’re ready to extract our CSS to a separate file. We can copy-paste the contents of our `<style>` tag and extract them to `card.css`. Now our code looks like this:
+Допустим, мы готовы извлечь наш CSS в отдельный файл. Мы можем скопировать-вставить содержимое нашего тега `<style>` и извлечь его в файл `card.css`. Теперь наш код выглядит следующим образом:
 
 ```css
 /* Card.css */
 .grid {
-  display: grid;
+    display: grid;
 }
 .grid.grid-center {
-  place-items: center;
+    place-items: center;
 }
 .screen {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
 .card {
-  height: 160px;
-  aspect-ratio: 2;
-  border-radius: 16px;
-  background-color: white;
-  box-shadow: 0 0 0 4px hsl(0 0% 0% / 15%);
+    height: 160px;
+    aspect-ratio: 2;
+    border-radius: 16px;
+    background-color: white;
+    box-shadow: 0 0 0 4px hsl(0 0% 0% / 15%);
 }
 ```
 
-```jsx
+```js
 // Card.jsx
-import "./Card.css";
+import './Card.css';
 
 function Card() {
-  return (
-    <>
-      <div class="grid grid-center screen">
-        <div class="card">Hello, world!</div>
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div class="grid grid-center screen">
+                <div class="card">Hello, world!</div>
+            </div>
+        </>
+    );
 }
 ```
 
-Provided that `card.css` and `Card.jsx` are in the same folder, `Card.jsx` can import `card.css` using relative syntax. Relative syntax is when a file starts with `./`. Colocating CSS files next to component files is generally a good strategy for organization. 👍
+При условии, что `card.css` и `Card.jsx` находятся в одной папке, `Card.jsx` может импортировать `card.css`, используя относительный синтаксис. Относительный синтаксис - это когда файл начинается с `./`. Размещение CSS-файлов рядом с файлами компонентов обычно является хорошей стратегией организации. 👍
 
-By importing `"./card.css"`, we’ve imported classes `.grid`, `.grid.center`, `.screen`, `.card` as globally scoped CSS. This means any elements that use one or more of these class names will automatically inherit these styles. There are pros and cons to this approach, but if you are interested in automatically scoping classes to the importer, you can use [CSS Modules](css-modules).
+Импортируя `"./card.css"`, мы импортировали классы `.grid`, `.grid.center`, `.screen`, `.card` в качестве глобально масштабируемого CSS. Это означает, что все элементы, использующие одно или несколько имен этих классов, будут автоматически наследовать эти стили. В этом подходе есть свои плюсы и минусы, но если вы заинтересованы в автоматической передаче классов импортеру, вы можете использовать [CSS Modules](css-modules.md).
 
-For global CSS not specific to components, we recommend creating and maintaining `src/index.css`, imported by `src/index.jsx`. For component CSS, we recommend creating and maintaining `src/components/<component>.css`, imported by `src/components/<Component>.jsx`.
+Для глобального CSS, не относящегося к компонентам, мы рекомендуем создавать и поддерживать `src/index.css`, импортируемый `src/index.jsx`. Для компонентного CSS рекомендуется создавать и поддерживать `src/components/<component>.css`, импортируемый `src/components/<Component>.jsx`.
 
-For example:
+Например:
 
 ```
 src/
@@ -159,3 +185,7 @@ src/
     nav.css
     Nav.jsx (imports nav.css)
 ```
+
+## Ссылки
+
+-   [Styling in Solid](https://docs.solidjs.com/guides/how-to-guides/styling-in-solid)

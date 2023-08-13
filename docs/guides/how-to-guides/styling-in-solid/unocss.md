@@ -1,8 +1,12 @@
-<Title>UnoCSS</Title>
+---
+description: UnoCSS - это утилитарная CSS-библиотека, создаваемая по требованию пользователя. UnoCSS интегрируется с Solid как плагин Vite
+---
 
-UnoCSS is an on demand utility CSS library. UnoCSS integrates with Solid as a Vite plugin.
+# UnoCSS
 
-## Install Vite Plugin
+**UnoCSS** - это утилитарная CSS-библиотека, создаваемая по требованию пользователя. UnoCSS интегрируется с Solid как плагин Vite.
+
+## Установить плагин Vite
 
 ```sh
 npm i --save-dev unocss
@@ -10,29 +14,27 @@ pnpm i --dev unocss   # Using pnpm
 yarn add --dev unocss # Using yarn
 ```
 
-## Import Vite Plugin
+## Импорт плагина Vite
 
-Once installed, open `vite.config.js` or `vite.config.ts`. The starter Solid Vite configuration looks like this:
+После установки откройте файл `vite.config.js` или `vite.config.ts`. Стартовая конфигурация Solid Vite выглядит следующим образом:
 
-````js
-import { defineConfig } from "vite"
+```js
+import { defineConfig } from 'vite';
 
-import solidPlugin from "vite-plugin-solid"
+import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
-	plugins: [
-		solidPlugin(),
-	],
-	server: {
-		port: 3000,
-	},
-	build: {
-		target: "esnext",
-	},
-})
-````
+    plugins: [solidPlugin()],
+    server: {
+        port: 3000,
+    },
+    build: {
+        target: 'esnext',
+    },
+});
+```
 
-Now, `import unocssPlugin from "unocss/vite"` and invoke it as a function inside of plugins:
+Теперь `import unocssPlugin from "unocss/vite"` и вызываем его как функцию внутри плагинов:
 
 ```diff
 import { defineConfig } from "vite"
@@ -54,11 +56,11 @@ export default defineConfig({
 })
 ```
 
-Note that `unocssPlugin` should be ordered before `solidPlugin`. This prevents some edge cases such as `&` from being escaped as `&amp;`.
+Обратите внимание, что `unocssPlugin` должен быть упорядочен перед `solidPlugin`. Это предотвращает некоторые крайние случаи, такие как `&`, от экранирования как `&amp;`.
 
-## Import UnoCSS
+## Импорт UnoCSS
 
-Add `import "uno.css"` to `index.jsx` or `index.tsx`:
+Добавьте `import "uno.css"` в `index.jsx` или `index.tsx`:
 
 ```diff
 /* @refresh reload */
@@ -72,7 +74,7 @@ import App from './App';
 render(() => <App />, document.getElementById('root') as HTMLElement);
 ```
 
-You can also use the alias `import "virtual:uno.css"`; this is equivalent to `import "uno.css"`. `virtual` simply communicates that there is `uno.css` on the filesystem.
+Можно также использовать псевдоним `import "virtual:uno.css"`; это эквивалентно `import "uno.css"`. Псевдоним `virtual` просто сообщает, что в файловой системе есть файл `uno.css`.
 
 ```diff
 /* @refresh reload */
@@ -86,8 +88,10 @@ import App from './App';
 render(() => <App />, document.getElementById('root') as HTMLElement);
 ```
 
-{/* TODO: Add tip on dev tools and screenshot example */}
+## Поддержка
 
-## Support
+Для получения дополнительной поддержки см. руководство [UnoCSS/Vite integration guide](https://github.com/unocss/unocss/tree/main/packages/vite) или присоединяйтесь к [официальному обсуждению UnoCSS на Github](https://github.com/unocss/unocss/discussions) и Discord-каналу [Solid JS](https://discord.com/invite/solidjs). 👋
 
-For more support, see the [UnoCSS/Vite integration guide](https://github.com/unocss/unocss/tree/main/packages/vite) or join the [offical UnoCSS Github discussion](https://github.com/unocss/unocss/discussions) and [Solid JS](https://discord.com/invite/solidjs) Discord channel. 👋
+## Ссылки
+
+-   [UnoCSS](https://docs.solidjs.com/guides/how-to-guides/styling-in-solid/unocss)

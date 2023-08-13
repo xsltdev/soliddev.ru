@@ -1,8 +1,8 @@
-<Title>Sass</Title>
+# Sass
 
-Sass is a superset of CSS that makes authoring CSS easier. Sass integrates with Solid as an builtin Vite plugin.
+**Sass** - это супернабор CSS, который упрощает создание CSS. Sass интегрируется с Solid в качестве встроенного плагина Vite.
 
-## Install Sass
+## Установите Sass
 
 ```sh
 npm i --save-dev sass
@@ -10,11 +10,11 @@ pnpm i --dev sass   # using pnpm
 yarn add --dev sass # using yarn
 ```
 
-## Convert Filename Extensions
+## Преобразование расширений имен файлов
 
-Once installed, we simply need to change `.css` filename extensions to `.scss` or `.sass`. `.scss` filenames are a strict superset of CSS. `.sass` filenames are an alternate syntax for authoring Sasss that is syntatically more relaxed. Generally, `.scss` is recommended but Vite supports both.
+После установки нам просто необходимо изменить расширения имен файлов `.css` на `.scss` или `.sass`. Имена файлов `.scss` представляют собой строгий супернабор CSS. Имена файлов `.sass` - это альтернативный синтаксис для создания Sasss, который синтаксически более свободен. Как правило, рекомендуется использовать `.scss`, но Vite поддерживает оба варианта.
 
-To get started, simply convert `.css` filenames to `.scss` or `.sass` and import them:
+Для начала работы достаточно преобразовать имена файлов `.css` в `.scss` или `.sass` и импортировать их:
 
 ```diff
 // Card.scss
@@ -46,4 +46,8 @@ function Card() {
 }
 ```
 
-When we changed `.css` to `.scss` or `.sass`, Vite automatically recognized the these filenames and compiled Sass to CSS on demand. When building for production, all Sass files are converted to CSS and thus can be interpreted by the browser.
+Когда мы меняли `.css` на `.scss` или `.sass`, Vite автоматически распознавал эти имена файлов и компилировал Sass в CSS по требованию. При сборке для производства все файлы Sass преобразуются в CSS и, таким образом, могут быть интерпретированы браузером.
+
+## Ссылки
+
+-   [Sass](https://docs.solidjs.com/guides/how-to-guides/styling-in-solid/sass)

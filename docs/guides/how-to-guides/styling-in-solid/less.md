@@ -1,12 +1,16 @@
-<Title>Less</Title>
+---
+description: Давайте рассмотрим, как можно использовать LESS в приложениях Solid
+---
 
-LESS stands for Leaner CSS. LESS is a CSS preprocessor based on Javascript, LESS gives you the ability to make use of mixins and other programmatical tools. It helps in making your styling code cleaner and less redundant.
+# Less
 
-Let's take a look at how you can make use of LESS in your Solid apps
+LESS расшифровывается как Leaner CSS. **LESS** - это препроцессор CSS, основанный на Javascript. LESS дает возможность использовать миксины и другие программные инструменты. Это помогает сделать код стилей чище и менее избыточным.
 
-## Installing The Dependency
+Давайте рассмотрим, как можно использовать LESS в приложениях Solid.
 
-In order to make use of LESS files in your Solid app you'll need to install the dependency as a development dependency, like so
+## Установка зависимостей
+
+Для того чтобы использовать файлы LESS в приложении Solid, необходимо установить зависимость как зависимость разработки, как показано ниже:
 
 ```bash
 npm install --save-dev less
@@ -14,23 +18,23 @@ pnpm i --dev less           # Using pnpm
 yarn add --dev less         # Using yarn
 ```
 
-## Using LESS In Your App
+## Использование LESS в приложении
 
-Let's create a `.less` file in our `src` directory and name it `styles.less`
+Создадим файл `.less` в каталоге `src` и назовем его `styles.less`.
 
 ```less
 //styles.less
 
 .foo {
-  color: red;
+    color: red;
 }
 
 .bar {
-  background-color: blue;
+    background-color: blue;
 }
 ```
 
-Take note of how the basic syntax is very similar to that of CSS. If you would like to declare variables in LESS you can do so as you usually would, for example
+Обратите внимание на то, что основной синтаксис очень похож на синтаксис CSS. Если вы хотите объявить переменные в LESS, вы можете сделать это как обычно, например:
 
 ```less
 //styles.less
@@ -39,28 +43,32 @@ Take note of how the basic syntax is very similar to that of CSS. If you would l
 @plainblue: blue;
 
 .foo {
-  color: @plainred;
+    color: @plainred;
 }
 
 .bar {
-  background-color: @plainblue;
+    background-color: @plainblue;
 }
 ```
 
-Write your LESS styles like you would anywhere else. Let's change the file extension of the `styles.css` import to `.less`.
+Пишите стили LESS так же, как и в любом другом месте. Давайте изменим расширение файла импорта `styles.css` на `.less`.
 
-```jsx
+```js
 //component.jsx
 
-import "./styles.less";
+import './styles.less';
 
 function Component() {
-  return (
-    <>
-      <div class="foo bar">Hello, world!</div>
-    </>
-  );
+    return (
+        <>
+            <div class="foo bar">Hello, world!</div>
+        </>
+    );
 }
 ```
 
-By using `.less` as our styles file extension instead of `.css`, Vite (the build tool Solid uses) automatically recognized we are importing a LESS file and compiled LESS to CSS on demand.
+Используя в качестве расширения файла стилей `.less` вместо `.css`, Vite (инструмент для сборки Solid) автоматически распознает, что мы импортируем LESS-файл, и компилирует LESS в CSS по требованию.
+
+## Ссылки
+
+-   [Less](https://docs.solidjs.com/guides/how-to-guides/styling-in-solid/less)

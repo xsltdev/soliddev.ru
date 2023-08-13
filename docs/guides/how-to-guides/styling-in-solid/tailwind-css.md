@@ -1,8 +1,12 @@
-<Title>Tailwind CSS</Title>
+---
+description: Tailwind CSS - это утилитарная CSS-библиотека, создаваемая по запросу. Tailwind CSS интегрируется с Solid как встроенный плагин PostCSS
+---
 
-Tailwind CSS is an on demand utility CSS library. Tailwind CSS integrates with Solid as builtin PostCSS plugin.
+# Tailwind CSS
 
-## Install Tailwind CSS
+**Tailwind CSS** - это утилитарная CSS-библиотека, создаваемая по запросу. Tailwind CSS интегрируется с Solid как встроенный плагин PostCSS.
+
+## Установить Tailwind CSS
 
 ```sh
 # Install (choose one)
@@ -14,26 +18,26 @@ yarn add --dev tailwindcss postcss autoprefixer # Using yarn
 npx tailwindcss init -p
 ```
 
-## Create a configuration
+## Создание конфигурации
 
-Tailwind CSS is a configuration-based tool. Use the initialize command above or create `tailwind.config.js` at the root of your project directory. It should look something like this:
+Tailwind CSS - это инструмент, основанный на конфигурации. Используйте команду initialize, приведенную выше, или создайте `tailwind.config.js` в корне каталога вашего проекта. Он должен выглядеть примерно так:
 
 ```js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
 };
 ```
 
-Consult the offical docs for more information on configuration: [Tailwind Official Documentation](https://tailwindcss.com/docs/guides/solidjs).
+Более подробную информацию о конфигурации можно найти в официальной документации: [Tailwind Official Documentation](https://tailwindcss.com/docs/guides/solidjs).
 
-## Add Tailwind Directives
+## Добавление директив Tailwind
 
-Tailwind is composed of three layers: the base layer, component layer, and utilities layer. Add these lines of code to your `src/index.css` file:
+Tailwind состоит из трех слоев: базового слоя, слоя компонентов и слоя утилит. Добавьте эти строки кода в ваш файл `src/index.css`:
 
 ```diff
 # src/index.css
@@ -43,11 +47,11 @@ Tailwind is composed of three layers: the base layer, component layer, and utili
 + @tailwind utilities;
 ```
 
-This is a hint to PostCSS that we are using Tailwind and communicates to Tailwind which directives we are using and what their order is. Unless you know what you’re doing, you should probably not change this code. But you can still append custom CSS below these directives. Note that this file will be compiled as PostCSS.
+Это подсказка для PostCSS, что мы используем Tailwind, и передача Tailwind информации о том, какие директивы мы используем и каков их порядок. Если вы не знаете, что делаете, то, скорее всего, не стоит изменять этот код. Но вы все равно можете добавить пользовательский CSS ниже этих директив. Обратите внимание, что этот файл будет скомпилирован как PostCSS.
 
-## Import Tailwind CSS
+## Импорт Tailwind CSS
 
-Make sure that `index.css` is imported in your root `index.jsx` or `index.tsx` file. If it isn't, add `import "./index.css"` to `index.jsx` or `index.tsx`:
+Убедитесь, что `index.css` импортирован в ваш корневой файл `index.jsx` или `index.tsx`. Если это не так, добавьте `import "./index.css"` в `index.jsx` или `index.tsx`:
 
 ```diff
 # src/index.jsx
@@ -58,9 +62,9 @@ import { render } from 'solid-js/web'; import App from './App';
 render(() => <App />, document.getElementById('root') as HTMLElement);
 ```
 
-### Usage
+### Использование
 
-Now that we've got TailwindCSS setup we can get rid of the styling within the `Card.css` file or just get rid of the file entirely.
+Теперь, когда мы настроили TailwindCSS, мы можем избавиться от стилей в файле `Card.css` или просто избавиться от файла полностью.
 
 ```diff
 /* src/components/Card.css */
@@ -78,7 +82,7 @@ Now that we've got TailwindCSS setup we can get rid of the styling within the `C
 - }
 ```
 
-Don't forget to remove the `Card.css` import from any component that might have it imported and make use of the styling classes provided by TailwindCSS.
+Не забудьте удалить импорт `Card.css` из всех компонентов, в которые он может быть импортирован, и используйте классы стилей, предоставляемые TailwindCSS.
 
 ```diff
 /* src/components/Card.jsx */
@@ -96,6 +100,10 @@ function Card() {
 }
 ```
 
-## Support
+## Поддержка
 
-For more support, see the [Taiwind CSS/Vite integration guide](https://tailwindcss.com/docs/guides/vite) or join the [offical Tailwind CSS](https://discord.com/invite/7NF8GNe) and [Solid JS](https://discord.com/invite/solidjs) Discord channels. 👋
+Для получения дополнительной поддержки см. руководство [Taiwind CSS/Vite integration guide](https://tailwindcss.com/docs/guides/vite) или присоединяйтесь к [официальным каналам Tailwind CSS](https://discord.com/invite/7NF8GNe) и [Solid JS](https://discord.com/invite/solidjs) Discord. 👋
+
+## Ссылки
+
+-   [Tailwind CSS](https://docs.solidjs.com/guides/how-to-guides/styling-in-solid/tailwind-css)
