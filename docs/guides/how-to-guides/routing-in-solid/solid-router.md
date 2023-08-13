@@ -1,31 +1,28 @@
-import { Aside } from "~/components/configurable/Aside";
-import { CodeTabs } from "~/components/Tabs";
-import routeDataSnippetTS from './snippets/routedata-snippet-ts.mdx';
-import routeDataSnippetJS from './snippets/routedata-snippet-js.mdx';
-import dataFunctionSnippet1TS from './snippets/data-function-snippet1-ts.mdx';
-import dataFunctionSnippet1JS from './snippets/data-function-snippet1-js.mdx';
+---
+description: Solid Router - это простой и удобный в использовании универсальный маршрутизатор для приложений Solid. Он работает как на клиенте, так и на сервере
+---
 
-<Title>Solid Router</Title>
+# Solid Router
 
-In modern web development a router is a software component that is responsible for handling client requests and determining which component to render whether that be through server-side or client-side routing. Once a request is made on the client the router assesses the URL and decides which controller or server-side component should handle this request or be rendered.
+В современной веб-разработке маршрутизатор - это программный компонент, отвечающий за обработку клиентских запросов и определяющий, какой компонент следует отобразить, с помощью маршрутизации на стороне сервера или на стороне клиента. При поступлении запроса от клиента маршрутизатор оценивает URL и решает, какой контроллер или компонент на стороне сервера должен обработать этот запрос или быть отображен.
 
-Solid Router is a simple and easy to use universal router for Solid applications. It works both on the client and on the server. The routes are defined using a simple JSX syntax and can be nested. However, routes can also be passed as a configuration object.
+**Solid Router** - это простой и удобный в использовании универсальный маршрутизатор для приложений Solid. Он работает как на клиенте, так и на сервере. Маршруты задаются с помощью простого синтаксиса JSX и могут быть вложенными. Однако маршруты можно передавать и в виде объекта конфигурации.
 
-Solid Router has a lot of cool features and one of those is its ability to support nested routing which allows it to change a particular part of a component instead of replacing it completely.
+Solid Router обладает множеством замечательных возможностей, одной из которых является поддержка вложенной маршрутизации, позволяющей изменять определенную часть компонента, а не заменять его полностью.
 
-It supports all of Solid's SSR methods and has Solid's transitions baked in, so use it freely with suspense, resources, and lazy components. Solid Router also allows you to define a data function that loads parallel to the routes ([render-as-you-fetch](https://epicreact.dev/render-as-you-fetch/)).
+Он поддерживает все методы Solid SSR и имеет встроенные переходы Solid, поэтому его можно свободно использовать с суспензиями, ресурсами и "ленивыми" компонентами. Solid Router также позволяет определить функцию данных, которая загружается параллельно с маршрутами ([render-as-you-fetch](https://epicreact.dev/render-as-you-fetch/)).
 
-<Aside>
-  For more information on Solid Router, please visit the{" "}<a href="https://github.com/solidjs/solid-router#getting-started">Solid Router GitHub page</a>.
-</Aside>
+!!!note ""
 
-## Getting Started
+    Дополнительную информацию о Solid Router можно найти на [Solid Router GitHub page](https://github.com/solidjs/solid-router#getting-started).
 
-In order to get started with Solid Router you will need to install it into your project since it is not installed by default. Once that's done we will need to setup the router and define some routes.
+## Начало работы
 
-#### Installation
+Для того чтобы начать работу с Solid Router, необходимо установить его в проект, поскольку по умолчанию он не установлен. После этого необходимо настроить маршрутизатор и определить некоторые маршруты.
 
-Let's jump into installing the router. To do this we will need to install the router using NPM, Yarn, or your favorite package manager.
+### Установка
+
+Давайте перейдем к установке маршрутизатора. Для этого нам нужно установить маршрутизатор с помощью NPM, Yarn или вашего любимого менеджера пакетов.
 
 ```bash
 npm install @solidjs/router
@@ -35,483 +32,624 @@ yarn add @solidjs/router
 pnpm i @solidjs/router
 ```
 
-#### Setup
+### Настройка
 
-Now that we have the router installed we can setup the router and define some routes. Let's start by importing the router into our root `Index` file.
+Теперь, когда маршрутизатор установлен, мы можем его настроить и определить некоторые маршруты. Начнем с импорта маршрутизатора в наш корневой файл `Index`.
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import { Router } from "@solidjs/router"; // 👈 Import the router
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import { Router } from '@solidjs/router'; // 👈 Import the router
 
 render(
-  () => (
-    <Router> {/* 👈 Wrap the router around the app */}
-      <App />
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            {' '}
+            {/* 👈 Wrap the router around the app */}
+            <App />
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-Now that we have the router setup we can define some routes. Let's start by making our `App` component our home page or `/` route.
+Теперь, когда маршрутизатор настроен, мы можем определить некоторые маршруты. Начнем с того, что сделаем компонент `App` нашей домашней страницей или маршрутом `/`.
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import { Router, Route, Routes } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import { Router, Route, Routes } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} /> {/* 👈 Define the home page route */}
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />{' '}
+                {/* 👈 Define the home page route */}
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-In the code above we have imported the `Route` and `Routes` component from Solid Router and defined a route for the home page. The `Route` component takes a `path` prop which is the URL path that the route will match. The `component` prop is the component that will be rendered when the route is matched. The `Routes` component is used to group routes together and is required for nested routes. This component is used to show where the routes should be rendered.
+В приведенном выше коде мы импортировали компоненты `Route` и `Routes` из Solid Router и определили маршрут для главной страницы. Компонент `Route` принимает свойство `path`, которое представляет собой путь URL, которому будет соответствовать маршрут. Свойство `component` - это компонент, который будет отображаться при совпадении с маршрутом. Компонент `Routes` используется для группировки маршрутов и необходим для вложенных маршрутов. Этот компонент используется для того, чтобы показать, где должны быть отображены маршруты.
 
-You can add multiple routes under the `Routes` component and they will be rendered whenever the URL matches the route's path. Let's add a route for the `/about` and `/contact` pages.
+Вы можете добавить несколько маршрутов в компонент `Routes`, и они будут отображаться каждый раз, когда URL-адрес будет соответствовать пути маршрута. Добавим маршрут для страниц `/about` и `/contact`.
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import Contact from "./Contact";
-import { Router, Route, Routes } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import Contact from './Contact';
+import { Router, Route, Routes } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} /> {/* 👈 Define the about page route */}
-        <Route path="/contact" component={Contact} /> {/* 👈 Define the contact page route */}
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route
+                    path="/about"
+                    component={About}
+                /> {/* 👈 Define the about page route */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />{' '}
+                {/* 👈 Define the contact page route */}
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-__Note:__ If you would like to lazy load your components so that they are only loaded when the route is matched you can use the `lazy` function from `solid-js` to lazy load your components.
+!!!note "Примечание"
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import { Router, Route, Routes } from "@solidjs/router";
-import { lazy } from "solid-js";
+    Если вы хотите лениво загружать свои компоненты, чтобы они загружались только при совпадении маршрута, вы можете использовать функцию `lazy` из `solid-js` для ленивой загрузки своих компонентов.
 
-const About = lazy(() => import("./About"));
-const Contact = lazy(() => import("./Contact"));
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import { Router, Route, Routes } from '@solidjs/router';
+import { lazy } from 'solid-js';
+
+const About = lazy(() => import('./About'));
+const Contact = lazy(() => import('./Contact'));
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} /> {/* 👈 Define the about page route */}
-        <Route path="/contact" component={Contact} /> {/* 👈 Define the contact page route */}
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route
+                    path="/about"
+                    component={About}
+                /> {/* 👈 Define the about page route */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />{' '}
+                {/* 👈 Define the contact page route */}
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-Now that we have our routes defined we can navigate to the `/about` and `/contact` pages. Let's add some links to our `App` component so we can navigate to the other pages. You can add links to your routes using the `A` component from Solid Router. Let's add links to the `/about` and `/contact` pages.
+Теперь, когда определены маршруты, мы можем переходить на страницы `/about` и `/contact`. Давайте добавим несколько ссылок в компонент `App`, чтобы можно было переходить на другие страницы. Для добавления ссылок в маршруты можно использовать компонент `A` из Solid Router. Добавим ссылки на страницы `/about` и `/contact`.
 
-```jsx
-import styles from "./App.module.css";
-import { A } from "@solidjs/router"; // 👈 Import the A component
+```js
+import styles from './App.module.css';
+import { A } from '@solidjs/router'; // 👈 Import the A component
 
 const App = () => {
-  return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-        <A href="/about">About</A> {/* 👈 Add a link to the about page */}
-        <A href="/contact">Contact</A> {/* 👈 Add a link to the contact page */}
-      </header>
-    </div>
-  );
+    return (
+        <div class={styles.App}>
+            <header class={styles.header}>
+                <p>
+                    Edit <code>src/App.tsx</code> and save
+                    to reload.
+                </p>
+                <a
+                    class={styles.link}
+                    href="https://github.com/solidjs/solid"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Learn Solid
+                </a>
+                <A href="/about">About</A>{' '}
+                {/* 👈 Add a link to the about page */}
+                <A href="/contact">Contact</A> {/* 👈 Add a link to the contact page */}
+            </header>
+        </div>
+    );
 };
 
 export default App;
 ```
 
-## Creating links to other routes
+## Создание ссылок на другие маршруты
 
-#### The `A` component
+### Компонент `A`
 
-The `A` component is used to create links to other routes in your application. The `A` component also takes in the `href` prop which is the URL path that the link will navigate to. The `A` component also takes in the `activeClass` prop which is the class that will be applied to the link when the current route path matches that of the link's path.
+Компонент `A` используется для создания ссылок на другие маршруты в вашем приложении. Компонент `A` также принимает свойство `href`, которое представляет собой URL-путь, по которому будет осуществляться переход по ссылке. Компонент `A` также принимает свойство `activeClass`, которое представляет собой класс, который будет применен к ссылке, когда текущий путь маршрута совпадет с путем ссылки.
 
-Here's a quick example of how a base Solid application with Solid Router might look, and how to use the `A` component.
+Вот краткий пример того, как может выглядеть базовое приложение Solid с Solid Router и как использовать компонент `A`.
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import Contact from "./Contact";
-import { Router, Route, Routes, A } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import Contact from './Contact';
+import { Router, Route, Routes, A } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/contact" component={Contact} />
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route path="/about" component={About} />
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-Here's an example of how to make use of the `A` component and its `activeClass` prop.
+Приведем пример использования компонента `A` и его свойства `activeClass`.
 
-```jsx
-import styles from "./App.css";
-import { A } from "@solidjs/router";
+```js
+import styles from './App.css';
+import { A } from '@solidjs/router';
 
 const App = () => {
-  return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <A
-          class={styles.link}
-          href="/about"
-          activeClass="underlined" // 👈 Add the active class
-        >
-          About
-        </A>
-        <A
-          class={styles.link}
-          href="/contact"
-          activeClass="underlined" // 👈 Add the active class
-        >
-          Contact
-        </A>
-      </header>
-    </div>
-  );
+    return (
+        <div class={styles.App}>
+            <header class={styles.header}>
+                <p>
+                    Edit <code>src/App.tsx</code> and save
+                    to reload.
+                </p>
+                <A
+                    class={styles.link}
+                    href="/about"
+                    activeClass="underlined" // 👈 Add the active class
+                >
+                    About
+                </A>
+                <A
+                    class={styles.link}
+                    href="/contact"
+                    activeClass="underlined" // 👈 Add the active class
+                >
+                    Contact
+                </A>
+            </header>
+        </div>
+    );
 };
 
 export default App;
 ```
 
-**Note:** Be careful when using the **`activeClass`** prop, because by default matching includes routes that are descendants or otherwise nested within the matched path (e.g. `/about` will match `/about/me` and `/about/me/you`). However, you can use the **`end`** boolean prop to match on the exact path (e.g. `/about` will only match `/about`). The **`end`** prop is particularly useful for links to the root route `/` which would match all paths.
+!!!note "Примечание"
 
-Here's a list of all the props that the `A` component takes in.
+    Будьте внимательны при использовании свойства **`activeClass`**, поскольку по умолчанию в соответствие включаются маршруты, являющиеся потомками или иным образом вложенными в совпадающий путь (например, `/about` будет соответствовать `/about/me` и `/about/me/you`). Однако можно использовать булево свойство **``end`** для точного соответствия пути (например, `/about` будет соответствовать только `/about`). Свойство **`end`** особенно полезно для ссылок на корневой маршрут `/`, который будет соответствовать всем путям.
 
-| Prop            | Type      | Description                                                                                                                                                                              |
-| --------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `href`          | `string`  | The path of the route to navigate to. This will be resolved relative to the route that the link is in, but you can preface it with / to refer back to the root.                          |
-| `activeClass`   | `string`  | The class that will be applied to the link when the current route path matches that of the link's path.                                                                                  |
-| `end`           | `boolean` | If `true`, only considers the link to be active when the curent location matches the `href` exactly; if `false`, check if the current location starts with `href`                        |
-| `noScroll`      | `boolean` | If true, turn off the default behavior of scrolling to the top of the new page                                                                                                           |
-| `replace`       | `boolean` | If true, don't add a new entry to the browser history. (By default, the new page will be added to the browser history, so pressing the back button will take you to the previous route.) |
-| `state`         | `unknown` | [Push this value](https://developer.mozilla.org/en-US/docs/Web/API/History/pushState) to the history stack when navigating                                                               |
-| `inactiveClass` | `string`  | The class to show when the link is inactive (when the current location doesn't match the link)                                                                                           |
+Вот список всех свойств, которые принимает компонент `A`.
 
-#### The `Navigate` component
+| Свойства        | Тип       | Описание                                                                                                                                                                                                |
+| --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `href`          | `string`  | Путь маршрута, на который нужно перейти. Он будет разрешен относительно маршрута, в котором находится ссылка, но перед ним можно поставить `/`, чтобы вернуться к корню.                                |
+| `activeClass`   | `string`  | Класс, который будет применяться к ссылке, когда текущий путь маршрута совпадает с путем ссылки.                                                                                                        |
+| `end`           | `boolean` | Если `true`, то ссылка считается активной только тогда, когда текущее местоположение точно совпадает с `href`; если `false`, то проверяется, начинается ли текущее местоположение с `href`              |
+| `noScroll`      | `boolean` | Если `true`, то отключается стандартное поведение прокрутки к верху новой страницы                                                                                                                      |
+| `replace`       | `boolean` | Если `true`, то не добавлять новую запись в историю браузера. (По умолчанию новая страница будет добавлена в историю браузера, поэтому нажатие кнопки назад приведет к переходу на предыдущий маршрут). |
+| `state`         | `unknown` | [Вставить это значение](https://developer.mozilla.org/ru/docs/Web/API/History/pushState) в стек истории при навигации                                                                                   |
+| `inactiveClass` | `string`  | Класс, который должен отображаться, когда ссылка неактивна (когда текущее местоположение не соответствует ссылке)                                                                                       |
 
-Solid Router provides a `Navigate` component that works similarly to `A`, but it will immediately navigate to the provided path as soon as the component is rendered. It also uses the `href` prop, but you have the additional option of passing a function to `href` that returns a path to navigate to:
+### Компонент `Navigate`
 
-```jsx
-function getPath ({navigate, location}) {
-  //navigate is the result of calling useNavigate(); location is the result of calling useLocation(). 
-  //You can use those to dynamically determine a path to navigate to
-  return "/some-path";
+Solid Router предоставляет компонент `Navigate`, который работает аналогично компоненту `A`, но сразу после отображения компонента осуществляет переход по указанному пути. Он также использует свойство `href`, но у вас есть дополнительная возможность передать в `href` функцию, возвращающую путь для перехода:
+
+```js
+function getPath({ navigate, location }) {
+    //navigate is the result of calling useNavigate(); location is the result of calling useLocation().
+    //You can use those to dynamically determine a path to navigate to
+    return '/some-path';
 }
 
 //Navigating to /redirect will redirect you to the result of getPath
-<Route path="/redirect" element={<Navigate href={getPath}/>}/>
+<Route
+    path="/redirect"
+    element={<Navigate href={getPath} />}
+/>;
 ```
 
-## Dynamic Routes
+## Динамические маршруты
 
-If you don't know the path ahead of time, you might want to treat part of the path as a flexible parameter that is passed on to the component. For instance if you would like to navigate to a blog post with a particular ID you might want to use a dynamic route.
+Если путь не известен заранее, можно рассматривать часть пути как гибкий параметр, который передается компоненту. Например, если необходимо перейти к записи блога с определенным идентификатором, можно использовать динамический маршрут.
 
-Here's a quick example of how to create a dynamic route.
+Вот краткий пример создания динамического маршрута.
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import User from "./User";
-import Contact from "./Contact";
-import { Router, Route, Routes, A } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import User from './User';
+import Contact from './Contact';
+import { Router, Route, Routes, A } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/user/:id" component={User} /> {/* 👈 Add a dynamic route */}
-        <Route path="/contact" component={Contact} />
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route path="/about" component={About} />
+                <Route
+                    path="/user/:id"
+                    component={User}
+                />{' '}
+                {/* 👈 Add a dynamic route */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-In the code snippet above we added a dynamic route named `user` that takes in a `:id` parameter. The `:id` parameter will be passed to the `User` component through the `useParams` primitive. More on Solid Router primitives later.
+В приведенном выше фрагменте кода мы добавили динамический маршрут с именем `user`, который принимает параметр `:id`. Параметр `:id` будет передаваться компоненту `User` через примитив `useParams`. Подробнее о примитивах Solid Router мы поговорим позже.
 
-Here's an example of how to use the dynamic route in the `User` component.
+Приведем пример использования динамического маршрута в компоненте `User`.
 
-```jsx
-import styles from "./User.module.css";
-import { useParams } from "@solidjs/router";
+```js
+import styles from './User.module.css';
+import { useParams } from '@solidjs/router';
 
 const User = () => {
-  const params = useParams(); // 👈 Get the dynamic route parameters
+    const params = useParams(); // 👈 Get the dynamic route parameters
 
-  return (
-    <div class={styles.User}>
-      <header class={styles.header}>
-        <p>
-          Edit <code>src/User.tsx</code> and save to reload.
-        </p>
-        <A class={styles.link} href="/">
-          Home
-        </A>
-        <A class={styles.link} href="/about">
-          About
-        </A>
-        <A class={styles.link} href="/contact">
-          Contact
-        </A>
-        <p>
-          This is the user with the id of <code>{params.id}</code> {/* 👈 Access the dynamic route parameter */}
-        </p>
-      </header>
-    </div>
-  );
+    return (
+        <div class={styles.User}>
+            <header class={styles.header}>
+                <p>
+                    Edit <code>src/User.tsx</code> and save
+                    to reload.
+                </p>
+                <A class={styles.link} href="/">
+                    Home
+                </A>
+                <A class={styles.link} href="/about">
+                    About
+                </A>
+                <A class={styles.link} href="/contact">
+                    Contact
+                </A>
+                <p>
+                    This is the user with the id of{' '}
+                    <code>{params.id}</code>{' '}
+                    {/* 👈 Access the dynamic route parameter */}
+                </p>
+            </header>
+        </div>
+    );
 };
 
 export default User;
 ```
 
-You can make use of the `params` object to access the dynamic route parameters. In the example above we accessed the `id` parameter. You can make use of the parameters even in primitives like `createResource` and `createSignal`:
+Для доступа к динамическим параметрам маршрута можно использовать объект `params`. В приведенном примере мы получили доступ к параметру `id`. Параметры можно использовать даже в таких примитивах, как `createResource` и `createSignal`:
 
-Here's an example of what this might look like in a `createResource` primitive:
+Вот пример того, как это может выглядеть в примитиве `createResource`:
 
-```jsx
-import { createResource, createSignal } from "solid-js";
-import { useParams } from "@solidjs/router";
+```js
+import { createResource, createSignal } from 'solid-js';
+import { useParams } from '@solidjs/router';
 
 // 👇 This is an asynchronous function that fetches a user from the jsonplaceholder API
 async function fetchUser(id) {
-  const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
-  return response.json();
+    const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+    return response.json();
 }
 
 const User = () => {
-  const params = useParams();
-  const [data] = createResource(params.id,fetchUser) // 👈 Pass the dynamic route parameter to the createResource primitive
+    const params = useParams();
+    const [data] = createResource(params.id, fetchUser); // 👈 Pass the dynamic route parameter to the createResource primitive
 
-  return (
-    <div>
-      {data.loading ? ( // 👈 Use the loading property to show a loading indicator
-        <p>Loading...</p>
-      ) : (
+    return (
         <div>
-          <p>Name: {data().name}</p> {/* 👈 Access the data returned from the fetchUser function */}
-          <p>Email: {data().email}</p>
-          <p>Phone: {data().phone}</p>
+            {data.loading ? ( // 👈 Use the loading property to show a loading indicator
+                <p>Loading...</p>
+            ) : (
+                <div>
+                    <p>Name: {data().name}</p>{' '}
+                    {/* 👈 Access the data returned from the fetchUser function */}
+                    <p>Email: {data().email}</p>
+                    <p>Phone: {data().phone}</p>
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default User;
 ```
 
-In the above code snippet we passed the `id` parameter to the `createResource` primitive. This means that the `fetchUser` function will be called every time the `id` parameter changes. This is useful if you want to fetch new user data every time the `id` parameter changes.
+В приведенном выше фрагменте кода мы передали параметр `id` примитиву `createResource`. Это означает, что функция `fetchUser` будет вызываться каждый раз при изменении параметра `id`. Это удобно, если необходимо получать новые данные о пользователе при каждом изменении параметра `id`.
 
-#### Optional Parameters
+### Необязательные параметры
 
-You can also make a parameter optional by adding a `?` after the parameter name. For example, if you want to make the `id` parameter optional you can do the following:
+Вы также можете сделать параметр необязательным, добавив символ `?` после имени параметра. Например, если вы хотите сделать параметр `id` необязательным, то сделайте следующее:
 
 ```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import User from "./User";
-import Contact from "./Contact";
-import { Router, Route, Routes, A } from "@solidjs/router";
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import User from './User';
+import Contact from './Contact';
+import { Router, Route, Routes, A } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/user/:id?" component={User} /> {/* 👈 Make the id parameter optional */}
-        <Route path="/contact" component={Contact} />
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route path="/about" component={About} />
+                <Route
+                    path="/user/:id?"
+                    component={User}
+                />{' '}
+                {/* 👈 Make the id parameter optional */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-The optional `/user/:id?` route will match `/user` and `/user/123` but not `/user/123/comment`.
+Необязательный маршрут `/user/:id?` будет соответствовать `/user` и `/user/123`, но не `/user/123/comment`.
 
-#### Wildcard Routes/Parameters
+### Маршруты/параметры диких символов
 
-Wildcard routes are routes that match any descendant path within a given path.
+Маршруты с подстановочными знаками - это маршруты, которые соответствуют любому пути-потомку в пределах заданного пути.
 
-You can also make a parameter a wildcard by adding a `*` after the parameter name. For example, if you want to make the `id` parameter a wildcard you can do the following:
+Параметр также можно сделать подстановочным, добавив `*` после имени параметра. Например, если необходимо сделать параметр `id` подстановочным, то можно сделать следующее:
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import User from "./User";
-import Contact from "./Contact";
-import { Router, Route, Routes, A } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import User from './User';
+import Contact from './Contact';
+import { Router, Route, Routes, A } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/user/*" component={User} /> {/* 👈 Make the id parameter a wildcard */}
-        <Route path="/contact" component={Contact} />
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route path="/about" component={About} />
+                <Route
+                    path="/user/*"
+                    component={User}
+                />{' '}
+                {/* 👈 Make the id parameter a wildcard */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-The wildcard `/user/*` route will match `/user`, `/user/123`, `/user/123/comment`, `/user/123/comment/456`, etc.
+Маршрут с подстановочным символом `/user/*` будет соответствовать маршрутам `/user`, `/user/123`, `/user/123/comment`, `/user/123/comment/456` и т.д.
 
-If you would like to access the wildcard parameter you can name it:
+Если вы хотите получить доступ к параметру wildcard, вы можете назвать его:
 
-```jsx
-import { render } from "solid-js/web";
-import App from "./App";
-import About from "./About";
-import User from "./User";
-import Contact from "./Contact";
-import { Router, Route, Routes, A } from "@solidjs/router";
+```js
+import { render } from 'solid-js/web';
+import App from './App';
+import About from './About';
+import User from './User';
+import Contact from './Contact';
+import { Router, Route, Routes, A } from '@solidjs/router';
 
 render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-        <Route path="/about" component={About} />
-        <Route path="/user/*id" component={User} /> {/* 👈 Name the wildcard parameter */}
-        <Route path="/contact" component={Contact} />
-      </Routes>
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <Routes>
+                <Route path="/" component={App} />
+                <Route path="/about" component={About} />
+                <Route
+                    path="/user/*id"
+                    component={User}
+                />{' '}
+                {/* 👈 Name the wildcard parameter */}
+                <Route
+                    path="/contact"
+                    component={Contact}
+                />
+            </Routes>
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-You can access the wildcard parameter the same way you would access a dynamic route parameter:
+Доступ к параметру `wildcard` осуществляется так же, как и к параметру динамического маршрута:
 
 ```jsx
-import styles from "./User.module.css";
-import { useParams } from "@solidjs/router";
+import styles from './User.module.css';
+import { useParams } from '@solidjs/router';
 
 const User = () => {
-  const params = useParams(); // 👈 Get the wildcard route parameters
+    const params = useParams(); // 👈 Get the wildcard route parameters
 
-  return (
-    <div class={styles.User}>
-      <header class={styles.header}>
-        <p>
-          Edit <code>src/User.tsx</code> and save to reload.
-        </p>
-        <A class={styles.link} href="/">
-          Home
-        </A>
-        <A class={styles.link} href="/about">
-          About
-        </A>
-        <A class={styles.link} href="/contact">
-          Contact
-        </A>
-        <p>
-          This is the wildcard parameter <code>{params.id}</code> {/* 👈 Access the wildcard parameter */}
-        </p>
-      </header>
-    </div>
-  );
+    return (
+        <div class={styles.User}>
+            <header class={styles.header}>
+                <p>
+                    Edit <code>src/User.tsx</code> and save
+                    to reload.
+                </p>
+                <A class={styles.link} href="/">
+                    Home
+                </A>
+                <A class={styles.link} href="/about">
+                    About
+                </A>
+                <A class={styles.link} href="/contact">
+                    Contact
+                </A>
+                <p>
+                    This is the wildcard parameter{' '}
+                    <code>{params.id}</code>{' '}
+                    {/* 👈 Access the wildcard parameter */}
+                </p>
+            </header>
+        </div>
+    );
 };
 
 export default User;
 ```
 
-__Note:__ The wildcard token `*` must be the last token in the route path. For instance `/user/*id` is valid but `/user/id*` and `/user/*id/foo` is not.
+!!!note "Примечание"
 
-#### Multiple Paths
+    Токен `*` должен быть последним в пути маршрута. Например, `/user/*id` является допустимым, а `/user/id*` и `/user/*id/foo` - нет.
 
-Routes also support defining multiple paths using an array. This allows a route to remain mounted and not rerender when switching between two or more locations that it matches:
+### Множественные пути
 
-```jsx
+Маршруты также поддерживают определение нескольких путей с помощью массива. Это позволяет маршруту оставаться смонтированным и не перерисовываться при переключении между двумя или более местами, которым он соответствует:
+
+```js
 //Navigating from login to register does not cause the Login component to re-render
-<Route path={["login", "register"]} component={Login}/>
+<Route path={['login', 'register']} component={Login} />
 ```
 
-## Data Functions
+## Функции данных {#data-functions}
 
-In the previous examples, the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data parallel to loading the route, so we can use the data as soon as possible.
+В предыдущих примерах компонент User загружается в ленивом режиме, а затем происходит выборка данных. С помощью функций данных маршрута мы можем начать получать данные параллельно с загрузкой маршрута, чтобы использовать их как можно быстрее.
 
-To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component.
+Для этого создайте функцию, которая получает и возвращает данные с помощью `createResource`. Затем передайте эту функцию в свойство `data` компонента `Route`.
 
-<CodeTabs
-  js={[{name: "example.jsx", component: dataFunctionSnippet1JS}]}
-  ts={[{name: "example.tsx", component: dataFunctionSnippet1TS}]}
-/>
+=== "example.jsx"
 
-The `data` function will be called once the route is loaded and the result can be accessed by calling `useRouteData` in the route component.
+    ```js
+    import { lazy } from 'solid-js';
+    import { Route } from '@solidjs/router';
+    import User from './pages/users/[id].js';
+    import { fetchUser } from './fetchUser'; // Import the your fetchUser function
 
-<CodeTabs js={[{name:"/pages/users/[id].jsx", component: routeDataSnippetJS}]} ts={[{name: "/pages/users/[id].tsx", component: routeDataSnippetTS}]}/>
+    const User = lazy(() => import('./pages/users/[id].js'));
 
-As the data function only has one argument which is an object that contains route information such as 
+    //Data function
+    function UserData({ params, location, navigate, data }) {
+    	const [user] = createResource(
+    		() => params.id,
+    		fetchUser
+    	); // 👈 Pass the id parameter to the fetchUser function
+    	return user;
+    }
 
-| Key | Type | Description |
-| --- | --- | --- |
-| `params` | object | The route parameters (same value as calling useParams() inside the route component) |
-| `location` | `{ pathname, search, hash, query, state, key}` | An object that you can use to get more information about the path (corresponds to [useLocation()](#uselocation)) |
-| `navigate` | `(to: string, options?: NavigateOptions) => void` | A function that you can call to navigate to a different route instead (corresponds to [useNavigate()](#usenavigation)) |
-| `data` | unknown | The data returned by the parent's data function, if any. (Data will pass through any intermediate nesting.) |
+    //Pass it in the route definition
+    <Route
+    	path="/users/:id"
+    	component={User}
+    	data={UserData}
+    />;
+    ```
 
-A common pattern is to export the data function that corresponds to a route in a dedicated `route.data.js|ts` file. This way, the data function can be imported without loading anything else.
+=== "example.tsx"
 
-```diff 
+    ```ts
+    import { lazy } from 'solid-js';
+    import { Route } from '@solidjs/router';
+    import User from './pages/users/[id].ts';
+    import { fetchUser } from './fetchUser'; // Import the your fetchUser function
+
+    const User = lazy(() => import('./pages/users/[id].ts'));
+
+    //Data function
+    function UserData({
+    	params,
+    	location,
+    	navigate,
+    	data,
+    }: RouteDataFuncArgs) {
+    	const [user] = createResource(
+    		() => params.id,
+    		fetchUser
+    	); // 👈 Pass the id parameter to the fetchUser function
+    	return user;
+    }
+
+    //Pass it in the route definition
+    <Route
+    	path="/users/:id"
+    	component={User}
+    	data={UserData}
+    />;
+    ```
+
+Функция `data` будет вызвана после загрузки маршрута, а доступ к результату можно получить, вызвав `useRouteData` в компоненте маршрута.
+
+=== "/pages/users/[id].jsx"
+
+    ```js
+    import { useRouteData } from '@solidjs/router';
+
+    const user = useRouteData();
+
+    return <h1>{user().name}</h1>;
+    ```
+
+=== "/pages/users/[id].tsx"
+
+    ```ts
+    import { useRouteData } from '@solidjs/router';
+
+    const user = useRouteData<RouteDataFunctionType>();
+
+    return <h1>{user().name}</h1>;
+    ```
+
+Поскольку функция data имеет только один аргумент, которым является объект, содержащий информацию о маршруте, например
+
+| Ключ       | Тип                                               | Описание                                                                                                                             |
+| ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `params`   | object                                            | Параметры маршрута (то же значение, что и при вызове функции useParams() внутри компонента маршрута)                                 |
+| `location` | `{ pathname, search, hash, query, state, key}`    | Объект, который можно использовать для получения дополнительной информации о пути (соответствует [useLocation()](#uselocation))      |
+| `navigate` | `(to: string, options?: NavigateOptions) => void` | Функция, которую можно вызвать для перехода к другому маршруту (соответствует [useNavigate()](#usenavigation))                       |
+| `data`     | unknown                                           | Данные, возвращаемые родительской функцией data, если таковая имеется. (Данные будут проходить через все промежуточные вложенности.) |
+
+Общим шаблоном является экспорт функции данных, соответствующей маршруту, в специальный файл `route.data.js|ts`. Таким образом, функция данных может быть импортирована без загрузки чего-либо еще.
+
+```diff
   import { lazy } from "solid-js";
   import { Route } from "@solidjs/router";
-- import { fetchUser } ... 
+- import { fetchUser } ...
 + import UserData from "./pages/users/[id].data.js";
   const User = lazy(() => import("/pages/users/[id].js"));
 
@@ -519,29 +657,31 @@ A common pattern is to export the data function that corresponds to a route in a
   <Route path="/users/:id" component={User} data={UserData} />;
 ```
 
-There's no need for the fetchUser function to be imported anymore since it is no longer being used here but in the `[id].data.js` file.
+Импортировать функцию fetchUser больше не нужно, поскольку она используется не здесь, а в файле `[id].data.js`.
 
-## Nested Routes
+## Вложенные маршруты
 
-Nested routes are another way of defining your routes. They are useful when you have a lot of routes and want to group them together. They also allow you to define a layout component that will be used for all the nested routes.
+Вложенные маршруты - это еще один способ определения маршрутов. Они полезны, когда у вас много маршрутов и вы хотите сгруппировать их вместе. Они также позволяют определить компонент макета, который будет использоваться для всех вложенных маршрутов.
 
-Here's a quick code example showing the difference between normal route definitions and nested route definitions:
+Приведем небольшой пример кода, показывающий разницу между обычными и вложенными определениями маршрутов:
 
-```jsx
+```js
 <Route path="/users/:id" component={User} />  {/*// Normal route definition */}
 ```
 
-```jsx
+---
+
+```js
 <Routes path="/users">
   <Route path="/:id" component={User} /> {/*// Nested route definition */}
 </Route>
 ```
 
-`/users/:id` renders the `<User/>` component, and `/users/` is an empty route.
+`/users/:id` отображает компонент `<User/>`, а `/users/` - пустой маршрут.
 
-Only leaf Route nodes (innermost `Route` components) are given a route. If you want to make the parent its own route, you have to specify it separately:
+Маршрут задается только для листовых узлов Route (внутренних компонентов `Route`). Если вы хотите сделать родительским свой собственный маршрут, то его необходимо указать отдельно:
 
-```jsx
+```js
 //This won't work the way you'd expect
 <Route path="/users" component={Users}>
   <Route path="/:id" component={User} />
@@ -558,124 +698,157 @@ Only leaf Route nodes (innermost `Route` components) are given a route. If you w
 </Route>
 ```
 
-The first Nested Route definition will not work as you would expect it to because it works in a completely different way which makes use of an `<Outlet/>` component. The `<Outlet/>` component is used to render the child routes of a parent route. The `<Outlet/>` component is only rendered when the parent route is active. This means that the `<User/>` component will only be rendered when the `/users/:id` route is active. Here's what that looks like:
+Первое определение Nested Route не будет работать так, как вы ожидаете, поскольку оно работает совершенно по-другому, используя компонент `<Outlet/>`. Компонент `<Outlet/>` используется для отображения дочерних маршрутов родительского маршрута. Компонент `<Outlet/>` отображается только тогда, когда активен родительский маршрут. Это означает, что компонент `<User/>` будет отображаться только при активном маршруте `/users/:id`. Вот как это выглядит:
 
-```jsx
+```js
+import { Outlet } from '@solidjs/router';
 
-import { Outlet } from "@solidjs/router";
-
-function PageWrapper () {
-  return <div>
-    <h1> We love our users! </h1>
-    <Outlet/>
-    <A href="/">Back Home</A>
-  </div>
+function PageWrapper() {
+    return (
+        <div>
+            <h1> We love our users! </h1>
+            <Outlet />
+            <A href="/">Back Home</A>
+        </div>
+    );
 }
 
 <Route path="/users" component={PageWrapper}>
-  <Route path="/" component={Users}/>
-  <Route path="/:id" component={User} />
+    <Route path="/" component={Users} />
+    <Route path="/:id" component={User} />
+</Route>;
+```
+
+Конфигурация маршрутов остается прежней, но теперь элементы маршрута будут появляться внутри родительского элемента, в котором был объявлен `<Outlet/>`.
+
+Вкладывать элементы можно до бесконечности - только помните, что только листовые узлы станут собственными маршрутами. В данном примере создан только один маршрут `/layer1/layer2`, и он отображается в виде трех вложенных div'ов.
+
+```js
+<Route
+    path="/"
+    element={
+        <div>
+            Onion starts here <Outlet />
+        </div>
+    }
+>
+    <Route
+        path="layer1"
+        element={
+            <div>
+                Another layer <Outlet />
+            </div>
+        }
+    >
+        <Route
+            path="layer2"
+            element={<div>Innermost layer</div>}
+        ></Route>
+    </Route>
 </Route>
 ```
 
-The routes are still configured the same, but now the route elements will appear inside the parent element where the `<Outlet/>` was declared.
+Если объявить функцию данных на родительском и дочернем маршрутах, то результат работы родительской функции данных будет передан в дочернюю функцию данных в качестве свойства `data` аргумента, как это было описано в предыдущем разделе. Это работает, даже если маршрут не является прямым дочерним, поскольку по умолчанию каждый маршрут пересылает данные своего родителя.
 
-You can nest indefinitely - just remember that only leaf nodes will become their own routes. In this example, the only route created is `/layer1/layer2`, and it appears as three nested divs.
+## Маршрутизатор с хэш-режимом
 
-```jsx 
-<Route path='/' element={<div>Onion starts here <Outlet /></div>}>
-  <Route path='layer1' element={<div>Another layer <Outlet /></div>}>
-    <Route path='layer2' element={<div>Innermost layer</div>}></Route>
-  </Route>
-</Route>
-```
+По умолчанию Solid Router использует `location.pathname` в качестве пути маршрута. Вы можете просто переключиться в хэш-режим через свойство `source` компонента `<Router>`.
 
-If you declare a data function on a parent and a child, the result of the parent's data function will be passed to the child's data function as the `data` property of the argument, as described in the last section. This works even if it isn't a direct child, because by default every route forwards its parent's data.
-
-## Hash Mode Router
-
-By default, Solid Router uses `location.pathname` as route path. You can simply switch to hash mode through the `source` property on `<Router>` component.
-
-```jsx
-import { Router, hashIntegration } from '@solidjs/router'
+```js
+import { Router, hashIntegration } from '@solidjs/router';
 
 <Router source={hashIntegration()}>
-  <App />
-</Router>
+    <App />
+</Router>;
 ```
 
-<Aside>Todo: Add link to article on hash mode</Aside>
+## Маршрутизация на основе конфигурации
 
-## Config Based Routing
+Для определения маршрутов необязательно использовать JSX. Для определения маршрутов можно также использовать объект config. Это удобно, когда вы хотите определить маршруты в отдельном файле и импортировать их в приложение, а затем передать их в `useRoutes`.
 
-You don't have to use JSX to define your routes. You can also use a config object to define your routes. This is useful when you want to define your routes in a separate file and import them into your app, then pass them to `useRoutes`.
-
-```jsx 
-import { lazy } from "solid-js";
-import { render } from "solid-js/web";
-import { Router, useRoutes, A } from "@solidjs/router";
+```js
+import { lazy } from 'solid-js';
+import { render } from 'solid-js/web';
+import { Router, useRoutes, A } from '@solidjs/router';
 
 // Define your routes
 const routes = [
-  {
-    path: "/users",
-    component: lazy(() => import("/pages/users.js"))
-  },
-  {
-    path: "/users/:id",
-    component: lazy(() => import("/pages/users/[id].js")),
-    children: [
-      { path: "/", component: lazy(() => import("/pages/users/[id]/index.js")) },
-      { path: "/settings", component: lazy(() => import("/pages/users/[id]/settings.js")) },
-      { path: "/*all", component: lazy(() => import("/pages/users/[id]/[...all].js")) }
-    ]
-  },
-  {
-    path: "/",
-    component: lazy(() => import("/pages/index.js"))
-  },
-  {
-    path: "/*all",
-    component: lazy(() => import("/pages/[...all].js"))
-  }
+    {
+        path: '/users',
+        component: lazy(() => import('/pages/users.js')),
+    },
+    {
+        path: '/users/:id',
+        component: lazy(() =>
+            import('/pages/users/[id].js')
+        ),
+        children: [
+            {
+                path: '/',
+                component: lazy(() =>
+                    import('/pages/users/[id]/index.js')
+                ),
+            },
+            {
+                path: '/settings',
+                component: lazy(() =>
+                    import('/pages/users/[id]/settings.js')
+                ),
+            },
+            {
+                path: '/*all',
+                component: lazy(() =>
+                    import('/pages/users/[id]/[...all].js')
+                ),
+            },
+        ],
+    },
+    {
+        path: '/',
+        component: lazy(() => import('/pages/index.js')),
+    },
+    {
+        path: '/*all',
+        component: lazy(() => import('/pages/[...all].js')),
+    },
 ];
 
 function App() {
-  const Routes = useRoutes(routes); // 👈 useRoutes takes in the routes config
-  return (
-    <>
-      <h1>Awesome Site</h1>
-      <A class="nav" href="/">
-        Home
-      </A>
-      <A class="nav" href="/users">
-        Users
-      </A>
-      <Routes />
-    </>
-  );
+    const Routes = useRoutes(routes); // 👈 useRoutes takes in the routes config
+    return (
+        <>
+            <h1>Awesome Site</h1>
+            <A class="nav" href="/">
+                Home
+            </A>
+            <A class="nav" href="/users">
+                Users
+            </A>
+            <Routes />
+        </>
+    );
 }
 
 render(
-  () => (
-    <Router>
-      <App />
-    </Router>
-  ),
-  document.getElementById("app")
+    () => (
+        <Router>
+            <App />
+        </Router>
+    ),
+    document.getElementById('app')
 );
 ```
 
-## Router Primitives 
+## Примитивы маршрутизатора
 
-Solid Router provides a number of primitives that read off the Router and Route context.
+Solid Router предоставляет ряд примитивов, которые считывают контекст Router и Route.
 
 ### `useParams`
 
-Retrieves a reactive, store-like object containing the current route path parameters as defined in the Route.
+Получает реактивный объект типа store, содержащий текущие параметры маршрута, определенные в Route.
 
-```jsx
-import { useParams } from "@solidjs/router";
+```js
+import { useParams } from '@solidjs/router';
 
 const params = useParams();
 
@@ -685,33 +858,33 @@ const [user] = createResource(() => params.id, fetchUser);
 
 ### `useNavigation`
 
-This retrieves a method to do navigation imperatively. It returns a `navigate` function that takes a path and an optional options object. The options object can contain a `replace` property to replace the current history entry instead of pushing a new one.
+Этот метод извлекает метод для императивной навигации. Он возвращает функцию `navigate`, которая принимает путь и необязательный объект options. Объект options может содержать свойство `replace`, чтобы заменить текущую запись истории вместо того, чтобы проталкивать новую.
 
 ```js
 const navigate = useNavigate();
 
 if (unauthorized) {
-  navigate("/login", { replace: true });
+    navigate('/login', { replace: true });
 }
 ```
 
-Here's a list of the available options:
+Вот список доступных опций:
 
-- resolve (_boolean_, default `true`): resolve the path against the current route
-- replace (_boolean_, default `false`): replace the history entry
-- scroll (_boolean_, default `true`): scroll to top after navigation
-- state (_any_, default `undefined`): pass custom state to location.state
+-   resolve (_boolean_, по умолчанию `true`): преобразовать путь к текущему маршруту
+-   replace (_boolean_, по умолчанию `false`): заменить запись в истории
+-   scroll (_boolean_, по умолчанию `true`): прокрутка к верху после навигации
+-   state (_any_, по умолчанию `undefined`): передавать пользовательское состояние в location.state
 
-<Aside>
-  Note: The state is serialized using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm">structured clone algorithm</a> which does not support all object types.
-</Aside>
+!!!note ""
+
+    Примечание: Сериализация состояния осуществляется с использованием [structured clone algorithm](https://developer.mozilla.org/ru/docs/Web/API/Web_Workers_API/Structured_clone_algorithm), который поддерживает не все типы объектов.
 
 ### `useLocation`
 
-Retrieves reactive `location` object useful for getting things like `pathname`, `search`, `hash`, `state`, etc.
+Извлекает реактивный объект `location`, полезный для получения таких вещей, как `pathname`, `search`, `hash`, `state` и т. д.
 
-```jsx
-import { useLocation } from "@solidjs/router";
+```js
+import { useLocation } from '@solidjs/router';
 
 const location = useLocation();
 
@@ -720,46 +893,72 @@ const pathname = createMemo(() => location.pathname);
 
 ### `useSearchParams`
 
-Retrieves a tuple containing a reactive object to read the current location's query parameters and a method to update them. The object is a proxy so you must access properties to subscribe to reactive updates. Note values will be strings and property names will retain their casing.
+Получает кортеж, содержащий реактивный объект для чтения параметров запроса текущего местоположения и метод для их обновления. Объект является прокси, поэтому для подписки на реактивные обновления необходимо получить доступ к свойствам. Обратите внимание, что значения будут строками, а имена свойств сохранят свой регистр.
 
-The setter method accepts an object whose entries will be merged into the current query string. Values like `''`, `undefined` and `null` will remove the key from the resulting query string. Updates will behave just like a navigation and the setter accepts the same optional second parameter as `navigate` and auto-scrolling is disabled by default.
+Метод setter принимает объект, записи которого будут объединены в текущую строку запроса. Значения типа `''`, `undefined` и `null` будут удалять ключ из результирующей строки запроса. Обновления будут вести себя так же, как навигация, и сеттер принимает тот же необязательный второй параметр, что и `navigate`, а автопрокрутка по умолчанию отключена.
 
-```jsx 
+```js
 const [searchParams, setSearchParams] = useSearchParams();
 
 return (
-  <div>
-    <span>Page: {searchParams.page}</span>
-    <button onClick={() => setSearchParams({ page: searchParams.page + 1 })}>Next Page</button>
-  </div>
+    <div>
+        <span>Page: {searchParams.page}</span>
+        <button
+            onClick={() =>
+                setSearchParams({
+                    page: searchParams.page + 1,
+                })
+            }
+        >
+            Next Page
+        </button>
+    </div>
 );
 ```
 
 ### `useIsRouting`
 
-Retrieves signal that indicates whether the route is currently in a Transition. Useful for showing stale/pending state when the route resolution is Suspended during concurrent rendering.
+Получает сигнал, указывающий, находится ли маршрут в данный момент в состоянии перехода. Полезно для отображения состояния "застоялся/отложен", когда разрешение маршрута приостановлено во время параллельного рендеринга.
 
-```jsx 
+```js
 const isRouting = useIsRouting();
 
 return (
-  <div classList={{ "grey-out": isRouting() }}>
-    <MyAwesomeContent />
-  </div>
+    <div classList={{ 'grey-out': isRouting() }}>
+        <MyAwesomeContent />
+    </div>
 );
 ```
 
 ### `useRouteData`
 
-Retrieves the return value from the [data function](#data-functions).
+Получает возвращаемое значение из функции [data function](#data-functions).
 
-<CodeTabs js={[{name:"app.jsx", component: routeDataSnippetJS}]} ts={[{name: "app.tsx", component: routeDataSnippetTS}]}/>
+=== "/pages/users/[id].jsx"
+
+    ```js
+    import { useRouteData } from '@solidjs/router';
+
+    const user = useRouteData();
+
+    return <h1>{user().name}</h1>;
+    ```
+
+=== "/pages/users/[id].tsx"
+
+    ```ts
+    import { useRouteData } from '@solidjs/router';
+
+    const user = useRouteData<RouteDataFunctionType>();
+
+    return <h1>{user().name}</h1>;
+    ```
 
 ### `useMatch`
 
-`useMatch` takes an accessor that returns the path and creates a Memo that returns match information if the current path matches the provided path. Useful for determining if a given path matches the current route.
+Функция `useMatch` принимает аксессор, возвращающий путь, и создает Memo, возвращающий информацию о совпадении, если текущий путь совпадает с предоставленным путем. Полезно для определения соответствия заданного пути текущему маршруту.
 
-```jsx 
+```js
 const match = useMatch(() => props.href);
 
 return <div classList={{ active: Boolean(match()) }} />;
@@ -767,36 +966,44 @@ return <div classList={{ active: Boolean(match()) }} />;
 
 ### `useRoutes`
 
-Used to define routes via a config object instead of JSX. See [Config Based Routing](#config-based-routing).
+Используется для определения маршрутов через объект конфигурации вместо JSX. См. раздел [Маршрутизация на основе конфигурации](#config-based-routing).
 
 ### `useBeforeLeave`
 
-`useBeforeLeave` takes a function that will be called prior to leaving a route. The function will be called with:
+Функция `useBeforeLeave` принимает функцию, которая будет вызвана перед выходом из маршрута. Функция будет вызвана с:
 
-- from (`Location`): current location (before change).
-- to (`string | number`): path passed to navigate.
-- options (`NavigateOptions`): options passed to navigate.
-- preventDefault (void function): call to block the route change.
-- defaultPrevented (readonly boolean): true if any previously called leave handlers called preventDefault().
-- retry (void function, force?: boolean ): call to retry the same navigation, perhaps after confirming with the user. Pass true to skip running the leave handlers again (ie force navigate without confirming).
+-   `from` (`Location`): текущее местоположение (до изменения).
+-   `to` (`string | number`): путь, переданный для навигации.
+-   `options` (`NavigateOptions`): опции, передаваемые навигатору.
+-   `preventDefault` (void function): вызов блокировки изменения маршрута.
+-   `defaultPrevented` (readonly boolean): true, если все ранее вызванные обработчики оставления вызывали preventDefault().
+-   `retry` (void function, force?: boolean ): вызов для повторного выполнения той же навигации, возможно, после согласования с пользователем. Передайте true, чтобы пропустить повторный запуск обработчиков ухода (т.е. принудительный переход без подтверждения).
 
-Example usage: 
+Пример использования:
 
-```jsx
+```js
 useBeforeLeave((e: BeforeLeaveEventArgs) => {
-  if (form.isDirty && !e.defaultPrevented) {
-    // preventDefault to block immediately and prompt user async
-    e.preventDefault();
-    setTimeout(() => {
-      if (window.confirm("Discard unsaved changes - are you sure?")) {
-        // user wants to proceed anyway so retry with force=true
-        e.retry(true); 
-      }
-    }, 100);
-  }
+    if (form.isDirty && !e.defaultPrevented) {
+        // preventDefault to block immediately and prompt user async
+        e.preventDefault();
+        setTimeout(() => {
+            if (
+                window.confirm(
+                    'Discard unsaved changes - are you sure?'
+                )
+            ) {
+                // user wants to proceed anyway so retry with force=true
+                e.retry(true);
+            }
+        }, 100);
+    }
 });
 ```
 
-<Aside>
-  For more information on Solid Router check out the Github repository <a href="https://github.com/solidjs/solid-router">here</a>.
-</Aside>
+!!!note ""
+
+    Более подробную информацию о Solid Router можно найти в репозитории Github [здесь](https://github.com/solidjs/solid-router).
+
+## Ссылки
+
+-   [Solid Router](https://docs.solidjs.com/guides/how-to-guides/routing-in-solid/solid-router)
