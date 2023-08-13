@@ -1,9 +1,13 @@
-<Title>Get Ready for Solid</Title>
+# Готовьтесь к Solid
 
-Address different kinds of learners:
+Обращение к различным типам обучающихся:
 
-- Little/no web dev experience
-- Knowledge of JavaScript, but not frameworks. Might not know what the DOM is.
-- Framework knowledge (direct them to getting started tutorial)
+-   Небольшой опыт веб-разработки
+-   Знание JavaScript, но не фреймворков. Возможно, не знают, что такое DOM.
+-   Знание фреймворка (направьте их на учебник по началу работы)
 
-In this section we'll be walking through how anyone can get started with Solid using step-by-step guides. Whether you're new to web development or if you've been around the block a few times 😅, don't worry because we've got you covered.
+В этом разделе мы расскажем о том, как каждый может начать работу с Solid, используя пошаговые руководства. Неважно, новичок ли вы в веб-разработке или уже не первый раз 😅, не волнуйтесь, мы все предусмотрели.
+
+## Ссылки
+
+-   [Get Ready for Solid](https://docs.solidjs.com/guides/how-to-guides/get-ready-for-solid)

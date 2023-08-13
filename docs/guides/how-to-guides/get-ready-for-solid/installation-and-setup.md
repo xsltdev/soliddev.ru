@@ -1,36 +1,34 @@
-import { Aside } from "~/components/configurable/Aside";
+# Установка и настройка
 
-<Title>Installation & Setup</Title>
+Здесь мы приведем краткое руководство по настройке и установке приложения Solid. Мы также затронем такие вопросы, как настройка переменных окружения, Typescript и линтеров.
 
-Here we'll provide quick guides on how to setup and install your Solid app. We'll also touch on setting up things like environment variables, Typescript, and linters.
+## Установка
 
-## Installation
+Solid имеет несколько [vite-шаблонов](https://github.com/solidjs/templates) для начала работы. Чтобы воспользоваться ими, просто выполните следующие команды:
 
-Solid has some [vite templates](https://github.com/solidjs/templates) to get you started. To make use of them just run these commands:
+=== "Javascript"
 
-#### Javascript
+    ```bash
+    > npx degit solidjs/templates/js my-app
+    > cd my-app
+    > npm install # yarn or pnpm install
+    # To run the server
+    > npm run dev
+    ```
 
-```bash
-> npx degit solidjs/templates/js my-app
-> cd my-app
-> npm install # yarn or pnpm install
-# To run the server
-> npm run dev
-```
+=== "Typescript"
 
-#### Typescript
+    ```bash
+    > npx degit solidjs/templates/ts my-app
+    > cd my-app
+    > npm install # yarn or pnpm install
+    # To run the server
+    > npm run dev
+    ```
 
-```bash
-> npx degit solidjs/templates/ts my-app
-> cd my-app
-> npm install # yarn or pnpm install
-# To run the server
-> npm run dev
-```
+### Typescript с TailwindCSS, WindiCSS, SASS или UNOCSS
 
-#### Typescript with TailwindCSS, WindiCSS, SASS or UNOCSS
-
-In the command below you can replace `tailwindcss` with `windicss`, `sass` or `unocss` to get a template that already has one of these configured.
+В приведенной ниже команде можно заменить `tailwindcss` на `windicss`, `sass` или `unocss`, чтобы получить шаблон, в котором уже настроен один из них.
 
 ```bash
 > npx degit solidjs/templates/ts-tailwindcss my-app
@@ -40,56 +38,57 @@ In the command below you can replace `tailwindcss` with `windicss`, `sass` or `u
 > npm run dev
 ```
 
-<Aside>
-  {" "}
-  For more templates visit our <Link href="https://github.com/solidjs/templates" target="_blank">vite templates GitHub repository</Link>
-</Aside>
+!!!note ""
 
-## Setup Typescript In Pre-existing Solid Javascript Projects
+    Для получения дополнительных шаблонов посетите наш репозиторий [vite templates GitHub repository](https://github.com/solidjs/templates).
 
-Here, we'll walk you through how you can get Typescript installed and setup in your already existing Solid Javascript project.
+## Установка Typescript в уже существующие проекты Solid Javascript
 
-**Step 1:** Install `typescript` in our project
+Здесь мы расскажем о том, как установить и настроить Typescript в уже существующем проекте Solid Javascript.
+
+**Шаг 1:** Установите `typescript` в наш проект
 
 ```bash
 > npm install --save-dev typescript
 ```
 
-**Step 2:** Initialize Typescript with A `tsconfig.json` File.
+**Шаг 2:** Инициализация Typescript с помощью файла `tsconfig.json`.
 
-You can create a `tsconfig.json` file or you can run the below command to have one generated for you automatically
+Вы можете создать файл `tsconfig.json` или выполнить приведенную ниже команду, чтобы он был сгенерирован автоматически
 
 ```bash
 > tsc --init
 ```
 
-**Step 3:** Edit the `tsconfig.json` File To Match Solid's Configuration.
+**Шаг 3:** Отредактируйте файл `tsconfig.json` в соответствии с конфигурацией Solid.
 
-Copy the code below into your `tsconfig.json` as this is what it should look like.
+Скопируйте приведенный ниже код в файл `tsconfig.json`, так он должен выглядеть.
 
 ```json
 {
-  "compilerOptions": {
-    "strict": true,
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "types": ["vite/client"],
-    "noEmit": true,
-    "isolatedModules": true
-  }
+    "compilerOptions": {
+        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "types": ["vite/client"],
+        "noEmit": true,
+        "isolatedModules": true
+    }
 }
 ```
 
-If you used `tsc --init`, your `tsconfig.json` should have a lot of boilerplate, so you can get rid of that and just copy the above snippet.
+Если вы использовали `tsc --init`, то ваш `tsconfig.json` должен содержать много шаблонов, поэтому вы можете избавиться от них и просто скопировать приведенный выше фрагмент.
 
-**Final step:** Create a Typescript or `.tsx` file to test if everything works as it should.
+**Заключительный шаг:** Создайте файл Typescript или `.tsx`, чтобы проверить, все ли работает так, как нужно.
 
-**Note:** If you wish to change the `index.jsx` file to `index.tsx` there 2 things that you will need to do first. You'll need to make sure that you've changed the `src` attribute for the `script` tag in the `index.html` file.
+!!!warning "Примечание"
+
+    Если вы хотите заменить файл `index.jsx` на `index.tsx`, то сначала необходимо сделать две вещи. Необходимо убедиться, что вы изменили атрибут `src` для тега `script` в файле `index.html`.
 
 ```diff
 <!DOCTYPE html>
@@ -110,82 +109,84 @@ If you used `tsc --init`, your `tsconfig.json` should have a lot of boilerplate,
 </html>
 ```
 
-```tsx
+```ts
 // Mytscomponent.tsx
 
-import { Component } from "solid-js";
+import { Component } from 'solid-js';
 
 function MyTsComponent(): Component {
-  return (
-    <div>
-      <h1> This is a typescript component </h1>
-    </div>
-  );
+    return (
+        <div>
+            <h1> This is a typescript component </h1>
+        </div>
+    );
 }
 
 export default MyTsComponent;
 ```
 
-Let's make use of our Typescript component in our Javascript component
+Давайте используем наш компонент Typescript в нашем компоненте Javascript
 
-```jsx
+```js
 // MyJsComponent.jsx
 
-import MyTsComponent from "./MyTsComponent";
+import MyTsComponent from './MyTsComponent';
 
 function MyJsComponent() {
-  return (
-    <>
-      ...
-      <MyTsComponent />
-    </>
-  );
+    return (
+        <>
+            ...
+            <MyTsComponent />
+        </>
+    );
 }
 ```
 
-<Aside>
-  For more information on Solid with typescript check out our{" "}
-  <Link href="/TODO"> Typescript section </Link>{" "}
-</Aside>
+## Настройка переменных окружения
 
-## Setting Up Environment Variables
+Solid использует [Vite](https://vitejs.dev/), поэтому использование переменных окружения здесь будет сильно отличаться от использования переменных окружения в других фреймворках, использующих другие встроенные средства.
 
-Solid makes use of [Vite](https://vitejs.dev/) so making use of environment variables here will be quite different from making use of environment variables in other frameworks that make use of other built tools.
-
-**Step 1:** Let's create a `.env` file and declare a value in it called `VITE_VARIABLE_NAME`
+**Шаг 1:** Создадим файл `.env` и объявим в нем значение `VITE_VARIABLE_NAME`.
 
 ```
 VITE_VARIABLE_NAME="I am a vite environment variable"
 ```
 
-**Step 2:** Make use of the environment variable in your Solid app.
+**Шаг 2:** Используйте переменную окружения в приложении Solid.
 
-Let's try and make use of the environment variable we just created in one of our Solid components
+Попробуем использовать переменную окружения, которую мы только что создали, в одном из компонентов Solid
 
-```jsx
+```js
 function MyComponent() {
-  return (
-    <div>
-      <h2>Component with environment variable used {import.meta.env.VITE_VARIABLE_NAME}</h2>
-    </div>
-  )
+    return (
+        <div>
+            <h2>
+                Component with environment variable used{' '}
+                {import.meta.env.VITE_VARIABLE_NAME}
+            </h2>
+        </div>
+    );
 }
 
 export default MyComponent;
 ```
 
-And that's it, just 2 steps and you're ready to go with your `.env` variables. 
+Вот и все, всего два шага, и вы готовы к работе с переменными `.env`.
 
-Notice how we made use of the environment variable in our Solid component, instead of using `process.env` that a lot of developers are familiar with, we're making use of 
+Обратите внимание, как мы использовали переменную окружения в нашем компоненте Solid, вместо привычного для многих разработчиков `process.env` мы используем
 
-```jsx
-import.meta.env
+```js
+import.meta.env;
 ```
 
-which is specific to Vite.
+что характерно для Vite.
 
-**Note**: The `VITE` prefix is client side specific so any backend specific environment variables do not need to make use of that prefix as they are not bundled by `VITE` for use on the client side.
+!!!note "Примечание"
 
-<Aside>
-  For more information on environment variables in Vite and how to make use of intellisense on your environment variables in Typescript, check out the <Link href="https://vitejs.dev/guide/env-and-mode.html#env-files" target="_blank">Vite Documentation</Link>
-</Aside>
+    Префикс `VITE` используется на стороне клиента, поэтому переменные окружения, специфичные для бэкенда, не должны использовать этот префикс, поскольку они не связаны с `VITE` для использования на стороне клиента.
+
+Более подробную информацию о переменных окружения в Vite и о том, как использовать intellisense для переменных окружения в Typescript, можно найти в [Vite Documentation](https://vitejs.dev/guide/env-and-mode.html#env-files).
+
+## Ссылки
+
+-   [Installation & Setup](https://docs.solidjs.com/guides/how-to-guides/get-ready-for-solid/installation-and-setup)

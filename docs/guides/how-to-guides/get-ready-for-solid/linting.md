@@ -1,18 +1,18 @@
-import { Aside } from "~/components/configurable/Aside";
+# Линтинг
 
-<Title>Linting</Title>
+## Настройка линтера
 
-## Setting Up a Linter 
-Solid has a strong community of developers and some of those developers create tools that make the development experience that much better for other developers in the community. The eslint plugin we'll be making use of is just one of those tools made by one of our community members.
+В Solid существует сильное сообщество разработчиков, и некоторые из них создают инструменты, которые делают процесс разработки еще более удобным для других участников сообщества. Плагин eslint, который мы будем использовать, является одним из таких инструментов, созданных одним из членов нашего сообщества.
 
-<Aside>
-  Eslint is tool that statically analyzes Javascript and Typescript code for problems and suggest quick fixes if any to the developer. For more on the eslint tool visit <Link href="https://eslint.org/" target="_blank">here</Link>.
-</Aside>
+!!!note ""
 
-Now let's get down to adding the linter to our Solid project.
+    Eslint - это инструмент, который статически анализирует код Javascript и Typescript на предмет наличия проблем и предлагает разработчику быстрые решения, если таковые имеются. Подробнее об инструменте eslint можно узнать здесь [https://eslint.org/].
+
+Теперь приступим к добавлению линтера в наш проект Solid.
 
 #### Javascript
-**Step 1:** Install `eslint`, and `eslint-plugin-solid` the plugin made by our community member
+
+**Шаг 1:** Установите `eslint` и плагин `eslint-plugin-solid`, созданный участником нашего сообщества
 
 ```bash
 > npm install --save-dev eslint eslint-plugin-solid
@@ -20,13 +20,16 @@ Now let's get down to adding the linter to our Solid project.
 > yarn add --dev eslint eslint-plugin-solid
 ```
 
-**Step 2:** Initialize `eslint` within your projects main folder
+**Шаг 2:** Инициализируйте `eslint` в основной папке вашего проекта
+
 ```bash
 > npm init @eslint/config
 ```
-Once you run this command you will be prompted to answer a few questions about your project. Make sure you answer them accordingly. When you're asked `"Does your project use TypeScript"` answer `"no"`, `"what framework does your project use"` answer `"none"`, and `"Where does your code run"` answer `"browser"` since Solid is a frontend framework.
 
-**Step 3:** Configure the generated `eslint` file to work on Solid code. Add the below code to the appropriate fields in your `.eslint` file
+После выполнения этой команды вам будет предложено ответить на несколько вопросов о вашем проекте. Убедитесь, что вы ответили на них соответствующим образом. На вопрос `Использует ли ваш проект TypeScript` ответьте `нет`, `какой фреймворк использует ваш проект` ответьте `никакой`, а на вопрос `Где выполняется ваш код` ответьте `в браузере`, поскольку Solid - это фреймворк для фронтенда.
+
+**Шаг 3:** Настройте сгенерированный файл `eslint` для работы с кодом Solid. Добавьте приведенный ниже код в соответствующие поля файла `.eslint`.
+
 ```js
 {
   ...
@@ -36,10 +39,11 @@ Once you run this command you will be prompted to answer a few questions about y
 }
 ```
 
-And that's it. Eslint should be setup and working for Solid.
+Вот и все. Eslint должен быть настроен и работать для Solid.
 
 #### Typescript
-**Step 1:** Install `eslint`, and `eslint-plugin-solid` the plugin made by our community member
+
+**Шаг 1:** Установите `eslint` и плагин `eslint-plugin-solid`, созданный участником нашего сообщества
 
 ```bash
 > npm install --save-dev eslint eslint-plugin-solid
@@ -47,15 +51,18 @@ And that's it. Eslint should be setup and working for Solid.
 > yarn add --dev eslint eslint-plugin-solid
 ```
 
-**Step 2:** Initialize `eslint` within your projects main folder
+**Шаг 2:** Инициализируйте `eslint` в основной папке вашего проекта
+
 ```bash
 > npm init @eslint/config
 ```
-Once you run this command you will be prompted to answer a few questions about your project. Make sure you answer them accordingly. When you're asked `"Does your project use TypeScript"` answer `"yes"`, `"what framework does your project use"` answer `"none"`, and `"Where does your code run"` answer `"browser"` since Solid is a frontend framework.
 
-Then, you should be asked to install some Typescript specific packages called `@typescript-eslint/eslint-plugin@latest` and `@typescript-eslint/parser@latest` answer `"yes"` to this.
+После выполнения этой команды вам будет предложено ответить на несколько вопросов о вашем проекте. Убедитесь, что вы ответили на них соответствующим образом. На вопрос `Использует ли ваш проект TypeScript` ответьте `да`, `какой фреймворк использует ваш проект` ответьте `никакой`, а на вопрос `Где выполняется ваш код` ответьте `браузер`, поскольку Solid - это фреймворк для фронтенда.
 
-**Step 3:** Configure the generated `eslint` file to work on Solid code. Add the below code to the appropriate fields in your `.eslint` file
+Затем вам будет предложено установить несколько специфических для Typescript пакетов `@typescript-eslint/eslint-plugin@latest` и `@typescript-eslint/parser@latest` Ответьте `"да"` на это.
+
+**Шаг 3:** Настройте сгенерированный файл `eslint` для работы с кодом Solid. Добавьте приведенный ниже код в соответствующие поля файла `.eslint`.
+
 ```js
 {
   ...
@@ -66,8 +73,10 @@ Then, you should be asked to install some Typescript specific packages called `@
 }
 ```
 
-And that's it. Eslint should be setup for Typescript and Solid.
+Вот и все. Eslint должен быть настроен на работу с Typescript и Solid.
 
-<Aside>
-  For more information on the <code>eslint-plugin-solid</code> plugin visit the <Link href="https://github.com/solidjs-community/eslint-plugin-solid" target="_blank"> Github repo</Link>
-</Aside>
+Более подробную информацию о плагине `eslint-plugin-solid` можно найти на [Github repo](https://github.com/solidjs-community/eslint-plugin-solid)
+
+## Ссылки
+
+-   [Linting](https://docs.solidjs.com/guides/how-to-guides/get-ready-for-solid/linting)
