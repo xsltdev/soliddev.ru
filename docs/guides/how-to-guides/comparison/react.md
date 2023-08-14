@@ -1,388 +1,394 @@
-import { IfDark } from "~/components/configurable/IfConfig";
+---
+description: React оказал большое влияние на Solid. Его однонаправленный поток и явное разделение чтения и записи в API хуков легли в основу API Solid
+---
 
-<Title>Comparison with React</Title>
+# Сравнение с React
 
-React has had a big influence on Solid. Its unidirectional flow and explicit segregation of read and write in its
-Hooks API informed Solid's API. More so than the objective of being just a "Render Library" rather than a framework.
-Solid has strong opinions on how to approach managing data in application development but doesn't seek to constrain
-its execution.
+React оказал большое влияние на Solid. Его однонаправленный поток и явное разделение чтения и записи в API хуков легли в основу API Solid. В большей степени, чем задача быть просто "библиотекой рендеринга", а не фреймворком.
 
-However, as much as Solid aligns with React's design philosophy, it works fundamentally differently. This API similarity
-with a different execution model usually throws off React developers that expect certain React patterns to be transferable
-to Solid. This guide is here to help point out those differences and how to overcome them.
+Solid имеет свое мнение о том, как следует подходить к управлению данными при разработке приложений, но не стремится ограничивать их выполнение.
 
-## Components as render functions vs setup functions
+Однако, несмотря на то, что Solid соответствует философии дизайна React, он работает принципиально иначе. Такое сходство API с другой моделью исполнения обычно отталкивает разработчиков React, которые ожидают, что определенные паттерны React можно будет перенести в Solid. Данное руководство призвано помочь указать на эти различия и способы их преодоления.
+
+## Компоненты как функции рендеринга против функций настройки
 
 ### React
 
-In a simplified explanation, React components work as a way to organize your code and handle view updates derive from state
-or props changes. This means that every time there's an update, React wil re-run the component with the latest state/props
-to reflect it in the view. Let's take a look at the following example:
+Если говорить упрощенно, то компоненты React работают как способ организации кода и обработки обновлений представления, вытекающих из изменений состояния или свойств. Это означает, что при каждом обновлении React будет перезапускать компонент с последним состоянием/свойствами, чтобы отразить его в представлении. Рассмотрим следующий пример:
 
-```jsx
-import { useState } from "react";
+```js
+import { useState } from 'react';
 
 const App = () => {
-  const [count, setCount] = useState(0);
+    const [count, setCount] = useState(0);
 
-  return (
-    <>
-      <p>Count is: {count}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    return (
+        <>
+            <p>Count is: {count}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 };
 ```
 
-Whenever we click our button, we will trigger a state update resulting in a re-run of our component.
+Каждый раз, когда мы нажимаем на кнопку, происходит обновление состояния, приводящее к повторному запуску нашего компонента.
 
-<IfDark
-  fallback={
-    <img
-      src="/images/how-to-guides/comparison/react/react-simple-state-update-light.svg"
-      alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the template"
-    />
-  }
->
-  <img
-    src="/images/how-to-guides/comparison/react/react-simple-state-update-dark.svg"
-    alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the template"
-  />
-</IfDark>
+![Скриншот браузера файлов в Stackblitz, отображающий все файлы в шаблоне](react-simple-state-update-light.svg#only-light)
+![Снимок экрана браузера файлов в Stackblitz, отображающего все файлы в шаблоне](react-simple-state-update-dark.svg#only-dark)
 
 ### Solid
 
-We can create extremely similar code with Solid, but the way it works under the hood will be different. Again, the component will be
-useful as a way to organize the code, but unlike React it won't re-run everytime there's a state or props update.
+Мы можем создать очень похожий код с помощью Solid, но принцип его работы под капотом будет отличаться. Компонент снова будет полезен как способ организации кода, но, в отличие от React, он не будет перезапускаться каждый раз, когда происходит обновление состояния или свойств.
 
-Instead, the component will setup everything that needs to be tracked by Solid's reactive system and move out of the way once the code is being executed. This means that
-the **function component will run only once** as it won't handle state/props updates. Here's the same example written in Solid:
+Вместо этого компонент будет настраивать все, что необходимо отслеживать реактивной системе Solid, и уходить с дороги, когда код будет выполняться. Это означает, что **функция компонента будет запущена только один раз**, поскольку она не будет обрабатывать обновления состояния и свойств. Вот тот же пример, написанный на Solid:
 
-```jsx
-import { createSignal } from "solid-js";
+```js
+import { createSignal } from 'solid-js';
 
 const App = () => {
-  const [count, setCount] = createSignal(0);
+    const [count, setCount] = createSignal(0);
 
-  return (
-    <>
-      <p>Count is: {count()}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    return (
+        <>
+            <p>Count is: {count()}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 };
 ```
 
-When we click our button only granular updates will be executed by Solid's reactive system.
+Когда мы нажмем на кнопку, реактивная система Solid будет выполнять только гранулярные обновления.
 
-<IfDark
-  fallback={
-    <img
-      src="/images/how-to-guides/comparison/react/solid-simple-state-update-light.svg"
-      alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the template"
-    />
-  }
->
-  <img
-    src="/images/how-to-guides/comparison/react/solid-simple-state-update-dark.svg"
-    alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the template"
-  />
-</IfDark>
+![Снимок экрана браузера файлов в Stackblitz, отображающего все файлы в шаблоне](solid-simple-state-update-light.svg#only-light)
+![Снимок экрана браузера файлов в Stackblitz, отображающий все файлы в шаблоне](solid-simple-state-update-dark.svg#only-dark)
 
-This is what we mean in the title by _render functions_ vs _setup functions_. In React, rendering and its updates are tied to the component. In Solid however, components only
-exists in your code and run once to setup all the pieces needed for the reactive system to take place. You can think of components in Solid as _vanishing components_, they go
-away when the code is executed.
+Это то, что мы подразумеваем в заголовке под _функциями рендеринга_ и _функциями настройки_. В React рендеринг и его обновления привязаны к компоненту. В Solid же компоненты существуют только в вашем коде и запускаются один раз для настройки всех элементов, необходимых для работы реактивной системы. Компоненты в Solid можно рассматривать как _исчезающие компоненты_, они исчезают после выполнения кода.
 
-This leads to discrepancies on how code works between the two frameworks, despite of their similarity when you write code. For one, we can move state out of the component
-and Solid's code will still work.
+Это приводит к различиям в работе кода между двумя фреймворками, несмотря на их схожесть при написании кода. Например, мы можем вынести состояние за пределы компонента, и код Solid будет работать.
 
-```jsx
-import { createSignal } from "solid-js";
+```js
+import { createSignal } from 'solid-js';
 
 const [count, setCount] = createSignal(0);
 
 const App = () => {
-  return (
-    <>
-      <p>Count is: {count()}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    return (
+        <>
+            <p>Count is: {count()}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 };
 ```
 
-Again, this is possible because Solid's reactive system lives outside of components. If you want further reading on the topic, check out Ryan Carniato's (creator of Solid) article [Components are Pure Overhead](https://dev.to/this-is-learning/components-are-pure-overhead-hpm)
+Опять же, это возможно благодаря тому, что реактивная система Solid живет вне компонентов. Если вы хотите почитать на эту тему, ознакомьтесь со статьей Райана Карниато (создателя Solid) [Components are Pure Overhead](https://dev.to/this-is-learning/components-are-pure-overhead-hpm)
 
-## Early returns and the use of `<Show>`
+## Ранние возвраты и использование `<Show>`
 
-Since components in Solid are executed only once, the following React code **is not** transferable to Solid
+Поскольку компоненты в Solid выполняются только один раз, следующий код React **не** переносится в Solid
 
-### React
+### В React
 
-```jsx
-import { useState } from "react";
+```js
+import { useState } from 'react';
 
 const App = () => {
-  const [count, setCount] = useState(0);
+    const [count, setCount] = useState(0);
 
-  if (count > 5) {
-    return <p>Count is too high!</p>;
-  }
+    if (count > 5) {
+        return <p>Count is too high!</p>;
+    }
 
-  return (
-    <>
-      <p>Count is: {count}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    return (
+        <>
+            <p>Count is: {count}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 };
 ```
 
-In the example above, since React re-renders on every state change, our condition is evaluated every time we click the button.
-Once `count` is bigger than 5 our condition will be true, and React will render our `<p` element.
+В приведенном примере, поскольку React выполняет рендеринг при каждом изменении состояния, наше условие оценивается каждый раз, когда мы нажимаем на кнопку. Как только `count` станет больше 5, наше условие будет истинным, и React отобразит наш элемент `<p`.
 
-### Solid
+### В Solid
 
-We can write similar code, but once again, the execution model is different
+Мы можем написать аналогичный код, но модель выполнения снова будет другой
 
-```jsx
-import { createSignal } from "solid-js";
+```js
+import { createSignal } from 'solid-js';
 
 const App = () => {
-  const [count, setCount] = createSignal(0);
+    const [count, setCount] = createSignal(0);
 
-  if (count() > 5) {
-    return <p>Count is too high!</p>;
-  }
+    if (count() > 5) {
+        return <p>Count is too high!</p>;
+    }
 
-  return (
-    <>
-      <p>Count is: {count()}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    return (
+        <>
+            <p>Count is: {count()}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 };
 ```
 
-Here, since we initialize our count at 0 and the component only runs once, the condition will be evaluated, turn out to be false, and never be re-evaluated.
-You can click the button and get past 5, and you'll still see the counter and button.
+Здесь, поскольку мы инициализируем счетчик в 0, а компонент запускается только один раз, условие будет оценено, окажется ложным и никогда не будет повторно оценено. Вы можете нажать на кнопку и перейти через 5, и все равно увидите счетчик и кнопку.
 
-This is due to how Solid's granular reactivity works. Put in simple terms, React is opt-out rendering meaning that React will re-render everything if not
-told otherwise (think `memo()`, `useMemo()`, `useCallback()`).
+Это связано с тем, как работает гранулярная реактивность Solid. Проще говоря, в React реализован opt-out рендеринг, то есть React будет рендерить все заново, если не сказать иначе (вспомните `memo()`, `useMemo()`, `useCallback()`).
 
-On the other hand, Solid is opt-in rendering meaning it will not re-render anything that is not tracked by the reactive system. Solid thinks of rendering elements to
-the DOM as a side effect of state changes, so the way to "fix" our code is to check our condition inside our JSX to make the reactive system track it and derive
-the DOM output as a result of state change. Solid provides a built-in component to help us with that: `<Show>`
+С другой стороны, Solid - это opt-in рендеринг, то есть он не будет перерисовывать ничего, что не отслеживается реактивной системой. Solid рассматривает рендеринг элементов в DOM как побочный эффект изменения состояния, поэтому способ "исправить" наш код заключается в проверке состояния внутри JSX, чтобы реактивная система отслеживала его и выводила DOM в результате изменения состояния. Solid предоставляет встроенный компонент, который поможет нам в этом: `<Show>`.
 
-```jsx
-import { createSignal, Show } from "solid-js";
+```js
+import { createSignal, Show } from 'solid-js';
 
 const App = () => {
-  const [count, setCount] = createSignal(0);
+    const [count, setCount] = createSignal(0);
 
-  const fallback = (
-    <>
-      <p>Count is: {count()}</p>
-      <button onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Increase count by 1
-      </button>
-    </>
-  );
+    const fallback = (
+        <>
+            <p>Count is: {count()}</p>
+            <button
+                onClick={() =>
+                    setCount((prevCount) => prevCount + 1)
+                }
+            >
+                Increase count by 1
+            </button>
+        </>
+    );
 
-  return (
-    <Show when={count() > 5} fallback={fallback}>
-      <p>Count is too high!</p>
-    </Show>
-  );
+    return (
+        <Show when={count() > 5} fallback={fallback}>
+            <p>Count is too high!</p>
+        </Show>
+    );
 };
 ```
 
-## Going through lists and the use of `<For>`
+## Перебор списков и использование `<For>`
 
-Usually the way to iterate through lists in React is the following
+Обычно итерация по спискам в React выполняется следующим образом
 
-```jsx
-import { useState } from "react";
+```js
+import { useState } from 'react';
 
 const App = () => {
-  const [todos] = useState([
-    { id: "1", name: "Learn Solid" },
-    { id: "2", name: "Learn Solid Start" },
-  ]);
+    const [todos] = useState([
+        { id: '1', name: 'Learn Solid' },
+        { id: '2', name: 'Learn Solid Start' },
+    ]);
 
-  return (
-    <>
-      <h1>TO-DO</h1>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.name}</li>
-        ))}
-      </ul>
-    </>
-  );
+    return (
+        <>
+            <h1>TO-DO</h1>
+            <ul>
+                {todos.map((todo) => (
+                    <li key={todo.id}>{todo.name}</li>
+                ))}
+            </ul>
+        </>
+    );
 };
 ```
 
-While this will also work on Solid, the idiomatic way to render lists is by using `<For>` component
+Хотя это будет работать и на Solid, идиоматическим способом вывода списков является использование компонента `<For>`
 
-```jsx
-import { createSignal, For } from "solid-js";
+```js
+import { createSignal, For } from 'solid-js';
 
 const App = () => {
-  const [todos] = createSignal([
-    { id: "1", name: "Learn Solid" },
-    { id: "2", name: "Learn Solid Start" },
-  ]);
+    const [todos] = createSignal([
+        { id: '1', name: 'Learn Solid' },
+        { id: '2', name: 'Learn Solid Start' },
+    ]);
 
-  return (
-    <>
-      <h1>TO-DO</h1>
-      <ul>
-        <For each={todos()}>{(todo) => <li>{todo.name}</li>}</For>
-      </ul>
-    </>
-  );
+    return (
+        <>
+            <h1>TO-DO</h1>
+            <ul>
+                <For each={todos()}>
+                    {(todo) => <li>{todo.name}</li>}
+                </For>
+            </ul>
+        </>
+    );
 };
 ```
 
-One benefit of the component is that rendered items are keyed by default, so we can forget about doing it ourselves.
+Одним из преимуществ компонента является то, что отображаемые элементы по умолчанию имеют ключи, поэтому мы можем забыть о том, чтобы делать это самостоятельно.
 
-Keys by default, allow granular updates as Solid will only apply updates to specific items in the list rather than recreating the list on every update.
+Ключи по умолчанию позволяют выполнять гранулярные обновления, поскольку Solid будет применять обновления только к определенным элементам списка, а не пересоздавать список при каждом обновлении.
 
-## Props destructuring
+## Деструктуризация свойств
 
-Prop destructuring is a common thing to do in React. If we were to click the "Add Todo" button on the code below, React would re-render the `<App>` component and all of its children, thus displaying the new value on the DOM.
+Деструктуризация свойств - обычное дело для React. Если мы нажмем кнопку "Add Todo" в приведенном ниже коде, React перерисует компонент `<App>` и все его дочерние элементы, отобразив новое значение в DOM.
 
-```jsx
+```js
 // This will update the DOM with the new todo
-import { useState } from "react";
+import { useState } from 'react';
 
 const Todos = ({ todos }) => {
-  return (
-    <ul>
-      {todos.map((todo) => (
-        <li key={todo.id}>{todo.name}</li>
-      ))}
-    </ul>
-  );
+    return (
+        <ul>
+            {todos.map((todo) => (
+                <li key={todo.id}>{todo.name}</li>
+            ))}
+        </ul>
+    );
 };
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    { id: "1", name: "Learn Solid" },
-    { id: "2", name: "Learn Solid Start" },
-  ]);
-  return (
-    <>
-      <h1>TO-DO</h1>
-      <Todos todos={todos} />
-      <button
-        onClick={() =>
-          setTodos((prev) => [...prev, { id: "3", name: "Learn Qwik" }])
-        }
-      >
-        Add Todo
-      </button>
-    </>
-  );
+    const [todos, setTodos] = useState([
+        { id: '1', name: 'Learn Solid' },
+        { id: '2', name: 'Learn Solid Start' },
+    ]);
+    return (
+        <>
+            <h1>TO-DO</h1>
+            <Todos todos={todos} />
+            <button
+                onClick={() =>
+                    setTodos((prev) => [
+                        ...prev,
+                        { id: '3', name: 'Learn Qwik' },
+                    ])
+                }
+            >
+                Add Todo
+            </button>
+        </>
+    );
 };
 ```
 
-Having similar code for Solid, and destructuring props on `<Todos>` component, will fail to update the DOM.
+Аналогичный код для Solid и деструктуризация свойств компонента `<Todos>` не приведет к обновлению DOM.
 
-```jsx
+```js
 // This won't update the DOM with the new todo
-import { createSignal, For } from "solid-js";
+import { createSignal, For } from 'solid-js';
 
 const Todos = ({ todos }) => {
-  return (
-    <ul>
-      <For each={todos}>{(todo) => <li>{todo.name}</li>}</For>
-    </ul>
-  );
+    return (
+        <ul>
+            <For each={todos}>
+                {(todo) => <li>{todo.name}</li>}
+            </For>
+        </ul>
+    );
 };
 
 const App = () => {
-  const [todos, setTodos] = createSignal([
-    { id: "1", name: "Learn Solid" },
-    { id: "2", name: "Learn Solid Start" },
-  ]);
+    const [todos, setTodos] = createSignal([
+        { id: '1', name: 'Learn Solid' },
+        { id: '2', name: 'Learn Solid Start' },
+    ]);
 
-  return (
-    <>
-      <h1>TO-DO</h1>
-      <Todos todos={todos()} />
-      <button
-        onClick={() =>
-          setTodos((prev) => [...prev, { id: "3", name: "Learn Qwik" }])
-        }
-      >
-        Add Todo
-      </button>
-    </>
-  );
+    return (
+        <>
+            <h1>TO-DO</h1>
+            <Todos todos={todos()} />
+            <button
+                onClick={() =>
+                    setTodos((prev) => [
+                        ...prev,
+                        { id: '3', name: 'Learn Qwik' },
+                    ])
+                }
+            >
+                Add Todo
+            </button>
+        </>
+    );
 };
 ```
 
-The reason for this, again, is that Solid has an opt-in reactive model. This means that anything that's not inside a tracking scope
-(Solid primitives and JSX) won't trigger an update.
+Причина этого, опять же, в том, что в Solid реализована реактивная модель "opt-in". Это означает, что все, что не находится в отслеживаемой области видимости (примитивы Solid и JSX), не вызовет обновления.
 
-In our code above, by destructuring the props we are accessing them in an un-tracked scope. To "fix" this we would have to access our props in a tracked scope,
-in this case inside JSX
+В нашем коде, приведенном выше, деструктурируя свойства, мы получаем к ним доступ в неотслеживаемой области видимости. Чтобы "исправить" это, необходимо обратиться к свойствам в отслеживаемой области видимости, в данном случае внутри JSX
 
-```jsx
+```js
 // This will update the DOM with the new todo
-import { createSignal, For } from "solid-js";
+import { createSignal, For } from 'solid-js';
 
 const Todos = (props) => {
-  return (
-    <ul>
-      <For each={props.todos}>{(todo) => <li>{todo.name}</li>}</For>
-    </ul>
-  );
+    return (
+        <ul>
+            <For each={props.todos}>
+                {(todo) => <li>{todo.name}</li>}
+            </For>
+        </ul>
+    );
 };
 
 const App = () => {
-  const [todos, setTodos] = createSignal([
-    { id: "1", name: "Learn Solid" },
-    { id: "2", name: "Learn Solid Start" },
-  ]);
+    const [todos, setTodos] = createSignal([
+        { id: '1', name: 'Learn Solid' },
+        { id: '2', name: 'Learn Solid Start' },
+    ]);
 
-  return (
-    <>
-      <h1>TO-DO</h1>
-      <Todos todos={todos()} />
-      <button
-        onClick={() =>
-          setTodos((prev) => [...prev, { id: "3", name: "Learn Qwik" }])
-        }
-      >
-        Add Todo
-      </button>
-    </>
-  );
+    return (
+        <>
+            <h1>TO-DO</h1>
+            <Todos todos={todos()} />
+            <button
+                onClick={() =>
+                    setTodos((prev) => [
+                        ...prev,
+                        { id: '3', name: 'Learn Qwik' },
+                    ])
+                }
+            >
+                Add Todo
+            </button>
+        </>
+    );
 };
 ```
 
 ## React vs. Solid
 
-Here's a table differentiating hooks in React against hooks in Solid.
+Приведем таблицу, различающую хуки в React и хуки в Solid.
 
-| React (Class components) | React (Functional components)              | Solid          |
-| ------------------------ | ------------------------------------------ | -------------- |
-| componentDidMount()      | useEffect(() => \{\}, [])                  | onMount()      |
-| componentWillUnmount()   | useEffect(() => \{ return () => \{\}}, []) | onCleanup()    |
-| this.state               | useState()                                 | createSignal() |
-| this.state               | useState()                                 | createStore()  |
-| N/A                      | useMemo()                                  | createMemo()   |
-| componentDidUpdate()     | useEffect(() => \{\}, [dependencies])      | createEffect() |
+| React (компоненты классов) | React (функциональные компоненты)         | Solid            |
+| -------------------------- | ----------------------------------------- | ---------------- |
+| `componentDidMount()`      | `useEffect(() => {}, [])`                 | `onMount()`      |
+| `componentWillUnmount()`   | `useEffect(() => { return () => {}}, [])` | `onCleanup()`    |
+| `this.state`               | `useState()`                              | `createSignal()` |
+| `this.state`               | `useState()`                              | `createStore()`  |
+| N/A                        | `useMemo()`                               | `createMemo()`   |
+| `componentDidUpdate()`     | `useEffect(() => {}, [dependencies])`     | `createEffect()` |
+
+## Ссылки
+
+-   [Comparison with React](https://docs.solidjs.com/guides/how-to-guides/comparison/react)
