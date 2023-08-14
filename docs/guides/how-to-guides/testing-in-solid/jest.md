@@ -1,39 +1,26 @@
-import { IfTS } from "~/components/configurable/IfConfig";
-import { CodeTabs } from "~/components/Tabs";
-import JestCounterJS from "./snippets/jest-counter-js.mdx";
-import JestCounterTS from "./snippets/jest-counter-ts.mdx";
-import JestCounterTestJS from "./snippets/jest-counter-test-js.mdx";
-import JestCounterTestTS from "./snippets/jest-counter-test-ts.mdx";
-import JestLoremJS from "./snippets/jest-lorem-js.mdx";
-import JestLoremTS from "./snippets/jest-lorem-ts.mdx";
-import JestLoremTestJS from "./snippets/jest-lorem-test-js.mdx";
-import JestLoremTestTS from "./snippets/jest-lorem-test-ts.mdx";
-import JestClickOutsideJS from "./snippets/jest-clickoutside-js.mdx";
-import JestClickOutsideTS from "./snippets/jest-clickoutside-ts.mdx";
-import JestClickOutsideTestJS from "./snippets/jest-clickoutside-test-js.mdx";
-import JestClickOutsideTestTS from "./snippets/jest-clickoutside-test-ts.mdx";
+---
+description: Jest - это многофункциональный интегрированный набор модульных тестов, написанный компанией Facebook, включающий программу запуска тестов, поддержку различных окружений, расширяемую библиотеку утверждений, средства мокинга и измерения покрытия
+---
 
-<Title>Jest</Title>
+# Jest
 
-Jest is a feature-rich integrated unit test suite written by Facebook including a test runner, support for different environments, extendable assertion library, mocking facilities and coverage measurement.
+**Jest** - это многофункциональный интегрированный набор модульных тестов, написанный компанией Facebook, включающий программу запуска тестов, поддержку различных окружений, расширяемую библиотеку утверждений, средства мокинга и измерения покрытия.
 
-<IfTS>
-## Starter Template
+!!!tip "Стартовый шаблон"
 
-In the official [vite starter templates](../get-ready-for-solid/installation-and-setup), there is also a `ts-jest` template that already installs Jest and most of the other requirements:
+    В официальном каталоге [vite starter templates](../get-ready-for-solid/installation-and-setup.md) также имеется шаблон `ts-jest`, в котором уже установлен Jest и большинство других требований:
 
-```bash
-npx degit solidjs/templates/ts-jest my-solid-project
-cd my-solid-project
-npm install # or pnpm install or yarn install
-```
+    ```bash
+    npx degit solidjs/templates/ts-jest my-solid-project
+    cd my-solid-project
+    npm install # or pnpm install or yarn install
+    ```
 
-If you have installed it, continue with the <a href="#ignoring-certain-files" target="_self">extended Setup</a>.
-</IfTS>
+    Если он установлен, продолжите расширенную установку.
 
-## Installation
+## Установка
 
-We first need to install the `jest` package:
+Сначала нам необходимо установить пакет `jest`:
 
 ```bash
 npm install --save-dev jest
@@ -41,17 +28,17 @@ pnpm i --dev jest           # Using pnpm
 yarn add --dev jest         # Using yarn
 ```
 
-## Setup
+## Настройка
 
-To test Solid code with Jest, you need to set it up. The setup can be done in the `"jest"` field of `package.json` or as a separate `jest.config.js` file. The latter allows having different setups, for testing both client-side and server-side code, and for programmatically augment existing presets.
+Чтобы протестировать код Solid с помощью Jest, необходимо его настроить. Настройку можно выполнить в поле `"jest"` файла `package.json` или в отдельном файле `jest.config.js`. Последний позволяет иметь различные настройки, тестировать код как на стороне клиента, так и на стороне сервера, а также программно дополнять существующие пресеты.
 
-At the time of writing, Jest only officially supports the <a class="footnote" id="cjs-module-format" href="#fn-cjs-module-format" target="_self">CJS module format</a> directly and uses a transformation pipeline to run other formats and transpiled JS. Since Solid uses transpiled code, we need to set it up.
+На момент написания статьи Jest официально поддерживает непосредственно только формат модулей CJS и использует конвейер трансформации для работы с другими форматами и транспилированным JS. Поскольку Solid использует транспонированный код, нам необходимо его настроить.
 
-Because Jest runs all imported code as CJS, we either need to transform files that are not valid CJS or make Jest ignore them.
+Поскольку Jest запускает весь импортируемый код в формате CJS, нам нужно либо преобразовать файлы, которые не являются корректным CJS, либо заставить Jest игнорировать их.
 
-### Solid code transformation
+### Преобразование кода Solid
 
-There are several ways to transform Solid code: the preferred method is a <a class="footnote" id="jest-preset" href="#fn-jest-preset" target="_self">preset</a> called `solid-jest` that contains the configuration for the transformation of Solid JSX to CJS. We first need to install it<IfTS>, unless we want to use `ts-jest` to transform TypeScript (see below)</IfTS>:
+Существует несколько способов преобразования Solid-кода: наиболее предпочтительным является пресет под названием `solid-jest`, содержащий конфигурацию для преобразования Solid JSX в CJS. Сначала нам необходимо установить его, если мы не хотим использовать `ts-jest` для преобразования TypeScript (см. ниже):
 
 ```bash
 npm install --save-dev solid-jest
@@ -59,7 +46,7 @@ pnpm i --dev solid-jest           # Using pnpm
 yarn add --dev solid-jest         # Using yarn
 ```
 
-To add it to our Jest configuration, we need to add the correct export for client-side or server-side testing to the `preset` property of the configuration (in `package.json#jest` or `jest.config.js`):
+Чтобы добавить его в нашу конфигурацию Jest, необходимо в свойство `preset` конфигурации (в файле `package.json#jest` или `jest.config.js`) добавить правильный экспорт для тестирования на стороне клиента или на стороне сервера:
 
 ```js
 { "preset": "solid-jest/preset/browser" }
@@ -67,12 +54,11 @@ To add it to our Jest configuration, we need to add the correct export for clien
 { "preset": "solid-jest/preset/node" }
 ```
 
-<IfTS>
-### TypeScript code transformation
+### TypeScript преобразование кода
 
-#### Alternative 1: Using babel to transform TypeScript
+#### Альтернатива 1: Использование babel для преобразования TypeScript
 
-If we are using <a class="footnote" id="babel" href="#fn-babel" target="_self">babel</a> to transform TypeScript, we need to install `@babel/preset-typescript`:
+Если мы используем babel для преобразования TypeScript, нам необходимо установить `@babel/preset-typescript`:
 
 ```bash
 npm install --save-dev @babel/preset-typescript
@@ -80,7 +66,7 @@ pnpm i --dev @babel/preset-typescript           # Using pnpm
 yarn add --dev @babel/preset-typescript         # Using yarn
 ```
 
-We also need to set up a babel configuration if not already present:
+Также необходимо настроить конфигурацию babel, если ее еще нет:
 
 ```bash
 cat > .babelrc <<- EOF
@@ -94,11 +80,11 @@ cat > .babelrc <<- EOF
 EOF
 ```
 
-### Alternative 2: Using ts-jest to transform TypeScript
+### Альтернатива 2: Использование ts-jest для преобразования TypeScript
 
-This does not require `solid-jest`. Instead of solely using the babel-transform, we can use the TypeScript compiler to transform the tests. This means that the tests are statically type-checked before running them. While this will reduce the speed of running tests, it may catch errors in the tests' code.
+Для этого не требуется `solid-jest. Вместо того чтобы использовать только babel-трансформер, мы можем использовать компилятор TypeScript для преобразования тестов. Это означает, что перед выполнением тесты будут статически проверены на соответствие типам. Хотя это и снижает скорость выполнения тестов, но может привести к обнаружению ошибок в коде тестов.
 
-To use it, we first need to install it:
+Для использования этого компилятора его необходимо установить:
 
 ```bash
 npm install --save-dev ts-jest
@@ -106,10 +92,10 @@ pnpm i --dev ts-jest           # Using pnpm
 yarn add --dev ts-jest         # Using yarn
 ```
 
-Then we need to configure Jest to use it in `package.json#jest` or `jest.config.js`:
+Затем необходимо настроить Jest на его использование в файле `package.json#jest` или `jest.config.js`:
 
 ```js
-{ 
+{
   "preset": "ts-jest",
   "globals": {
     "ts-jest": {
@@ -125,7 +111,7 @@ Then we need to configure Jest to use it in `package.json#jest` or `jest.config.
 }
 ```
 
-If we want to test the code as it would run in the browser, we also need to alias the solid-modules to the correct version because ts-jest unfortunately cannot detect the browser mode. Add the following to the previous configuration:
+Если мы хотим протестировать код так, как он будет работать в браузере, нам также необходимо присвоить псевдоним solid-модулям правильной версии, поскольку `ts-jest`, к сожалению, не может определить браузерный режим. Добавьте к предыдущей конфигурации следующее:
 
 ```js
 {
@@ -136,17 +122,15 @@ If we want to test the code as it would run in the browser, we also need to alia
 }
 ```
 
-</IfTS>
+### Игнорирование некоторых файлов
 
-### Ignoring certain files
-
-As already mentioned, Jest will treat anything imported (including CSS, images) as CJS. This may lead to errors. To make Jest ignore them, create an empty file:
+Как уже говорилось, Jest будет рассматривать все импортированное (включая CSS, изображения) как CJS. Это может привести к ошибкам. Чтобы заставить Jest игнорировать их, создайте пустой файл:
 
 ```bash
 touch .empty.js
 ```
 
-And then create an alias for any file that might lead to errors in your Jest configuration:
+А затем создайте псевдоним для любого файла, который может привести к ошибкам в конфигурации Jest:
 
 ```js
 {
@@ -156,23 +140,23 @@ And then create an alias for any file that might lead to errors in your Jest con
 }
 ```
 
-However, this might change the behavior of your code. If you need to test for HTML class names provided by CSS modules, that would not work.
+Однако это может изменить поведение вашего кода. Если вам нужно проверить наличие имен классов HTML, предоставляемых модулями CSS, это не сработает.
 
-### Other transformations
+### Другие преобразования
 
-There are several transformations for other file types available.
+Существует несколько преобразований для других типов файлов.
 
-* CSS modules: `jest-css-modules-transform`
-* SCSS: `jest-scss-transform`
-* Path import for plain files: `jest-file-loader`
-* JSON5: `@talabes/json5-jest`
-* GraphQL: `@graphql-tools/jest-transform`
-* Web Worker: `jest-webworker`
-* more on [npmjs](https://www.npmjs.com/search?q=jest+transform)
+-   CSS-модули: `jest-css-modules-transform`.
+-   SCSS: `jest-scss-transform`.
+-   Импорт пути для обычных файлов: `jest-file-loader`.
+-   JSON5: `@talabes/json5-jest`
+-   GraphQL: `@graphql-tools/jest-transform`.
+-   Web Worker: `jest-webworker`.
+-   подробнее о [npmjs](https://www.npmjs.com/search?q=jest+transform)
 
-If the search for a matching transformation is without result, the solution may be a <a class="footnote" id="custom-transform" href="#fn-custom-transform" target="_self">custom transform</a>.
+Если поиск подходящей трансформации не дал результата, то решением может стать пользовательская трансформация.
 
-We can simply install their packages like before, just replace `[transform-module]` with the above module name:
+Мы можем просто установить их пакеты, как и раньше, только замените `[transform-module]` на указанное выше имя модуля:
 
 ```bash
 npm install --save-dev [transform-module]
@@ -180,17 +164,17 @@ pnpm i --dev [transform-module]       # Using pnpm
 yarn add --dev [transform-module]     # Using yarn
 ```
 
-The easiest way to use them is to augment the existing preset in a `jest.config.js` file. Otherwise, we need to merge the contents of the preset and the additional transformations manually:
+Самый простой способ их использования - дополнить существующий пресет в файле `jest.config.js`. В противном случае необходимо вручную объединить содержимое пресета и дополнительные преобразования:
 
 ```js
 // jest.config.js
-const jestConfig = require("solid-jest/preset/browser");
-jestConfig.transform["\\.module\\.css$"] =
-  "jest-css-modules-transform";
+const jestConfig = require('solid-jest/preset/browser');
+jestConfig.transform['\\.module\\.css$'] =
+    'jest-css-modules-transform';
 modules.export = jestConfig;
 ```
 
-In case we want to stick with the configuration in `package.json#jest`, we need to copy the included transform for `.jsx` and `.tsx` files into the transform declarations:
+В случае если мы хотим придерживаться конфигурации в файле `package.json#jest`, нам необходимо скопировать в объявления трансформаций включенные трансформации для файлов `.jsx` и `.tsx`:
 
 ```js
 {
@@ -201,9 +185,9 @@ In case we want to stick with the configuration in `package.json#jest`, we need 
 }
 ```
 
-## Environment
+## Окружение
 
-Solid.js can run both in the browser and on the server. By default, Jest tests everything in a node-environment. To test browser code with Jest without an actual browser, we need a DOM environment. The <a class="footnote" id="jsdom" href="#fn-jsdom" target="_self">de-facto standard is `jsdom`</a>. To use it, we first need to install it together with the Jest environment:
+Solid.js может работать как в браузере, так и на сервере. По умолчанию Jest тестирует все в окружении node. Чтобы протестировать браузерный код с помощью Jest без реального браузера, нам необходимо DOM-окружение. Стандартом де-факто является `jsdom`. Чтобы использовать его, необходимо установить его вместе со средой Jest:
 
 ```bash
 npm install --save-dev jest-environment-jsdom
@@ -211,15 +195,15 @@ pnpm i --dev jest-environment-jsdom           # Using pnpm
 yarn add --dev jest-environment-jsdom         # Using yarn
 ```
 
-We also need to add the environment to the Jest configuration in `package.json#jest` or `jest.config.js`:
+Также необходимо добавить окружение в конфигурацию Jest в файле `package.json#jest` или `jest.config.js`:
 
 ```js
 { "testEnvironment": "jsdom" }
 ```
 
-## Running your tests
+## Запуск тестов
 
-Finally, we can add the following script to package.json to call <a class="footnote" href="#fn-jest-cli" name="jest-cli" target="_self">Jest's command-line-interface</a>:
+Наконец, мы можем добавить в package.json следующий скрипт для вызова интерфейса командной строки Jest:
 
 ```js
 {
@@ -229,7 +213,7 @@ Finally, we can add the following script to package.json to call <a class="footn
 }
 ```
 
-If our test works, the output looks something like:
+Если наш тест работает, то вывод выглядит примерно так:
 
 ```bash
 > jest
@@ -244,13 +228,13 @@ Time:        4.012 s
 Ran all test suites.
 ```
 
-## Testing your code with testing-library
+## Тестирование кода с помощью testing-library
 
-The undisputed gold standard for component testing is now defined by <a class="footnote" id="testing-library" href="#fn-testing-library" target="_self">Kent C. Dodds' Testing Library</a>, which is originally written for React, but there are multiple ports for other libraries, and Solid is no exception.
+Бесспорным золотым стандартом тестирования компонентов на сегодняшний день является библиотека Testing Library Кента Доддса, которая изначально была написана для React, но существует множество портов для других библиотек, и Solid не является исключением.
 
-### Setup
+### Установка testing-library
 
-To test with `@solidjs/testing-library`, we first need to install it:
+Для тестирования с помощью `@solidjs/testing-library` нам сначала нужно установить ее:
 
 ```bash
 npm install --save-dev @solidjs/testing-library
@@ -258,7 +242,7 @@ pnpm i --dev @solidjs/testing-library      # Using pnpm
 yarn add --dev @solidjs/testing-library    # Using yarn
 ```
 
-Testing-library also provides a small, helpful extension for jest's built-in assertions called `@testing-library/jest-dom` that we can also install:
+Testing-library также предоставляет небольшое полезное расширение для встроенных утверждений jest под названием `@testing-library/jest-dom`, которое мы также можем установить:
 
 ```bash
 npm install --save-dev @testing-library/jest-dom
@@ -266,7 +250,7 @@ pnpm i --dev @testing-library/jest-dom     # Using pnpm
 yarn add --dev @testing-library/jest-dom   # Using yarn
 ```
 
-Now we need to run it in advance of our test, so we can use the extended assertions. We could either include it manually in our tests, or more convenient, include it in the `setupFiles` of our Jest configuration:
+Теперь нам нужно запустить его перед тестом, чтобы мы могли использовать расширенные утверждения. Мы можем либо включить его вручную в наши тесты, либо, что более удобно, включить его в `setupFiles` нашей конфигурации Jest:
 
 ```js
 {
@@ -276,7 +260,7 @@ Now we need to run it in advance of our test, so we can use the extended asserti
 }
 ```
 
-There is another useful addition from Testing Library for testing user events: `@testing-library/user-events`. It tries to replicate the actual events that will typically happen in a user situation, for example, they will focus input fields before typing into them. If we want to test complex interactivity, we should install it, too.
+Есть еще одно полезное дополнение от Testing Library для тестирования пользовательских событий: `@testing-library/user-events`. Оно пытается воспроизвести реальные события, которые обычно происходят в ситуации с пользователем, например, он фокусирует поля ввода перед тем, как набрать в них текст. Если мы хотим протестировать сложную интерактивность, то следует установить и ее.
 
 ```bash
 npm install --save-dev @testing-library/user-events
@@ -284,80 +268,268 @@ pnpm i --dev @testing-library/user-events    # Using pnpm
 yarn add --dev @testing-library/user-events  # Using yarn
 ```
 
-### Testing components
+### Тестирование компонентов
 
-Let us test our most basic example: the counter. Consider the following component that you may have seen in the playground:
+Давайте протестируем наш самый простой пример - счетчик. Рассмотрим следующий компонент, который вы могли видеть на игровой площадке:
 
-<CodeTabs
-  js={[{ name: "counter.jsx", component: JestCounterJS }]}
-  ts={[{ name: "counter.tsx", component: JestCounterTS }]}
-/>
+=== "counter.jsx"
 
-We want to test if there is a button that counts up on click; to make sure that it is working more than one time, we will try it a second time, so this is what our test looks like:
+    ```js
+    import { createSignal } from 'solid-js';
 
-<CodeTabs
-  js={[{ name: "counter.test.jsx", component: JestCounterTestJS }]}
-  ts={[{ name: "counter.test.tsx", component: JestCounterTestTS }]}
-/>
+    export function Counter() {
+    	const [count, setCount] = createSignal(1);
+    	const increment = () => setCount(count() + 1);
 
-To use `toHaveTextContent`, we need to have `@testing-library/jest-dom` installed; otherwise, we need to replace that with
+    	return (
+    		<button type="button" onClick={increment}>
+    			{count()}
+    		</button>
+    	);
+    }
+    ```
+
+=== "counter.tsx"
+
+    ```ts
+    import { createSignal, type VoidComponent } from 'solid-js';
+
+    export const Counter: VoidComponent = () => {
+    	const [count, setCount] = createSignal(1);
+    	const increment = () => setCount(count() + 1);
+
+    	return (
+    		<button type="button" onClick={increment}>
+    			{count().toString()}
+    		</button>
+    	);
+    };
+    ```
+
+Мы хотим проверить, есть ли кнопка, которая подсчитывает количество нажатий; чтобы убедиться, что она работает не один раз, мы попробуем сделать это во второй раз, так что вот как выглядит наш тест:
+
+=== "counter.test.jsx"
+
+    ```js
+    import { render } from '@solidjs/testing-library';
+    import userEvent from '@testing-library/user-event';
+    import { Counter } from './counter';
+
+    const user = userEvent.setup();
+
+    test('counts on click', async () => {
+    	const { result, getByRole } = render(() => <Counter />);
+    	const button = getByRole('button');
+    	expect(button).toHaveTextContent('1');
+    	await user.click(button);
+    	expect(button).toHaveTextContent('2');
+    	await user.click(button);
+    	expect(button).toHaveTextContent('3');
+    });
+    ```
+
+=== "counter.test.tsx"
+
+    ```ts
+    import { render } from '@solidjs/testing-library';
+    import userEvent from '@testing-library/user-event';
+    import { Counter } from './counter';
+
+    const user = userEvent.setup();
+
+    test('counts on click', async () => {
+    	const { result, getByRole } = render(() => <Counter />);
+    	const button: HTMLButtonElement = getByRole('button');
+    	expect(button).toHaveTextContent('1');
+    	await user.click(button);
+    	expect(button).toHaveTextContent('2');
+    	await user.click(button);
+    	expect(button).toHaveTextContent('3');
+    });
+    ```
+
+Для использования `toHaveTextContent` необходимо, чтобы у нас была установлена `@testing-library/jest-dom`, в противном случае необходимо заменить ее на
 
 ```ts
-expect(button).toHaveProperty("textContent", "1");
+expect(button).toHaveProperty('textContent', '1');
 ```
 
-which is a bit less legible and if it fails, the error message will be slightly less helpful.
+что немного менее разборчиво, и в случае неудачи сообщение об ошибке будет менее полезным.
 
-If we want not to use `userEvent`, we can also use `fireEvent` from `@solidjs/testing-library`, which is synchronous, but be aware that these events are less like actual user events and may in some cases yield different results depending on the context.
+Если мы не хотим использовать `userEvent`, мы можем также использовать `fireEvent` из `@solidjs/testing-library`, который является синхронным, но имейте в виду, что эти события менее похожи на реальные события пользователя и в некоторых случаях могут давать разные результаты в зависимости от контекста.
 
-### Testing re-usable logic
+### Тестирование логики многократного использования
 
-Re-usable logic, also known as <a class="footnote" href="#fn-primitives" id="primitives" target="_self">hooks or primitives</a>, can also be tested using `@solidjs/testing-library`, by using the `renderHook` function.
+Логика многократного использования, также известная как хуки или примитивы, также может быть протестирована с помощью `@solidjs/testing-library`, используя функцию `renderHook`.
 
-Let us consider a hook that gives us a "Lorem ipsum" text with a certain number of words. We want to test it with 3, 2 and 5 words to make sure it works (select lorem.test.<IfTS fallback="js">ts</IfTS>):
+Рассмотрим хук, который выдает нам текст "Lorem ipsum" с определенным количеством слов. Мы хотим протестировать его с 3, 2 и 5 словами, чтобы убедиться, что он работает (выберите `lorem.test.ts`):
 
-<CodeTabs
-  js={[
-    { name: "lorem.js", component: JestLoremJS },
-    { name: "lorem.test.js", component: JestLoremTestJS }
-  ]}
-  ts={[
-    { name: "lorem.ts", component: JestLoremTS },
-    { name: "lorem.test.ts", component: JestLoremTestTS }
-  ]}
-/>
+=== "lorem.js"
 
-### Testing custom directives
+    ```js
+    const loremIpsumWords =
+    	'Lorem ipsum dolor sit amet, consectetur…'.split(/\s+/);
+    export const createLorem = (words) => {
+    	return createMemo(() => {
+    		const output = [],
+    			len =
+    				typeof words === 'function'
+    					? words()
+    					: words;
+    		while (output.length <= len) {
+    			output.push(...loremIpsumWords);
+    		}
+    		return output.slice(0, len).join(' ');
+    	});
+    };
+    ```
 
-Solid.js has the useful ability to not only make logic, but also DOM interactions re-usable, through so-called custom directives. Obviously, we want the same convenience testing those as we have with hooks, so our testing library comes with a `renderDirective` utility.
+=== "lorem.test.js"
 
-The primitive we want to test is `onClickOutside`, which calls a function given in its argument, and we need to test it by clicking both inside and outside and check whether our function had been called:
+    ```js
+    import { createSignal } from 'solid-js';
+    import { renderHook } from '@solidjs/testing-library';
+    import { createLorem } from 'createLorem';
 
-<CodeTabs
-  js={[
-    { name: "click-outside.js", component: JestClickOutsideJS },
-    { name: "click-outside.test.js", component: JestClickOutsideTestJS }
-  ]}
-  ts={[
-    { name: "click-outside.ts", component: JestClickOutsideTS },
-    { name: "click-outside.test.ts", component: JestClickOutsideTestTS }
-  ]}
-/>
+    test('it shows the right amount of words', () => {
+    	const [words, setWords] = createSignal(3);
+    	const { result } = renderHook(createLorem, [words]);
+    	expect(result()).toBe('Lorem ipsum dolor');
+    	setWords(2);
+    	expect(result()).toBe('Lorem ipsum');
+    	setWords(5);
+    	expect(result()).toBe('Lorem ipsum dolor sit amet');
+    });
+    ```
 
-<hr/>
-<section role="doc-endnotes">
-## Notes
+=== "lorem.ts"
 
-<ol>
-<li id="fn-cjs-module-format">Originally, JS libraries exposed their functionality as global declarations to be synchronously loaded within a script tag. To be more flexible, projects like [require.js](https://requirejs.org/) introduced module formats like [AMD](https://github.com/amdjs/amdjs-api/blob/master/AMD.md) (Asynchronous Module Definition) that allowed asynchronous loading into scoped variables. [Node.js](https://nodejs.org/) started supporting only the [CJS](https://en.wikipedia.org/wiki/CommonJS) (Common JS) format. This is slowly being superseded by the newer [ESM](https://tc39.es/ecma262/#sec-modules) (ECMAScript Modules) format. <a href="#cjs-module-format">back</a></li>
-<li id="fn-jest-preset">Jest allows augmenting the configuration by a predefined set of configuration, a so-called [preset](https://jestjs.io/docs/configuration#preset-string). <a href="#jest-preset">back</a></li>
-<IfTS>
-<li id="fn-babel">[Babel](https://babeljs.io/) is a versatile utility to convert one kind of JS code into another one. It is currently the de-facto standard to convert Solid JSX into JS. <a href="#babel">back</a></li>
-</IfTS>
-<li id="fn-custom-transform">The [API definition](https://jestjs.io/docs/code-transformation#writing-custom-transformers) might initially seem daunting, but a transform is merely an object with either a `process` method that receives the source, the path, and an optional options object and returns an object containing a code property with the result or a `processAsync` method that returns the same in a `Promise`. <a href="#custom-transform">back</a></li>
-<li id="fn-jsdom">While [jsdom](https://github.com/jsdom/jsdom) is the de-facto standard for a virtualized DOM environment, there are other contenders like [happy-dom](https://github.com/capricorn86/happy-dom) and [linkedom](https://github.com/WebReflection/linkedom), which both are less feature-rich, but faster. To minimize support requests due to lack of feature-support, they are purposefully left out; please only use them if you know what you are doing. <a href="#jsdom">back</a></li>
-<li id="fn-jest-cli">A command-line-interface or CLI is a program that runs inside a text terminal and can be controlled by optional parameters. Jest has a whole set of [CLI options](https://jestjs.io/docs/cli) that allow overwriting configuration and change the output or the behavior. <a href="#jest-cli">back</a></li>
-<li id="fn-testing-library">[Testing Library](https://testing-library.com/) provides a set of tools aimed at encouraging good testing practices and at the same time discourage code which is not adhering to accessibility standards, since it will make it harder to test. <a href="#testing-library">back</a></li>
-<li id="fn-primitives">In many frameworks, hooks/primitives are named `use[Something]`. Solid uses `create` as a prefix for its reactive primitives to denote that these are only called once inside the component. <a href="#primitives">back</a></li>
-</ol>
-</section>
+    ```ts
+    const loremIpsumWords =
+    	'Lorem ipsum dolor sit amet, consectetur…'.split(/\s+/);
+    export const createLorem = (
+    	words: Accessor<number> | number
+    ) => {
+    	return createMemo(() => {
+    		const output = [],
+    			len =
+    				typeof words === 'function'
+    					? words()
+    					: words;
+    		while (output.length <= len) {
+    			output.push(...loremIpsumWords);
+    		}
+    		return output.slice(0, len).join(' ');
+    	});
+    };
+    ```
+
+=== "lorem.test.ts"
+
+    ```ts
+    import { createSignal } from 'solid-js';
+    import { renderHook } from '@solidjs/testing-library';
+    import { createLorem } from 'createLorem';
+
+    test('it shows the right amount of words', () => {
+    	const [words, setWords] = createSignal(3);
+    	const { result } = renderHook(createLorem, [words]);
+    	expect(result()).toBe('Lorem ipsum dolor');
+    	setWords(2);
+    	expect(result()).toBe('Lorem ipsum');
+    	setWords(5);
+    	expect(result()).toBe('Lorem ipsum dolor sit amet');
+    });
+    ```
+
+### Тестирование пользовательских директив
+
+Solid.js обладает полезной способностью делать многоразовыми не только логические, но и DOM-взаимодействия с помощью так называемых пользовательских директив. Очевидно, что тестирование таких директив должно быть таким же удобным, как и тестирование хуков, поэтому в нашей библиотеке тестирования имеется утилита `renderDirective`.
+
+Примитив, который мы хотим протестировать, - это `onClickOutside`, который вызывает функцию, указанную в его аргументе, и нам нужно протестировать его, щелкнув мышью внутри и снаружи, и проверить, была ли вызвана наша функция:
+
+=== "click-outside.js"
+
+    ```js
+    import { onCleanup } from 'solid-js';
+
+    export function clickOutside(node, handlerAccessor) {
+    	const handler = (ev) =>
+    		node.contains(ev.target) || handlerAccessor()?.(ev);
+    	document.body.addEventListener('click', handler);
+    	onCleanup(() =>
+    		document.body.removeEventListener('click', handler)
+    	);
+    }
+    ```
+
+=== "click-outside.test.js"
+
+    ```js
+    import { renderDirective } from '@solidjs/testing-library';
+    import userEvent from '@testing-library/user-event';
+    import { clickOutside } from './click-outside';
+
+    const user = userEvent.setup();
+
+    test('only triggers the callback on click outside', async () => {
+    	const handler = jest.fn();
+    	const { container: outside } = renderDirective(
+    		clickOutside,
+    		{ initialValue: handler }
+    	);
+    	const inside = outside.querySelector('div');
+    	await user.click(inside);
+    	expect(handler).not.toHaveBeenCalled();
+    	await user.click(outside);
+    	expect(handler).toHaveBeenCalledTimes(1);
+    });
+    ```
+
+=== "click-outside.ts"
+
+    ```ts
+    import { onCleanup, type Accessor } from 'solid-js';
+
+    export const clickOutside = (
+    	node: HTMLElement,
+    	handlerAccessor: Accessor<
+    		((ev: ClickEvent) => void) | undefined
+    	>
+    ) => {
+    	const handler = (ev: ClickEvent) =>
+    		node.contains(ev.target) || handlerAccessor()?.(ev);
+    	document.body.addEventListener('click', handler);
+    	onCleanup(() =>
+    		document.body.removeEventListener('click', handler)
+    	);
+    };
+    ```
+
+=== "click-outside.test.ts"
+
+    ```ts
+    import { renderDirective } from '@solidjs/testing-library';
+    import userEvent from '@testing-library/user-event';
+    import { clickOutside } from './click-outside';
+
+    const user = userEvent.setup();
+
+    test('only triggers the callback on click outside', async () => {
+    	const handler = jest.fn();
+    	const { container: outside } = renderDirective(
+    		clickOutside,
+    		{ initialValue: handler }
+    	);
+    	const inside: HTMLDivElement =
+    		outside.querySelector('div');
+    	await user.click(inside);
+    	expect(handler).not.toHaveBeenCalled();
+    	await user.click(outside);
+    	expect(handler).toHaveBeenCalledTimes(1);
+    });
+    ```
+
+## Ссылки
+
+-   [Jest](https://docs.solidjs.com/guides/how-to-guides/testing-in-solid/jest)

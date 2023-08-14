@@ -1,23 +1,23 @@
-import { IfTS } from "~/components/configurable/IfConfig";
-import { CodeTabs } from "~/components/Tabs";
-import createLocalStorageTS from './snippets/vitest-createlocalstorage-ts.mdx';
-import createLocalStorageJS from './snippets/vitest-createlocalstorage-js.mdx';
+---
+description: Vitest - это очень быстрый фреймворк модульных тестов, построенный на основе Vite
+---
 
-<Title>Vitest</Title>
+# Vitest
 
-## What is Vitest?
+## Что такое Vitest?
 
-Vitest is a really fast unit test framework built on top of [Vite](vitejs.dev/). It's quick to get started with, and it's easy to write tests for your components. Vitest isn't made primarily for testing frontend components but with the addition of some awesome packages we can make use of it in order to test our Solid components.
+**Vitest** - это очень быстрый фреймворк модульных тестов, построенный на основе [Vite](https://vitejs.dev/). С ним можно быстро начать работу и легко писать тесты для своих компонентов. Vitest не предназначен в первую очередь для тестирования фронтенд-компонентов, но с добавлением некоторых замечательных пакетов мы можем использовать его для тестирования наших компонентов Solid.
 
-#### Packages
-* [JSDOM](github.com/jsdom/jsdom)
-* [JestDOM](https://testing-library.com/docs/ecosystem-jest-dom/)
-* [Solid.js Testing Library](https://github.com/solidjs/solid-testing-library)
-* [Vitest](https://vitest.dev/)
+### Пакеты
 
-## Getting Started
+-   [JSDOM](github.com/jsdom/jsdom)
+-   [JestDOM](https://testing-library.com/docs/ecosystem-jest-dom/)
+-   [Solid.js Testing Library](https://github.com/solidjs/solid-testing-library)
+-   [Vitest](https://vitest.dev/)
 
-First let's get started with the installations. We'll need to install the packages listed above. 
+## Начало работы
+
+Сначала приступим к установке. Нам потребуется установить перечисленные выше пакеты.
 
 ```bash
 npm i -D vitest jsdom @testing-library/jest-dom @solidjs/testing-library
@@ -25,37 +25,37 @@ npm i -D vitest jsdom @testing-library/jest-dom @solidjs/testing-library
 yarn add -D vitest jsdom @testing-library/jest-dom @solidjs/testing-library
 ```
 
-#### Configuring Vitest
+### Конфигурирование Vitest
 
-Now that we've installed the necessary packages, we'll need to configure vitest to work with Solid. Let's create a `vitest.config.ts` file in the root of our project. 
+Теперь, когда мы установили необходимые пакеты, необходимо настроить vitest для работы с Solid. Создадим файл `vitest.config.ts` в корне нашего проекта.
 
 ```ts
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-// 👆 do not forget to add the references above 
+// 👆 do not forget to add the references above
 
 import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
-  plugins: [solidPlugin()],
-  server: {
-    port: 3000,
-  },
-  build: {
-    target: 'esnext',
-  },
-  test:{
-    environment: 'jsdom',
-    globals: true,
-    transformMode: { web: [/\.[jt]sx?$/] },
-  }
+    plugins: [solidPlugin()],
+    server: {
+        port: 3000,
+    },
+    build: {
+        target: 'esnext',
+    },
+    test: {
+        environment: 'jsdom',
+        globals: true,
+        transformMode: { web: [/\.[jt]sx?$/] },
+    },
 });
 ```
 
-**Note:** Do not forget to add the `reference` types at the top of the file. If you do not add them, you will get a type error when you try to run your tests.
+**Примечание:** Не забудьте добавить типы `reference` в верхней части файла. Если вы не добавите их, то при попытке запустить тесты вы получите ошибку типа.
 
-Once we've created the config file, we'll need to add a script to our `package.json` file. 
+После создания файла конфигурации нам необходимо добавить скрипт в наш файл `package.json`.
 
 ```diff
 {
@@ -83,190 +83,263 @@ Once we've created the config file, we'll need to add a script to our `package.j
     "solid-js": "^1.6.6"
   }
 }
-
 ```
 
-Now that we've added the script, we can run our tests by running `npm run test` or `yarn test`. However, there are no tests to run so we'll need to create some.
+Теперь, когда мы добавили скрипт, мы можем запустить наши тесты, выполнив команду `npm run test` или `yarn test`. Однако тестов для запуска нет, поэтому нам нужно их создать.
 
-## Creating Tests
+## Создание тестов
 
-In Typescript/Javascript test files can be created with the `.test.ts` or `.spec.ts` extension. Tests are usually kept in their seperate folder in the root of the project, most developers like to name this folder `tests` or `__tests__`. However in some cases you may want to keep your tests in the same folder as the component you're testing. Explore the different styles and find what works best for you 🙂.
+В Typescript/Javascript файлы тестов могут быть созданы с расширением `.test.ts` или `.spec.ts`. Тесты обычно хранятся в отдельной папке в корне проекта, большинство разработчиков предпочитают называть эту папку `tests` или `__tests__`. Однако в некоторых случаях тесты лучше хранить в той же папке, что и тестируемый компонент. Изучите различные стили и найдите тот, который подходит именно вам 🙂 .
 
-#### Creating a Test File
+### Создание тестового файла
 
-In Solid we recommend creating a `test` folder to house all your test files in. Let's create a `test` folder in the root of our project and create a `App.test.ts` file inside of it. 
+В Solid мы рекомендуем создать папку `test`, в которой будут храниться все тестовые файлы. Давайте создадим папку `test` в корне нашего проекта и создадим в ней файл `App.test.ts`.
 
 ```bash
 mkdir test
 touch test/App.test.ts
 ```
 
-Now that we've created the test file, let's add some tests. 
+Теперь, когда мы создали тестовый файл, давайте добавим в него несколько тестов.
 
 ```ts
 import { render } from '@solidjs/testing-library';
 import App from '../src/App';
 import { describe, expect, it } from 'vitest';
-import '@testing-library/jest-dom'; // 👈 this is imported in order to use the jest-dom matchers 
+import '@testing-library/jest-dom'; // 👈 this is imported in order to use the jest-dom matchers
 
 describe('App', () => {
-  it('should render the app', () => {
-    const { getByText } = render(() => <App/>);
-    expect(getByText('Learn Solid')).toBeInTheDocument();
-  });
+    it('should render the app', () => {
+        const { getByText } = render(() => <App />);
+        expect(
+            getByText('Learn Solid')
+        ).toBeInTheDocument();
+    });
 });
 ```
 
-The above test will test to see if the phrase `Learn Solid` is in the `App` component once it is rendered. If it is, the test will pass. If it isn't, the test will fail. The snippet above is an example of a component test.
+Приведенный выше тест проверяет, находится ли фраза `Learn Solid` в компоненте `App` после его рендеринга. Если да, то тест будет пройден. Если нет, то тест будет провален. Приведенный выше фрагмент является примером теста компонента.
 
-## Testing Components
+## Тестирование компонентов
 
-Let's take a simple click counter component:
+Возьмем простой компонент счетчика кликов:
 
 ```tsx
 //counter.tsx
-import { createSignal, Component } from "solid-js";
+import { createSignal, Component } from 'solid-js';
 
 export const Counter: Component = () => {
-  const [count, setCount] = createSignal(0);
+    const [count, setCount] = createSignal(0);
 
-  return (
-    <div role="button" onClick={() => setCount((c) => c + 1)}>
-      Count: {count()}
-    </div>
-  );
+    return (
+        <div
+            role="button"
+            onClick={() => setCount((c) => c + 1)}
+        >
+            Count: {count()}
+        </div>
+    );
 };
 ```
 
-Here we use `solid-testing-library`. It's most important helpers are `render` to render a component to the DOM in a managed way, `fireEvent` to dispatch events in a way that resembles actual user events and `screen` to provide global selectors. We also use helpful assertions added to `expect` provided by `@testing-library/jest-dom`.
+Здесь мы используем библиотеку `solid-testing-library`. Наиболее важными помощниками являются `render` для управляемого рендеринга компонента в DOM, `fireEvent` для диспетчеризации событий, напоминающих реальные события пользователя, и `screen` для предоставления глобальных селекторов. Мы также используем полезные утверждения, добавленные в `expect`, предоставленные `@testing-library/jest-dom`.
 
-Let's create a test file for our `Counter` component:
+Давайте создадим тестовый файл для нашего компонента `Counter`:
 
 ```ts
 // counter.test.tsx
-import { Counter } from "../src/counter";
-import { cleanup, fireEvent, render, screen, afterEach } from "solid-testing-library";
+import { Counter } from '../src/counter';
+import {
+    cleanup,
+    fireEvent,
+    render,
+    screen,
+    afterEach,
+} from 'solid-testing-library';
 import { describe, expect, it } from 'vitest';
-import "@testing-library/jest-dom"
+import '@testing-library/jest-dom';
 
-describe("Counter", () => {
-  afterEach(cleanup);
+describe('Counter', () => {
+    afterEach(cleanup);
 
-  it("it starts with zero", () => {
-    render(() => <Counter />);
+    it('it starts with zero', () => {
+        render(() => <Counter />);
 
-    const button = screen.getByRole("button");
+        const button = screen.getByRole('button');
 
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent("Count: 0");
-  });
+        expect(button).toBeInTheDocument();
+        expect(button).toHaveTextContent('Count: 0');
+    });
 
-  it("it increases its value on click", async () => {
-    render(() => <Counter />);
+    it('it increases its value on click', async () => {
+        render(() => <Counter />);
 
-    const button = screen.getByRole("button");
+        const button = screen.getByRole('button');
 
-    fireEvent.click(button);
-    // the event loop takes one Promise to resolve to be finished
-    await Promise.resolve();
-    expect(button).toHaveTextContent("Count: 1");
-    fireEvent.click(button);
-    await Promise.resolve();
-    expect(button).toHaveTextContent("Count: 2");
-  });
+        fireEvent.click(button);
+        // the event loop takes one Promise to resolve to be finished
+        await Promise.resolve();
+        expect(button).toHaveTextContent('Count: 1');
+        fireEvent.click(button);
+        await Promise.resolve();
+        expect(button).toHaveTextContent('Count: 2');
+    });
 });
 ```
 
-The test above tests the `counter` component to see if it renders the correct text and if it increments the count when clicked.
+Приведенный выше тест проверяет компонент `counter` на корректность отображения текста и увеличение счета при нажатии на кнопку мыши.
 
-## Testing Reactive State 
+## Тестирование реактивного состояния
 
-You may want to keep parts of your state separate from the components for ease of maintenance or being able to support multiple views. In this case, the interface against which you are testing is the state itself. Keep in mind that out of a reactive root (i.e `createRoot`) your state is not tracked and updates won't trigger effects and memos.
+Для удобства обслуживания или поддержки нескольких представлений вы можете захотеть хранить часть состояния отдельно от компонентов. В этом случае интерфейсом, на котором проводится тестирование, является само состояние. Следует помнить, что вне реактивного корня (например, `createRoot`) состояние не отслеживается, и его обновление не будет вызывать эффекты и заметки.
 
-As an example let's create and test a function called createLocalStorage that will create a reactive state that is persisted in the browser's local storage.
+В качестве примера создадим и протестируем функцию `createLocalStorage`, которая будет создавать реактивное состояние, сохраняемое в локальном хранилище браузера.
 
-<CodeTabs
-  js={[{ name: "createLocalStorage.jsx", component: createLocalStorageJS }]}
-  ts={[{ name: "createLocalStorage.tsx", component: createLocalStorageTS }]}
-/>
+=== "createLocalStorage.jsx"
 
-Instead of creating a component we can test this function directly in isolation. When doing that we need to keep in mind that:
-1. reactive changes only work when they have a tracking context provided by render or createRoot
-2. that they are asynchronous, but we can use createEffect to catch them
+    ```js
+    // createLocalStorage.js
+    import { createEffect } from "solid-js";
+    import { createStore, Store, SetStoreFunction } from "solid-js/store";
 
-Using createRoot has the advantage that we can trigger the disposal manually:
+    export function createLocalStore(name, initState){
+    const localState = localStorage.getItem(name);
+    const [state, setState] = createStore(initState);
+
+    if (localState) setState(JSON.parse(localState));
+
+    createEffect(() => (localStorage.setItem(name, JSON.stringify(state))));
+
+    return [state, setState];
+    }
+    ```
+
+=== "createLocalStorage.tsx"
+
+    ```ts
+    // createLocalStorage.ts
+    import { createEffect } from "solid-js";
+    import { createStore, Store, SetStoreFunction } from "solid-js/store";
+
+    export function createLocalStore<T extends object>(name:string, initState: T): [Store<T>, SetStoreFunction<T>] {
+    const localState = localStorage.getItem(name);
+    const [state, setState] = createStore(initState);
+
+    if (localState) setState(JSON.parse(localState));
+
+    createEffect(() => (localStorage.setItem(name, JSON.stringify(state))));
+
+    return [state, setState];
+    }
+    ```
+
+Вместо создания компонента мы можем протестировать эту функцию непосредственно в изоляции. При этом необходимо учитывать, что:
+
+1.  реактивные изменения работают только тогда, когда они имеют контекст отслеживания, предоставляемый `render` или `createRoot`
+2.  что они асинхронны, но мы можем использовать `createEffect` для их перехвата.
+
+Преимущество использования `createRoot` заключается в том, что мы можем запускать удаление вручную:
 
 ```ts
-import { createRoot, createEffect } from "solid-js";
-import { createLocalStorage } from "../src/createLocalStorage"; // 👈 our function
+import { createRoot, createEffect } from 'solid-js';
+import { createLocalStorage } from '../src/createLocalStorage'; // 👈 our function
 import { describe, expect, it, beforeEach } from 'vitest';
 
-describe("createLocalStorage", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+describe('createLocalStorage', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
 
-  const initialState = {
-    todos: [],
-    newTitle: ""
-  }
+    const initialState = {
+        todos: [],
+        newTitle: '',
+    };
 
-  it("reads pre-existing state from localStorage", () => {
-    createRoot((dispose) => {
-      const savedState = {
-        todos: [{ title: "Learn Solid" }],
-        newTitle: "Learn Solid"
-      };
+    it('reads pre-existing state from localStorage', () => {
+        createRoot((dispose) => {
+            const savedState = {
+                todos: [{ title: 'Learn Solid' }],
+                newTitle: 'Learn Solid',
+            };
 
-      localStorage.setItem("state", JSON.stringify(savedState));
-      const [state] = createLocalStorage("state", initialState);
+            localStorage.setItem(
+                'state',
+                JSON.stringify(savedState)
+            );
+            const [state] = createLocalStorage(
+                'state',
+                initialState
+            );
 
-      expect(state).toEqual(savedState);
-      dispose();
-    })
-  });
-
-  it("stores new state to localStorage", () => {
-    createRoot((dispose) => {
-      const [state, setState] = createLocalStorage("state", initialState);
-
-      setState("newTitle", "updated");
-
-      return new Promise((resolve) => createEffect(() => {
-        expect(JSON.parse(localStorage.getItem("state") || "")).toEqual({
-          todos: [],
-          newTitle: "updated",
+            expect(state).toEqual(savedState);
+            dispose();
         });
-        dispose()
-        resolve()
-      })
-    })
-  });
-
-  it("updates state multiple times", async () => {
-    const { dispose, setState } = createRoot((dispose) => {
-      const [state, setState] = createLocalStore("state",initialState);
-      return { dispose, setState };
     });
 
-    setState("newTitle", "first");
-    // wait a tick to resolve all effects
-    await new Promise((done) => setTimeout(done, 0));
-    expect(JSON.parse(localStorage.getItem("state") || "")).toEqual({
-      todos: [],
-      newTitle: "first",
+    it('stores new state to localStorage', () => {
+        createRoot((dispose) => {
+            const [state, setState] = createLocalStorage(
+                'state',
+                initialState
+            );
+
+            setState('newTitle', 'updated');
+
+            return new Promise((resolve) =>
+                createEffect(() => {
+                    expect(
+                        JSON.parse(
+                            localStorage.getItem('state') ||
+                                ''
+                        )
+                    ).toEqual({
+                        todos: [],
+                        newTitle: 'updated',
+                    });
+                    dispose();
+                    resolve();
+                })
+            );
+        });
     });
 
-    setState("newTitle", "second");
-    // wait a tick to resolve all effects
-    await new Promise((done) => setTimeout(done, 0));
-    expect(JSON.parse(localStorage.getItem("state") || "")).toEqual({
-      todos: [],
-      newTitle: "second",
+    it('updates state multiple times', async () => {
+        const { dispose, setState } = createRoot(
+            (dispose) => {
+                const [state, setState] = createLocalStore(
+                    'state',
+                    initialState
+                );
+                return { dispose, setState };
+            }
+        );
+
+        setState('newTitle', 'first');
+        // wait a tick to resolve all effects
+        await new Promise((done) => setTimeout(done, 0));
+        expect(
+            JSON.parse(localStorage.getItem('state') || '')
+        ).toEqual({
+            todos: [],
+            newTitle: 'first',
+        });
+
+        setState('newTitle', 'second');
+        // wait a tick to resolve all effects
+        await new Promise((done) => setTimeout(done, 0));
+        expect(
+            JSON.parse(localStorage.getItem('state') || '')
+        ).toEqual({
+            todos: [],
+            newTitle: 'second',
+        });
+        dispose();
     });
-    dispose();
-  })
-})
+});
 ```
 
-That's it! You can now test your Solid apps with confidence. For more information on testing frontend apps, check out the [JestDOM testing library](https://github.com/testing-library/jest-dom) and the [Vitest testing framework](https://vitest.dev/) 
+Вот и все! Теперь вы можете с уверенностью тестировать свои приложения Solid. Более подробную информацию о тестировании фронтенд-приложений можно найти в [Библиотеке тестирования JestDOM](https://github.com/testing-library/jest-dom) и [Фреймворке тестирования Vitest](https://vitest.dev/).
+
+## Ссылки
+
+-   [Vitest](https://docs.solidjs.com/guides/how-to-guides/testing-in-solid/vitest)
