@@ -1,0 +1,8 @@
+title: Начало работы с Solid
+nav:
+    - welcome.md
+    - installing-solid.md
+    - building-ui-with-components.md
+    #- adding-interactivity-with-state.md
+    #- control-flow.md
+    #- fetching-data.md

@@ -1,398 +1,574 @@
-import {
-  PrevSection,
-  NextSection,
-  PrevNextSection,
-} from "~/components/NextSection";
-import { CodeTabs } from "~/components/Tabs";
-import { FrameworkAside, Aside } from "~/components/configurable/Aside";
-import HelloWorld from "./snippets/HelloWorld.mdx";
-import HelloWorldExport from "./snippets/HelloWorldExport.mdx";
-import HelloWorld2 from "./snippets/HelloWorld2.mdx";
-import HelloWorld3 from "./snippets/HelloWorld3.mdx";
-import IndexJS from "./snippets/indexjs.mdx";
-import IndexTS from "./snippets/indexts.mdx";
-import IndexHTML from "./snippets/indexhtml.mdx";
-import App from "./snippets/App.mdx";
-import BookList1 from "./snippets/bookshelf/BookList1.mdx";
-import AddBook1 from "./snippets/bookshelf/AddBook1.mdx";
-import App1 from "./snippets/bookshelf/App1.mdx";
-import App2js from "./snippets/bookshelf/App2js.mdx";
-import App2ts from "./snippets/bookshelf/App2ts.mdx";
-import { IfTS } from "~/components/configurable/IfConfig";
+---
+description: Компонент - это функция, определяющая часть пользовательского интерфейса. Они являются строительными блоками приложения Solid
+---
 
-# Building User Interfaces with Components
+# Построение UI с помощью компонентов
 
-## What are components?
+## Что такое компоненты?
 
-A component is a function that defines a piece of your user interface. They're the building blocks of a Solid app.
+**Компонент** - это функция, определяющая часть пользовательского интерфейса. Они являются строительными блоками приложения Solid.
 
-Let's build our first component. This component will display `Hello World!` inside a `<div>` element.
-To do this, we need to create a file called <IfTS fallback="HelloWorld.jsx">HelloWorld.tsx</IfTS>
-inside our src folder. Then copy the following contents:
+Давайте создадим наш первый компонент. Этот компонент будет отображать `Hello World!` внутри элемента `<div>`. Для этого в папке `src` необходимо создать файл `HelloWorld.tsx`. Затем скопируйте в него следующее содержимое:
 
-<CodeTabs
-  js={[{ name: "HelloWorld.jsx", component: HelloWorld }]}
-  ts={[{ name: "HelloWorld.tsx", component: HelloWorld }]}
-/>
+```ts
+export function HelloWorld() {
+    return <div>Hello World!</div>;
+}
+```
 
-There are a couple of things to note in our first component:
+В нашем первом компоненте есть несколько моментов, на которые следует обратить внимание:
 
-- Our component name, `HelloWorld`, is title-cased (sometimes referred to as _Pascal_ case), with _*H*ello_ and _*W*orld_ capitalized.
-  This helps us differentiate components from other JavaScript functions.
-- Our component returns something that looks a lot like HTML, but isn't&mdash;it's _JSX_.
+-   Имя нашего компонента, `HelloWorld`, имеет заглавную букву (иногда ее называют _паскалевской_), причем _*H*ello_ и _*W*orld_ написаны с большой буквы.
+    Это помогает нам отличать компоненты от других функций JavaScript.
+-   Наш компонент возвращает нечто, очень похожее на HTML, но это не так &mdash; это _JSX_.
 
-<FrameworkAside framework="react">
-While Solid components look like React components, they differ in a few distinct ways. Solid component functions _only run once_ to set up and never run again. If you're used to placing a calculation in the function body of a React component and expecting it to recompute when the component re-renders, you may need to take a different approach with Solid. Don't worry&mdash; we'll cover all the best practices throughout this tutorial.
+???react "React"
 
-Like React, you can include as many components as you like within a file. You can even write a component _inside_ of another!
+    Хотя компоненты Solid похожи на компоненты React, они отличаются друг от друга по нескольким признакам. Функции компонентов Solid запускаются только один раз для настройки и больше не запускаются. Если вы привыкли помещать вычисления в тело функции компонента React и ожидать, что они будут повторно вычисляться при рендеринге компонента, то в Solid вам, возможно, придется использовать другой подход. Не волнуйтесь &mdash; мы рассмотрим все лучшие практики в этом руководстве.
 
-</FrameworkAside>
+    Как и в React, в файл можно включать сколько угодно компонентов. Можно даже написать компонент _внутри_ другого!
 
-<FrameworkAside framework="vue">
-In Vue, components have _lifecycles_ that are important to how you work with them. 
-In Solid, components are simply functions that group your code. They
-don't have lifecycles, and Solid's rendering system is based on the _reactive_ features you use&mdash;we'll get
-to that!
+???vue "Vue"
 
-In Solid, you can include as many components as you like within a file. You can even write a component _inside_ of another!
+    В Vue компоненты имеют _жизненный цикл_, который важен для работы с ними. В Solid компоненты - это просто функции, которые группируют ваш код. У них нет жизненных циклов, а система рендеринга Solid основана на _реактивных_ функциях, которые вы используете&mdash; мы еще вернемся к этому!
 
-</FrameworkAside>
-<FrameworkAside framework="svelte">
+    В Solid можно включать в один файл сколько угодно компонентов. Можно даже написать компонент _внутри_ другого!
 
-In Svelte, components have _lifecycles_ that are important to how you work with them.
-In Solid, components are simply functions that group your code. They
-don't have lifecycles, and Solid's rendering system is based on the _reactive_ features you use&mdash;we'll get
-to that!
+???svelte "Svelte"
 
-Svelte uses Single-File Components, but Solid does not. You can include as many components as you like within a file. You can even write a component _inside_ of another!
+    В Svelte компоненты имеют _жизненные циклы_, которые важны для работы с ними. В Solid компоненты - это просто функции, которые группируют ваш код. У них нет жизненных циклов, а система рендеринга Solid основана на _реактивных_ функциях, которые вы используете &mdash; мы еще вернемся к этому!
 
-</FrameworkAside>
-<FrameworkAside framework="angular">
-In Angular, components have _lifecycles_ that are important to how you work with
-them. In Solid, components are simply functions that group your code. They
-don't have lifecycles, and Solid's rendering system isn't based on the
-boundaries of your components but on the reactive features you use&mdash;we'll get
-to that! Another thing to note: While you're able to write multiple Angular components
-in the same file using the `template` component decorator property, Solid takes it
-to another level.
-In Solid, not only can you include as many components as you like
-within a file, you can even write a component _inside_ of another!
-</FrameworkAside>
+    В Svelte используются однофайловые компоненты, а в Solid - нет. В один файл можно включать сколько угодно компонентов. Можно даже написать компонент _внутри_ другого!
 
-### Using a component
+???angular "Angular"
 
-Let's get this component on the screen. Export it from <IfTS fallback="HelloWorld.jsx">HelloWorld.tsx</IfTS> by replacing `function` with `export function`.
-Then, let's replace the boilerplate in <IfTS fallback="App.jsx">App.tsx</IfTS> with code that imports and displays our component:
+    В Angular компоненты имеют _жизненный цикл_, который важен для работы с ними. В Solid компоненты - это просто функции, которые группируют ваш код. У них нет жизненных циклов, а система рендеринга Solid основана не на границах компонентов, а на реактивных функциях, которые вы используете &mdash; мы еще вернемся к этому! Еще один момент: если в одном файле можно написать несколько компонентов Angular, используя свойство-декоратор компонента `template`, то в Solid это реализовано на другом уровне.
 
-<CodeTabs
-  js={[
-    { name: "HelloWorld.jsx", component: HelloWorldExport },
-    { name: "App.jsx", component: App, default: true },
-  ]}
-  ts={[
-    { name: "HelloWorld.tsx", component: HelloWorldExport },
-    { name: "App.tsx", component: App, default: true },
-  ]}
-/>
+    В Solid можно не только включать сколько угодно компонентов в один файл, но даже писать компонент _вместе_ с другим!
 
-We used our component just like any other element: after importing the `HelloWorld` function, we can now use `<HelloWorld />`.
+### Использование компонента
 
-<Aside>
-  By building with components, we're able to separate and reuse code. Components
-  let us create building blocks that we can put together to form new pieces.
-</Aside>
+Давайте выведем этот компонент на экран. Экспортируем его из файла `HelloWorld.tsx`, заменив `function` на `export function`.
 
-## What is JSX?
+Затем заменим шаблон в файле `App.tsx` на код, который импортирует и отображает наш компонент:
 
-As we learned above, Solid components return JSX. JSX is an HTML-like syntax used in Solid JavaScript code to represent part of the Document Object Model (DOM).
-In our <IfTS fallback="HelloWorld.jsx">HelloWorld.tsx</IfTS> example above, we returned the following JSX from our component:
+=== "HelloWorld.tsx"
 
-```tsx
+    ```ts
+    export function HelloWorld() {
+    	return <div>Hello World!</div>;
+    }
+    ```
+
+=== "App.tsx"
+
+    ```ts
+    import { HelloWorld } from './HelloWorld';
+    function App() {
+    	return (
+    		<div>
+    			<h1>Welcome</h1>
+    			<HelloWorld />
+    		</div>
+    	);
+    }
+    export default App;
+    ```
+
+Мы использовали наш компонент так же, как и любой другой элемент: импортировав функцию `HelloWorld`, мы теперь можем использовать `<HelloWorld />`.
+
+!!!note ""
+
+    Построение с использованием компонентов позволяет разделить код и использовать его повторно. Компоненты позволяют нам создавать строительные блоки, которые мы можем соединять вместе для создания новых частей.
+
+## Что такое JSX?
+
+Как мы узнали выше, компоненты Solid возвращают JSX. JSX - это HTML-подобный синтаксис, используемый в JavaScript-коде Solid для представления части объектной модели документа (DOM). В нашем примере `HelloWorld.tsx`, приведенном выше, мы вернули следующий JSX из нашего компонента:
+
+```ts
 <div>Hello World!</div>
 ```
 
-This JSX represents a `<div>` element with the text `Hello World!` inside. It's just as if we had written it in an HTML document.
-As a means of showing you the power and flexibility of Solid, let's add some inline styling to our `<div>`:
-
-```tsx
-<div style="background-color: #2c4f7c; color: #FFF;">Hello world!</div>
-```
-
-This will render a div with a blue background color and white text:
-
-<div style="background-color: #2c4f7c; color: #FFF;">Hello world!</div>
-
-Trying to create a stylized div using JavaScript _without_ JSX would be more complex:
+Этот JSX представляет собой элемент `<div>` с текстом `Hello World!` внутри. Это так же, как если бы мы написали его в HTML-документе. Чтобы продемонстрировать возможности и гибкость Solid, давайте добавим в наш элемент `<div>` несколько встроенных стилей:
 
 ```ts
-const div = document.createElement("div");
-div.style["background-color"] = "#2c4f7c";
-div.style.color = "#FFF";
+<div style="background-color: #2c4f7c; color: #FFF;">
+    Hello world!
+</div>
 ```
 
-<FrameworkAside framework="vue">
-  Vue has its own "template language" in a designated file type called `.vue`.
-  `.jsx` serves a similar role in Solid, but isn't directly integrated into
-  JavaScript. We can write a JSX element anywhere we could write a JavaScript
-  expression, and there's no enforced separation between template and data.
-</FrameworkAside>
+В результате будет создан `div` с синим цветом фона и белым текстом:
 
-<FrameworkAside framework="svelte">
-  Svelte has its own "template language" in a designated file type called
-  `.svelte`.`.jsx` serves a similar role in Solid, but isn't directly integrated
-  into JavaScript. We can write a JSX element anywhere we could write a
-  JavaScript expression, and there's no enforced separation between template and
-  data.
-</FrameworkAside>
-<FrameworkAside framework="angular">
-  Instead of JSX, Angular has its own "template compiler" that takes template
-  strings and compiles them into JavaScript instructions. This serves a similar
-  role to JSX, but isn't directly integrated into JavaScript. In Solid, you can
-  write a JSX element anywhere you could write a JavaScript expression, and
-  there's no enforced separation between template and data.
-</FrameworkAside>
+<div style="background-color: #2c4f7c; color: #FFF;">Hello world!</div>
+
+Попытка создать стилизованный `div` с помощью JavaScript _без_ JSX будет более сложной:
+
+```ts
+const div = document.createElement('div');
+div.style['background-color'] = '#2c4f7c';
+div.style.color = '#FFF';
+```
+
+???vue "vue"
+
+    Vue имеет свой собственный "язык шаблонов" в специальном типе файлов под названием `.vue`. `.jsx` выполняет аналогичную роль в Solid, но не интегрирован непосредственно в JavaScript. Мы можем написать JSX-элемент в любом месте, где мы могли бы написать выражение JavaScript, и нет никакого принудительного разделения между шаблоном и данными.
+
+???svelte "svelte"
+
+    В Svelte имеется собственный "язык шаблонов" в специальном типе файлов `.svelte`.`.jsx` выполняет аналогичную роль в Solid, но не интегрирован непосредственно в JavaScript. Мы можем написать JSX-элемент в любом месте, где мы могли бы написать выражение JavaScript, и нет никакого принудительного разделения между шаблоном и данными.
+
+???angular "angular"
+
+    Вместо JSX в Angular имеется собственный "компилятор шаблонов", который принимает строки шаблонов и компилирует их в инструкции JavaScript. Он выполняет ту же роль, что и JSX, но не интегрирован непосредственно в JavaScript. В Solid можно написать JSX-элемент в любом месте, где можно написать выражение JavaScript, и нет принудительного разделения между шаблоном и данными.
 
 ### JSX + JavaScript
 
-JSX becomes even more powerful when used alongside JavaScript expressions. For example, we can use variables to represent some of the text content in our `<div>`:
+JSX становится еще более мощным, если использовать его вместе с выражениями JavaScript. Например, мы можем использовать переменные для представления некоторого текстового содержимого в нашем `<div>`:
 
-```tsx
-const name = "Solid";
+```ts
+const name = 'Solid';
 
-<div style="background-color: #2c4f7c; color: #FFF;">Hello {name}!</div>;
+<div style="background-color: #2c4f7c; color: #FFF;">
+    Hello {name}!
+</div>;
 ```
 
-Notice how we can add `{name}` where it used to say `World`. This JavaScript expression allows us to modify the content of our `<div>`:
+Обратите внимание, как мы можем добавить `{name}` туда, где раньше было написано `World`. Это выражение JavaScript позволяет нам изменять содержимое нашего `<div>`:
 
 <div style="background-color: #2c4f7c; color: #FFF;">Hello Solid!</div>
 
-We can take this a step further and specify our div's `{style}` attribute as a JavaScript object:
+Мы можем пойти еще дальше и задать атрибут `{style}` нашего div как объект JavaScript:
 
-```tsx
-const name = "Solid";
-const style = { "background-color": "#2c4f7c", color: "#FFF" };
+```ts
+const name = 'Solid';
+const style = {
+    'background-color': '#2c4f7c',
+    color: '#FFF',
+};
 
 <div style={style}>Hello {name}!</div>;
 ```
 
-With JSX, we have code that lets us take advantage of the dynamic nature of JavaScript with a declarative HTML-like syntax.
+Благодаря JSX мы получаем код, позволяющий использовать динамическую природу JavaScript в сочетании с декларативным HTML-подобным синтаксисом.
 
-As we progress through these tutorials, we'll discover how Solid's reactive system combines with JSX to improve the experience of crafting user interfaces.
+По мере изучения этих уроков мы узнаем, как реактивная система Solid в сочетании с JSX улучшает работу по созданию пользовательских интерфейсов.
 
-<FrameworkAside framework="vue">
+???vue "vue"
 
-This syntax of binding HTML and attribute values are two different syntaxes in Vue. The above might look something like this in Vue:
+    Этот синтаксис связывания HTML и значений атрибутов - два разных синтаксиса в Vue. В Vue это может выглядеть следующим образом:
 
-```html
-<div :style="style">Hello {{name}}!</div>
+    ```html
+    <div :style="style">Hello {{name}}!</div>
+    ```
+
+Давайте обновим наш исходный компонент `HelloWorld` с учетом того, что мы узнали в ходе изучения JSX:
+
+```ts
+export function HelloWorld() {
+    const name = 'Solid';
+    const style = {
+        'background-color': '#2c4f7c',
+        color: '#FFF',
+    };
+    return <div style={style}>Hello {name}!</div>;
+}
 ```
 
-</FrameworkAside>
+### Использование фрагментов
 
-Let's update our initial `HelloWorld` component with what we learned in our JSX exploration:
+Одно из правил при использовании JSX заключается в том, что компонентная функция должна возвращать один элемент. Например, следующий пример является правильным JSX, поскольку в нем есть единственный элемент `<div />`, который содержит остальную часть JSX:
 
-<CodeTabs
-  js={[{ name: "HelloWorld.jsx", component: HelloWorld2 }]}
-  ts={[{ name: "HelloWorld.tsx", component: HelloWorld2 }]}
-/>
-
-### Using fragments
-
-One rule when using JSX is that a component function must return a single element. For example, the following is valid JSX because there is a single `<div />` that contains the rest of the JSX:
-
-```tsx
+```ts
 <div>
-  <h1>Welcome</h1>
-  <HelloWorld />
+    <h1>Welcome</h1>
+    <HelloWorld />
 </div>
 ```
 
-But the following is _not_ valid JSX because there is no single containing element:
+Но следующий вариант - это _не_ корректный JSX, поскольку в нем нет ни одного содержащего элемента:
 
-```tsx
+```ts
 <h1>Welcome</h1>
 <HelloWorld />
 ```
 
-However, we may not actually want a `div` surrounding this code when it's rendered to the DOM.
-_JSX fragments_ give us a way to write valid JSX and also not actually render a containing element to the DOM:
+Однако, возможно, мы не хотим, чтобы при выводе кода в DOM его окружало `div`. _JSX-фрагменты_ дают нам возможность писать корректный JSX и при этом не выводить в DOM содержащий его элемент:
 
-```tsx
+```ts
 <>
-  <h1>Welcome</h1>
-  <HelloWorld />
+    <h1>Welcome</h1>
+    <HelloWorld />
 </>
 ```
 
-<FrameworkAside framework="vue">
-  Vue 2 worked similarly: a component needed to have a single root element.
-</FrameworkAside>
+???vue "vue"
 
-<FrameworkAside framework="angular">
-  Angular has a similar API to Fragments with
-  [`ng-container`](https://angular.io/api/core/ng-container).
-</FrameworkAside>
+    Аналогичным образом работал и Vue 2: компонент должен был иметь один корневой элемент.
 
-### JSX is compiled
+???angular "angular"
 
-JSX is syntax on top of JavaScript and is not directly part of any JavaScript standard. Therefore, JSX can't be run directly in the browser (or most other JavaScript runtimes). Solid and other frameworks that use JSX require their code to be run through a compiler. If you're using a starter template you don't have to worry about this&mdash;everything will just work out of the box.
+    Angular имеет схожий с Fragments API с [`ng-container`](https://angular.io/api/core/ng-container).
 
-<Aside type="note">
-  Remember how we discussed that component function names are title-cased? This
-  is so the compiler understands the difference between native DOM elements
-  (like `div`) and custom components (like `HelloWorld`).
-</Aside>
+### JSX компилируется
 
-<Aside type="advanced" collapsible title="Read more about the compiler">
-  Solid's JSX compiler doesn't just compile JSX to JavaScript; it also extracts reactive values (which we'll get to later in the tutorial) and makes things more efficient along the way.
+JSX представляет собой синтаксис поверх JavaScript и не является непосредственной частью какого-либо стандарта JavaScript. Поэтому JSX не может быть запущен непосредственно в браузере (или в большинстве других программ выполнения JavaScript). Solid и другие фреймворки, использующие JSX, требуют, чтобы их код выполнялся через компилятор. Если вы используете стартовый шаблон, то вам не нужно беспокоиться об этом, все будет работать из коробки.
 
-This is more involved than React's JSX compiler, but much less involved than something like Svelte's compiler. Solid's compiler doesn't touch your JavaScript, only your JSX.
+!!!note ""
 
-If you're curious about how Solid and other frameworks use compilation, check out [A Look at Compilation in JavaScript Frameworks](https://dev.to/this-is-learning/a-look-at-compilation-in-javascript-frameworks-3caj) by the creator of Solid.
+    Помните, мы говорили о том, что имена функций компонентов приводятся в заголовке? Это сделано для того, чтобы компилятор понимал разницу между собственными элементами DOM (например, `div`) и пользовательскими компонентами (например, `HelloWorld`).
 
-</Aside>
-## Mounting Solid to the DOM
+???note "Подробнее о компиляторе"
 
-How does our `App` component make it on to the actual HTML page that we show our users?
+    JSX-компилятор Solid не просто компилирует JSX в JavaScript, он также извлекает реактивные значения (о чем мы поговорим позже) и делает все более эффективным.
 
-To add a Solid application to an HTML document, we first designate a containing element in our HTML and assign it an `id`. That usually looks like this:
+    Это более сложная задача, чем JSX-компилятор React, но гораздо менее сложная, чем, например, компилятор Svelte. Компилятор Solid не трогает JavaScript, а только JSX.
+
+    Если вам интересно узнать, как Solid и другие фреймворки используют компиляцию, посмотрите статью [A Look at Compilation in JavaScript Frameworks](https://dev.to/this-is-learning/a-look-at-compilation-in-javascript-frameworks-3caj), написанную создателем Solid.
+
+## Монтирование Solid в DOM
+
+Как наш компонент `App` попадает на реальную HTML-страницу, которую мы показываем нашим пользователям?
+
+Чтобы добавить приложение Solid в HTML-документ, мы сначала выделяем в HTML содержащий его элемент и присваиваем ему `id`. Обычно это выглядит следующим образом:
 
 ```html
 <body>
-  <div id="root"></div>
+    <div id="root"></div>
 </body>
 ```
 
-Then, we call Solid's `render` function, passing in our `App` component and this element:
+Затем мы вызываем функцию Solid `render`, передавая в нее наш компонент `App` и данный элемент:
 
-```jsx
-render(() => <App />, document.getElementById("root"));
+```js
+render(() => <App />, document.getElementById('root'));
 ```
 
-<FrameworkAside framework="vue">
-  This is similar to Vue's
-  [`app.mount`](https://vuejs.org/guide/essentials/application.html#mounting-the-app)
-  function.
-</FrameworkAside>
+???vue "vue"
 
-See how this plays out in our project in the `index.html` file, which creates the div, and <IfTS fallback="src/index.jsx" code>src/index.tsx</IfTS>, which calls that `render` function:
+    Это аналогично функции Vue [`app.mount`](https://vuejs.org/guide/essentials/application.html#mounting-the-app).
 
-<CodeTabs
-  js={[
-    { name: "src/HelloWorld.jsx", component: HelloWorld2 },
-    { name: "src/App.jsx", component: App },
-    { name: "src/index.jsx", component: IndexJS, default: true },
-    { name: "index.html", component: IndexHTML },
-  ]}
-  ts={[
-    { name: "src/HelloWorld.tsx", component: HelloWorld2 },
-    { name: "src/App.tsx", component: App },
-    { name: "src/index.tsx", component: IndexTS, default: true },
-    { name: "index.html", component: IndexHTML },
-  ]}
-/>
+Посмотрите, как это выглядит в нашем проекте в файле `index.html`, который создает div, и в файле `src/index.tsx`, который вызывает эту функцию `render`:
 
-<Aside type="note">
+=== "src/HelloWorld.tsx"
 
-You'll want to make sure the first argument passed to the render function is a function that returns a component `() => <Component />` rather than just the component itself.
+    ```ts
+    export function HelloWorld() {
+    	const name = 'Solid';
+    	const style = {
+    		'background-color': '#2c4f7c',
+    		color: '#FFF',
+    	};
+    	return <div style={style}>Hello {name}!</div>;
+    }
+    ```
 
-</Aside>
+=== "src/App.tsx"
 
-<FrameworkAside framework="react">
-React defaults to having a `StrictMode` component added to the root of your app, which [changes the render behavior of your code depending on whether you're in a development mode or not](https://beta.reactjs.org/learn/keeping-components-pure#side-effects-unintended-consequences:~:text=Detecting%20impure%20calculations%20with%20StrictMode).
+    ```ts
+    import { HelloWorld } from './HelloWorld';
+    function App() {
+    	return (
+    		<div>
+    			<h1>Welcome</h1>
+    			<HelloWorld />
+    		</div>
+    	);
+    }
+    export default App;
+    ```
 
-Solid has no such behavioral differences between production and development rendering.
+=== "src/index.tsx"
 
-</FrameworkAside>
+    ```ts
+    import { render } from 'solid-js/web';
+    import './index.css';
+    import App from './App';
+    render(
+    	() => <App />,
+    	document.getElementById('root') as HTMLElement
+    );
+    ```
 
-## Composing multiple components together
+=== "index.html"
 
-In most cases, our applications are big enough that we will want to split them into _multiple_ components. Let's move on from our `HelloWorld` example to build something a little bigger&mdash;a virtual bookshelf. Our bookshelf will allow us to add books, mark books as "read", and eventually fetch book titles from other services on the Internet.
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    	<head>
+    		<meta charset="utf-8" />
+    		<meta
+    			name="viewport"
+    			content="width=device-width, initial-scale=1"
+    		/>
+    		<meta name="theme-color" content="#000000" />
+    		<link
+    			rel="shortcut icon"
+    			type="image/ico"
+    			href="/src/assets/favicon.ico"
+    		/>
+    		<title>Solid App</title>
+    	</head>
+    	<body>
+    		<noscript
+    			>You need to enable JavaScript to run this
+    			app.</noscript
+    		>
+    		<div id="root"></div>
+    		<script src="/src/index.tsx" type="module"></script>
+    	</body>
+    </html>
+    ```
 
-Given the intuitive nature of JSX, we can plan out our application a bit. Our main `Bookshelf` will comprise two top-level components:
+!!!note ""
 
-- A `<BookList />` component, which lists all the books in our bookshelf
-- An `<AddBook />` component, which will allow us to add a book to our bookshelf
+    Необходимо убедиться, что первым аргументом, передаваемым функции `render`, является функция, возвращающая компонент `() => <Component />`, а не просто сам компонент.
 
-While we'll eventually want to make our bookshelf interactive, let's first create non-interactive versions of each component. First, we can make the `BookList` component inside and list a couple of books alongside their authors:
+???react "react"
 
-<CodeTabs
-  js={[{ name: "BookList.jsx", component: BookList1 }]}
-  ts={[{ name: "BookList.tsx", component: BookList1 }]}
-/>
+    В React по умолчанию в корень приложения добавлен компонент `StrictMode`, который [изменяет поведение рендеринга кода в зависимости от того, находитесь ли вы в режиме разработки или нет](https://beta.reactjs.org/learn/keeping-components-pure#side-effects-unintended-consequences:~:text=Detecting%20impure%20calculations%20with%20StrictMode).
 
-Next, we create an `AddBook` component. This will be a form that eventually allows us to add a book to our `BookList` list.
+    В Solid нет таких различий между рендерингом в режиме разработки и в режиме производства.
 
-<CodeTabs
-  js={[
-    { name: "AddBook.jsx", component: AddBook1 },
-    { name: "BookList.jsx", component: BookList1 },
-  ]}
-  ts={[
-    { name: "AddBook.tsx", component: AddBook1 },
-    { name: "BookList.tsx", component: BookList1 },
-  ]}
-/>
+## Объединение нескольких компонентов
 
-Finally, we can _compose_ our `BookList` and `AddBook` components together. Let's create a `Bookshelf` component within <IfTS code fallback="App.jsx">App.tsx</IfTS>
+В большинстве случаев наши приложения достаточно велики, чтобы мы захотели разделить их на _множество_ компонентов. Давайте перейдем от примера с `HelloWorld` к созданию чего-то более масштабного &mdash; виртуальной книжной полки. Наша книжная полка позволит нам добавлять книги, отмечать их как "прочитанные" и, в конечном счете, получать названия книг из других сервисов в Интернете.
 
-<CodeTabs
-  js={[
-    { name: "App.jsx", component: App1 },
-    { name: "AddBook.jsx", component: AddBook1 },
-    { name: "BookList.jsx", component: BookList1 },
-  ]}
-  ts={[
-    { name: "App.tsx", component: App1 },
-    { name: "AddBook.tsx", component: AddBook1 },
-    { name: "BookList.tsx", component: BookList1 },
-  ]}
-/>
+Учитывая интуитивную природу JSX, мы можем немного спланировать наше приложение. Наша главная `Bookshelf` будет состоять из двух компонентов верхнего уровня:
 
-### Component relationships
+-   компонент `<BookList />`, в котором перечислены все книги, имеющиеся на нашей книжной полке
+-   компонент `<AddBook />`, который позволит нам добавить книгу на книжную полку.
 
-If a component includes another, we call it a _parent_ component.
-In our `Bookshelf` example, the `Bookshelf` component is the _parent_ of both `BookList` and `AddBook` because those two components are within `Bookshelf`. Accordingly, `BookList` and `AddBook` are _children_ of `Bookshelf`. You may already be familiar with this terminology; it's how we tend to refer to HTML element relationships in our DOM tree.
+Хотя со временем мы захотим сделать нашу книжную полку интерактивной, давайте сначала создадим неинтерактивные версии каждого компонента. Во-первых, мы можем сделать компонент `BookList` внутренним и перечислить несколько книг вместе с их авторами:
 
-### Passing props between components
-
-Components can communicate with their child components by passing properties, often shortened to `props`. To demonstrate the power of `props`, let's customize the bookshelf by adding a name. To do this, add a `props` parameter to the bookshelf function. Then, add a `name` attribute when we use the component:
-
-<CodeTabs
-  js={[
-    { name: "App.jsx*", component: App2js },
-    { name: "AddBook.jsx", component: AddBook1 },
-    { name: "BookList.jsx", component: BookList1 },
-  ]}
-  ts={[
-    { name: "App.tsx*", component: App2ts },
-    { name: "AddBook.tsx", component: AddBook1 },
-    { name: "BookList.tsx", component: BookList1 },
-  ]}
-/>
-
-Component functions only ever take one argument, if any: the props object. The properties on this object are set when we use the component and provide attributes.
-
-<FrameworkAside framework="react">
-
-In React, it's common to use _destructuring assignment_ when accessing props inside a component. For example, our `Bookshelf` component may be written like this in React:
-
-```tsx
-function Bookshelf({ name }) {
-  return (
-    <div>
-      <h1>{name}'s Bookshelf</h1>
-      <Books />
-      <AddBook />
-    </div>
-  );
+```ts
+export function BookList() {
+    return (
+        <ul>
+            <li>
+                Code Complete{' '}
+                <span style={{ 'font-style': 'italic' }}>
+                    (Steve McConnell)
+                </span>
+            </li>
+            <li>
+                The Hobbit{' '}
+                <span style={{ 'font-style': 'italic' }}>
+                    (J.R.R. Tolkien)
+                </span>
+            </li>
+        </ul>
+    );
 }
 ```
 
-**But destructuring `props` is usually a bad idea in Solid**. Under the hood, Solid uses _proxies_ to hook into `props` objects to know when a prop is accessed. When we destructure our props object in the function signature, we immediately access the object's properties and lose reactivity.
+Далее мы создаем компонент `AddBook`. Это будет форма, которая позволит нам добавить книгу в список `BookList`.
 
-</FrameworkAside>
+=== "AddBook.tsx"
 
-### Progress!
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
 
-Thus far, we learned about Solid components, JSX, and built the foundation of a handy bookshelf app. Next, we'll bring our bookshelf to life using Solid's reactive system!
+=== "BookList.tsx"
+
+    ```ts
+    export function BookList() {
+    	return (
+    		<ul>
+    			<li>
+    				Code Complete{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(Steve McConnell)
+    				</span>
+    			</li>
+    			<li>
+    				The Hobbit{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(J.R.R. Tolkien)
+    				</span>
+    			</li>
+    		</ul>
+    	);
+    }
+    ```
+
+Finally, we can _compose_ our `BookList` and `AddBook` components together. Let's create a `Bookshelf` component within `App.tsx`.
+
+=== "App.tsx"
+
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    function Bookshelf() {
+    	return (
+    		<div>
+    			<h1>My Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    export function BookList() {
+    	return (
+    		<ul>
+    			<li>
+    				Code Complete{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(Steve McConnell)
+    				</span>
+    			</li>
+    			<li>
+    				The Hobbit{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(J.R.R. Tolkien)
+    				</span>
+    			</li>
+    		</ul>
+    	);
+    }
+    ```
+
+### Отношения между компонентами
+
+Если компонент включает в себя другой компонент, мы называем его _родительским_ компонентом. В нашем примере `Bookshelf` компонент `Bookshelf` является _родительским_ для `BookList` и `AddBook`, поскольку эти два компонента находятся внутри `Bookshelf`. Соответственно, `BookList` и `AddBook` являются _дочерними_ компонентами `Bookshelf`. Возможно, вы уже знакомы с этой терминологией; так мы обычно обозначаем отношения между HTML-элементами в нашем DOM-дереве.
+
+### Передача свойств между компонентами
+
+Компоненты могут взаимодействовать со своими дочерними компонентами путем передачи свойств, часто сокращенно называемых `props`. Чтобы продемонстрировать возможности свойства `props`, давайте настроим книжную полку, добавив ей имя. Для этого добавьте в функцию bookshelf параметр `props`. Затем добавим атрибут `name` при использовании компонента:
+
+=== "App.tsx\*"
+
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    export function BookList() {
+    	return (
+    		<ul>
+    			<li>
+    				Code Complete{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(Steve McConnell)
+    				</span>
+    			</li>
+    			<li>
+    				The Hobbit{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(J.R.R. Tolkien)
+    				</span>
+    			</li>
+    		</ul>
+    	);
+    }
+    ```
+
+Функции компонентов принимают только один аргумент, если таковой имеется: объект свойства. Свойства этого объекта устанавливаются при использовании компонента и предоставляют атрибуты.
+
+???react "react"
+
+    В React при обращении к свойствам внутри компонента принято использовать _деструктурирующее присваивание_. Например, наш компонент `Bookshelf` может быть написан в React следующим образом:
+
+    ```ts
+    function Bookshelf({ name }) {
+    	return (
+    		<div>
+    			<h1>{name}'s Bookshelf</h1>
+    			<Books />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    ```
+
+    **Но деструктуризация свойств обычно является плохой идеей в Solid**. Под капотом Solid использует _прокси_ для хука объектов `свойств`, чтобы знать, когда к ним обращаются. Когда мы деструктурируем наш объект свойства в сигнатуре функции, мы немедленно получаем доступ к свойствам объекта и теряем реактивность.
+
+### Прогресс!
+
+Итак, мы познакомились с компонентами Solid, JSX и создали основу для удобного приложения "Книжная полка". Далее мы воплотим нашу книжную полку в жизнь, используя реактивную систему Solid!
+
+## Ссылки
+
+-   [Building User Interfaces with Components](https://docs.solidjs.com/guides/tutorials/getting-started-with-solid/building-ui-with-components)

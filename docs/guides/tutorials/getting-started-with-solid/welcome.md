@@ -1,59 +1,29 @@
-import { NextSection } from "~/components/NextSection";
-import { Preferences } from "~/components/Preferences";
-import { FrameworkAside, Aside } from "~/components/configurable/Aside";
-import { FinishedBookshelf } from "./components/FinishedBookshelf";
+---
+description: Добро пожаловать в учебник по Solid! В этом учебном пособии вы будете изучать Solid на практике
+---
 
-# Welcome
+# Добро пожаловать
 
-Welcome to the Solid tutorial! In this tutorial, you'll learn Solid by doing.
+Добро пожаловать в учебник по Solid! В этом учебном пособии вы будете изучать Solid на практике.
 
-We'll build an app and explore Solid principles along the way. We'll be building a "bookshelf" that lets you search a library database and add books to a list.
+Мы создадим приложение и изучим принципы Solid. Мы создадим "книжную полку", позволяющую осуществлять поиск по библиотечной базе данных и добавлять книги в список.
 
-<FinishedBookshelf name="Ryan" />
+## Что такое Solid?
 
-## What is Solid?
+Solid - это JavaScript-фреймворк для создания интерактивных веб-приложений. С помощью Solid можно использовать имеющиеся знания HTML и JavaScript для создания компонентов, которые можно повторно использовать во всех приложениях. Solid предоставляет инструменты для повышения реактивности компонентов: декларативный JavaScript-код, связывающий пользовательский интерфейс с данными, которые он использует и создает.
 
-Solid is a JavaScript framework for making interactive web applications. With Solid, you can use your existing HTML and JavaScript knowledge to build components that can be reused throughout your app. Solid provides the tools to enhance your components with reactivity: declarative JavaScript code that links the user interface with the data that it uses and creates.
+## Предварительные условия
 
-## Prerequisites
+Прежде чем приступить к изучению Solid, мы рекомендуем вам иметь некоторый опыт создания веб-сайтов и понимать HTML, CSS и JavaScript.
 
-Before digging into Solid, we recommend you have some experience building websites and a working understanding of HTML, CSS, and JavaScript.
+!!!note ""
 
-<Aside type="general">
-  Check out [JavaScript for
-  Solid](/guides/foundations/javascript-for-solid) if you need a
-  refresher on JavaScript concepts we frequently use in Solid.
-</Aside>
+    Ознакомьтесь с [JavaScript для Solid](../../foundations/javascript-for-solid.md), если вам необходимо освежить в памяти концепции JavaScript, которые мы часто используем в Solid.
 
-## Tell us a little about yourself
+## Нужна помощь?
 
-Before we get started, we'd like to know a little about you! By telling us your language preference and if you're coming from another framework, we'll be able to tailor this tutorial to match your experience as best we can.
+Если вам понадобится помощь, [не стесняйтесь обращаться к команде Solid в Discord!](https://discord.com/invite/solidjs) Скорее всего, если что-то в этом руководстве непонятно вам, то, скорее всего, это непонятно и другим. Обратившись к нам, вы поможете улучшить опыт других людей.
 
-<Preferences id="content-1" isForContent={true} />
+## Ссылки
 
-<FrameworkAside framework="react">
-  As you go through the tutorial, we'll give you helpful hints in informational
-  boxes just like this one that relate Solid with React principles and
-  practices.
-</FrameworkAside>
-
-<FrameworkAside framework="svelte">
-  As you go through the tutorial, we'll give you helpful hints in informational
-  boxes just like this one that relate Solid with Svelte principles and
-  practices.
-</FrameworkAside>
-
-<FrameworkAside framework="vue">
-  As you go through the tutorial, we'll give you helpful hints in informational
-  boxes just like this one that relate Solid with Vue principles and practices.
-</FrameworkAside>
-
-<FrameworkAside framework="angular">
-  As you go through the tutorial, we'll give you helpful hints in informational
-  boxes just like this one that relate Solid with Angular principles and
-  practices.
-</FrameworkAside>
-
-## Need help?
-
-If you ever need help along the way, [don't hesitate to reach out to the Solid team on Discord!](https://discord.com/invite/solidjs) Chances are that if something in this tutorial is unclear to you, then it's likely unclear to others as well. By reaching out to us, you'll be helping improve the learning experience of others as well.
+-   [Welcome](https://docs.solidjs.com/guides/tutorials/getting-started-with-solid/welcome)

@@ -1,22 +1,23 @@
-import { PrevSection, NextSection, PrevNextSection } from "~/components/NextSection";
-import { IfTS } from "~/components/configurable/IfConfig";
+---
+description: Вы можете работать с Solid, используя браузерный редактор, или установить его локально на свой компьютер
+---
 
-# Installing Solid
+# Установка Solid
 
-You can work with Solid using a browser-based editor, or install it locally on your computer.
+Вы можете работать с Solid, используя браузерный редактор, или установить его локально на свой компьютер.
 
-## In the browser
+## В браузере
 
-The easiest way to get started with Solid is to choose a browser-based option.
+Самый простой способ начать работу с Solid - это выбрать браузерный вариант.
 
-- **StackBlitz Starters**: Stackblitz is a web-based development environment. You can choose from either the [JavaScript starter](https://stackblitz.com/github/solidjs/templates/tree/master/js) or the [TypeScript starter](https://stackblitz.com/github/solidjs/templates/tree/master/ts). These links will set up a full project environment for you, and everything will run directly in your browser.
+-   **StackBlitz Starters**: Stackblitz - это веб-среда разработки. Вы можете выбрать [JavaScript starter](https://stackblitz.com/github/solidjs/templates/tree/master/js) или [TypeScript starter](https://stackblitz.com/github/solidjs/templates/tree/master/ts). По этим ссылкам будет создана полная среда проекта, и все будет выполняться непосредственно в браузере.
 
-## In your local environment
+## В локальном окружении
 
-To run Solid on your own computer, make sure you have [Node.js](https://nodejs.org) installed.
-Then, run one of these commands, which pull from our [Vite templates](https://github.com/solidjs/templates).
+Чтобы запустить Solid на своем компьютере, убедитесь, что у вас установлен [Node.js](https://nodejs.org).
+Затем выполните одну из этих команд, которые взяты из наших [Vite шаблонов](https://github.com/solidjs/templates).
 
-### JavaScript template
+### Шаблон JavaScript
 
 ```bash
 npx degit solidjs/templates/js my-app
@@ -25,7 +26,7 @@ npm install # or yarn or pnpm
 npm run dev # or yarn or pnpm
 ```
 
-### TypeScript template
+### Шаблон TypeScript
 
 ```bash
 npx degit solidjs/templates/ts my-app
@@ -34,44 +35,34 @@ npm install # or yarn or pnpm
 npm run dev # or yarn or pnpm
 ```
 
-If everything has been installed correctly, the final command should start the demo application on port 3000. Navigate to [https://localhost:3000](https://localhost:3000) and you should see the following demo app:
+Если все установлено правильно, то последняя команда должна запустить демонстрационное приложение на порту 3000. Перейдите по адресу [https://localhost:3000](https://localhost:3000), и вы увидите следующее демонстрационное приложение:
 
-<img
-  src="/images/tutorial/solid-start-app.png"
-  alt="Screenshot of the Solid template running in a browser. There's a Solid logo rotating."
-  width="820"
-/>
+![Screenshot of the Solid template running in a browser. There's a Solid logo rotating.](solid-start-app.png)
 
 ## JavaScript vs TypeScript
 
-For this tutorial, it isn't important whether you choose the JavaScript or the TypeScript template. If you know TypeScript, feel free to choose that one. In the TypeScript template, code files will end in `.ts` and `.tsx` instead of `.js` and `.jsx`.
+Для данного урока не имеет значения, какой шаблон вы выберете - JavaScript или TypeScript. Если вы знаете TypeScript, смело выбирайте его. В шаблоне TypeScript файлы кода будут заканчиваться на `.ts` и `.tsx`, а не на `.js` и `.jsx`.
 
-## Understanding the Project Structure
+## Понимание структуры проекта
 
-<div class="flex gap-2">
+=== "JS"
 
-  <div>
+![Снимок экрана браузера файлов в Stackblitz, отображающего все файлы в шаблоне](template-files-js.png)
 
-These templates set up a project with many files, but it isn't important to understand them all now. We'll guide you through files as you need them.
-For now, here are the basics:
+=== "TS"
 
-- We're using [Vite](https://vitejs.dev/) to run our code. Vite is a tool that allows us to import one file from another and use plugins to improve the development experience. When we're ready to deploy our app, Vite bundles our code. 
-The <IfTS code fallback="vite.config.js">vite.config.ts</IfTS> file configures the Vite project.
-- Everything we'll be doing in this tutorial takes place in the `src` folder.
-- The starting point for our site is `index.html`. This provides a basic HTML skeleton, and links to <IfTS code fallback="src/index.jsx">src/index.tsx</IfTS>.
-- <IfTS code fallback="src/index.jsx">src/index.tsx</IfTS> is the starting point for our Solid app. 
-This in turn imports <IfTS code fallback="src/App.jsx">src/App.tsx</IfTS>, which is our first component. We'll discuss components next!
+![Снимок экрана браузера файлов в Stackblitz, отображающего все файлы в шаблоне TypeScript.](template-files-ts.png)
 
-</div>
+В этих шаблонах проект состоит из множества файлов, но разбираться в них сейчас не имеет смысла. Мы будем знакомить вас с файлами по мере их необходимости.
+Пока же приведем основные:
 
-  <IfTS fallback={<img
-      src="/images/tutorial/template-files-js.png"
-      alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the template"
-      width="800"/>
-    } block>
-    <img
-    src="/images/tutorial/template-files-ts.png"
-    alt="A screenshot of the file browser in Stackblitz, displaying all of the files in the TypeScript template."
-    width="800"/>
-  </IfTS>
-</div>
+-   Для выполнения нашего кода мы используем [Vite](https://vitejs.dev/). Vite - это инструмент, позволяющий импортировать один файл из другого и использовать плагины для улучшения процесса разработки. Когда мы готовы развернуть наше приложение, Vite упаковывает наш код.
+    Файл `vite.config.ts` (`vite.config.js`) настраивает проект Vite.
+-   Все, что мы будем делать в этом уроке, находится в папке `src`.
+-   Начальной точкой нашего сайта является `index.html`. Он представляет собой базовый HTML-скелет и содержит ссылки на папки `src/index.tsx` (`src/index.jsx`).
+-   `src/index.tsx` (`src/index.jsx`) является отправной точкой для нашего приложения Solid.
+    Оно, в свою очередь, импортирует `src/App.tsx` (`src/App.jsx`), который является нашим первым компонентом. О компонентах мы поговорим далее!
+
+## Ссылки
+
+-   [Installing Solid](https://docs.solidjs.com/guides/tutorials/getting-started-with-solid/installing-solid)
