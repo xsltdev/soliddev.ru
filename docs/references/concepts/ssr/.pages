@@ -1,0 +1,8 @@
+title: SSR
+nav:
+    - index.md
+    - simple-client-fetching-ssr.md
+    - async-ssr.md
+    - streaming.md
+    - ssg.md
+    #- hydration.md

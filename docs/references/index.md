@@ -1,11 +1,49 @@
-# API Reference
+# Справочник
 
-Welcome to the API Reference section of the Solid documentation site!
+Добро пожаловать в раздел API Reference сайта документации Solid!
 
-This section is intended to be a comprehensive reference guide for all aspects of the Solid library. Here, you will find detailed information about Solid's core concepts, API, hooks, and utilities.
+Этот раздел представляет собой полное справочное руководство по всем аспектам библиотеки Solid. Здесь вы найдете подробную информацию об основных концепциях Solid, API, хуках и утилитах.
 
-Solid is a reactive, declarative, and efficient library for building user interfaces. It offers a powerful yet intuitive programming model that allows you to easily create complex UIs with minimal boilerplate code.
+Solid - это реактивная, декларативная и эффективная библиотека для создания пользовательских интерфейсов. Она предлагает мощную, но интуитивно понятную модель программирования, позволяющую легко создавать сложные пользовательские интерфейсы с минимальным количеством шаблонов.
 
-Whether you're a seasoned Solid developer or just getting started with the library, this reference section will be an invaluable resource for you. It is designed to help you quickly find the information you need, whether you're looking for details on a specific feature or just want to explore the library's capabilities.
+Независимо от того, являетесь ли вы опытным разработчиком Solid или только начинаете работать с этой библиотекой, данный справочный раздел станет для вас бесценным источником информации. Он создан для того, чтобы помочь вам быстро найти нужную информацию, независимо от того, ищете ли вы подробности о конкретной функции или просто хотите изучить возможности библиотеки.
 
-Here are some links to get you started:
+Вот несколько ссылок для начала работы:
+
+<div class="grid cards" style="margin-top: 1.6em" markdown>
+
+-   :simple-solid:{ .lg .middle } **Концепции**
+
+    ***
+
+    Бзовые концепции Solid.js
+
+    [:octicons-arrow-right-24: Реактивность](./concepts/reactivity/what-is-reactivity.md)
+
+    [:octicons-arrow-right-24: SSR](./concepts/ssr/index.md)
+
+-   :material-api:{ .lg .middle } **API**
+
+    ***
+
+    Справочник API
+
+    [:octicons-arrow-right-24: Функции реактивности](./api-reference/basic-reactivity/index.md)
+
+    [:octicons-arrow-right-24: Жизненный цикл](./api-reference/lifecycles/index.md)
+
+    [:octicons-arrow-right-24: Реактивные утилиты](./api-reference/reactive-utilities/index.md)
+
+    [:octicons-arrow-right-24: Хранилища](./api-reference/stores/index.md)
+
+    [:octicons-arrow-right-24: API компонент](./api-reference/component-apis/index.md)
+
+    [:octicons-arrow-right-24: Остальные примитивы](./api-reference/secondary-primitives/index.md)
+
+    [:octicons-arrow-right-24: Рендеринг](./api-reference/rendering/index.md)
+
+    [:octicons-arrow-right-24: Управляющий поток](./api-reference/control-flow/index.md)
+
+    [:octicons-arrow-right-24: Особые JSX атрибуты](./api-reference/special-jsx-attributes/index.md)
+
+</div>
