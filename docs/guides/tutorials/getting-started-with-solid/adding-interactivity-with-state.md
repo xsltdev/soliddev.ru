@@ -101,109 +101,243 @@ setCount(count() + 1);
 
 Автоматическое отслеживание зависимостей эффектов стало возможным благодаря тому, что `count` является функцией. Когда функция `count` вызывается внутри эффекта, этот эффект регистрируется как слушатель сигнала. Вот почему так важно, чтобы наши сигналы были функциями!
 
-<FrameworkAside framework="svelte">
-  This is equivalent to `$: console.log(count)` in Svelte.
-</FrameworkAside>
-<FrameworkAside framework="react">
-  In React, you'd declare the dependencies explicitly using the dependency array:
-  ```js
+???svelte "svelte"
+
+    Это эквивалентно `$: console.log(count)` в Svelte.
+
+???react "react"
+
+    В React зависимости объявляются в явном виде с помощью массива зависимостей:
+
+    ```js
     useEffect(() => {
-      console.log(count);
-    }, [count])
-  ```
-    If you didn't, the effect would rerun whenever _any_ state in the component changes.
-    In Solid, dependencies are tracked automatically, and you don't have to worry about extra reruns.
-</FrameworkAside>
-<FrameworkAside framework="vue">
-  This is equivalent to `watchEffect(() => console.log(count.value))` in Vue.
-</FrameworkAside>
-<FrameworkAside framework="angular">
-    While Angular doesn't have a 1:1 comparison to Solid's `createEffect`, they're tangentially similar to Angular's [lifecycle hooks](https://angular.io/guide/lifecycle-hooks).
+    	console.log(count);
+    }, [count]);
+    ```
 
-    However, `createEffect` has some primary benefits over lifecycle methods:
-    - They can run outside of components.
-    - They have a more consolidated API as a result of their decoupling from components.
-    - They're "composable" (You can put an effect inside another effect)
+    В противном случае эффект будет запускаться заново при изменении _любого_ состояния компонента. В Solid зависимости отслеживаются автоматически, и вам не нужно беспокоиться о лишних повторных запусках.
 
-</FrameworkAside>
+???vue "vue"
 
-## Rendering with signals
+    Это эквивалентно `watchEffect(() => console.log(count.value))` в Vue.
 
-Before we get back to our bookshelf, let's see an example of how these _primitives_ can be used inside _components_.
+???angular "angular"
 
-<CodeTabs
-js={[{ name: "Counter.jsx", component: Counter1 }]}
-ts={[{ name: "Counter.tsx", component: Counter1 }]}
-/>
+    Хотя Angular не может сравниться 1:1 с `createEffect` в Solid, они по касательной похожи на [хуки жизненного цикла](https://angdev.ru/angular/lifecycle-hooks/) Angular.
 
-<div>Current count: 0</div>
+    Однако `createEffect` имеет ряд основных преимуществ перед методами жизненного цикла:
 
-We see that, much like other variables, we can use signals inside our JSX code by including them inside curly braces. This component is not too interesting yet; so let's add the ability to increment our count. We can do this by adding a `<button>` element and giving it a _click handler_ using the `onClick` attribute. This click handler will increment our count by using the `setCount` function:
+    -   Они могут выполняться вне компонентов.
+    -   Они имеют более консолидированный API в результате отделения от компонентов.
+    -   Они являются "композитными" (эффект можно поместить внутрь другого эффекта).
 
-<CodeTabs
-js={[{ name: "Counter.jsx", component: Counter2 }]}
-ts={[{ name: "Counter.tsx", component: Counter2 }]}
-/>
+## Рендеринг с помощью сигналов
 
-<BasicCounter />
+Прежде чем мы вернемся к нашей книжной полке, давайте посмотрим пример использования этих _примитивов_ внутри _компонентов_.
 
-And now we have a functioning counter! Notably, our text updates whenever our `count` is incremented. Does this remind you of an effect? Whenever the signal changes, the code that controls that part of the DOM reruns, similar to how the code in our effect reran whenever `count` changed.
+```ts
+import { createSignal } from 'solid-js';
+function Counter() {
+    const [count, setCount] = createSignal(0);
+    return <div>Current count: {count()}</div>;
+}
+```
 
-Behind the scenes, Solid's compiler creates effects based on our JSX. It sees that we're using `count()` in a specific part of the DOM, and it creates an effect that updates just that part of the DOM when the signal reruns.
+Мы видим, что, как и другие переменные, мы можем использовать сигналы в нашем JSX-коде, заключая их в фигурные скобки. Пока этот компонент не слишком интересен, поэтому давайте добавим возможность увеличивать счетчик. Для этого добавим элемент `<button>` и зададим ему обработчик _клик_ с помощью атрибута `onClick`. Этот обработчик щелчка будет увеличивать наш счетчик с помощью функции `setCount`:
 
-A driving philosophy of Solid is that, by treating everything as a signal or an effect, we can better reason about our application.
+```ts
+import { createSignal } from 'solid-js';
+function Counter() {
+    const [count, setCount] = createSignal(0);
+    const increment = () => {
+        setCount(count() + 1);
+    };
+    return (
+        <div>
+            Current count: {count()}
+            <button onClick={increment}>Increment</button>
+        </div>
+    );
+}
+```
 
-## Revisting the bookshelf
+И теперь у нас есть работающий счетчик! Примечательно, что наш текст обновляется каждый раз, когда увеличивается `count`. Не напоминает ли это вам эффект? При изменении сигнала код, управляющий этой частью DOM, запускается заново, подобно тому, как код в нашем эффекте запускается при изменении `count`.
 
-We now have the tools necessary to make our Bookshelf application interactive. As a refresher, here's the current state of the app with the following components:
+За кулисами компилятор Solid создает эффекты на основе нашего JSX. Он видит, что мы используем `count()` в определенной части DOM, и создает эффект, который обновляет именно эту часть DOM при повторном выполнении сигнала.
 
--   `BookList`, a list of books on our Bookshelf
--   `AddBook`, a form that will allow us to add more books to the shelf
--   `Bookshelf`, our main application component that contains the other two
+Философия Solid заключается в том, что, рассматривая все как сигнал или эффект, мы можем лучше рассуждать о нашем приложении.
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App2js },
-{ name: "AddBook.jsx", component: AddBook1 },
-{ name: "BookList.jsx", component: BookList1 },
+## Пересмотр книжной полки
 
-]}ts={[
-{ name: "App.tsx", component: App2ts },
-{ name: "AddBook.tsx", component: AddBook1 },
-{ name: "BookList.tsx", component: BookList1 },
-]}
-/>
+Теперь у нас есть инструменты, необходимые для того, чтобы сделать наше приложение "Книжная полка" интерактивным. В качестве иллюстрации приведем текущее состояние приложения со следующими компонентами:
 
-As a first step to adding interactivity, let's add a signal that keeps track of our book list. We'll call it `books` and it will live in the `BookList` component. Each book will have a `title` and an `author`.
+-   `BookList`, список книг на нашей Книжной полке
+-   `AddBook` - форма, позволяющая добавлять книги на полку.
+-   `Bookshelf`, наш основной компонент приложения, который содержит два других компонента
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App2js },
-{ name: "AddBook.jsx", component: AddBook1 },
-{ name: "BookList\*.jsx", component: BookList2js, default: true },
+=== "App.tsx"
 
-]}ts={[
-{ name: "App.tsx", component: App2ts },
-{ name: "AddBook.tsx", component: AddBook1 },
-{ name: "BookList*.tsx", component: BookList2ts, default: true },
-]}
-/>
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
 
-There are a couple of things to note here:
+=== "AddBook.tsx"
 
-First, while we had only used `createSignal` to maintain the value of a number in state thus far, it can manage all kinds of state. In our Bookshelf application, our signal is an array of objects.
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
 
-Second, we're now using `books` directly in our JSX code. We call `books()` to access the signal array, and then access the element at index 0 (zero) of that array in the first list item and the element at index 1 of that array in the second list item. This will work, but it's not flexible: we want to handle a dynamic number of books.
+=== "BookList.tsx"
 
-## Looping over items
+    ```ts
+    export function BookList() {
+    	return (
+    		<ul>
+    			<li>
+    				Code Complete{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(Steve McConnell)
+    				</span>
+    			</li>
+    			<li>
+    				The Hobbit{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					(J.R.R. Tolkien)
+    				</span>
+    			</li>
+    		</ul>
+    	);
+    }
+    ```
 
-The best way to loop over items in Solid is the `<For />` component. The `<For />` component has an `each` prop, to which we can pass our `books()` array.
+В качестве первого шага к добавлению интерактивности давайте добавим сигнал, который будет отслеживать список книг. Назовем его `books`, и он будет находиться в компоненте `BookList`. Каждая книга будет иметь `title` и `author`.
+
+=== "App.tsx"
+
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList\*.tsx"
+
+    ```ts
+    import { createSignal } from 'solid-js';
+    type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    export function BookList() {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<ul>
+    			<li>
+    				{books()[0].title}{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					({books()[0].author})
+    				</span>
+    			</li>
+    			<li>
+    				{books()[1].title}{' '}
+    				<span style={{ 'font-style': 'italic' }}>
+    					({books()[1].author})
+    				</span>
+    			</li>
+    		</ul>
+    	);
+    }
+    ```
+
+Здесь следует отметить несколько моментов:
+
+Во-первых, хотя до сих пор мы использовали `createSignal` только для сохранения значения числа в состоянии, он может управлять всеми видами состояния. В нашем приложении "Книжная полка" сигналом является массив объектов.
+
+Во-вторых, теперь мы используем `books` непосредственно в нашем JSX-коде. Мы вызываем `books()` для доступа к массиву сигналов, затем обращаемся к элементу с индексом `0` (ноль) этого массива в первом элементе списка и к элементу с индексом `1` этого массива во втором элементе списка. Это работает, но не является гибким: мы хотим обрабатывать динамическое количество книг.
+
+## Перебор элементов
+
+Лучшим способом перебора элементов в Solid является компонент `<For />`. Компонент `<For />` имеет пропс `each`, которому мы можем передать наш массив `books()`.
 
 ```tsx
 <For each={books()}></For>
 ```
 
-Inside the `For` component, we use a _callback function_ that will be applied to _each_ element in the array. In this instance, we want each `book` to be rendered inside an `<li>`.
+Внутри компонента `For` мы используем функцию _callback_, которая будет применяться к каждому элементу массива. В данном случае мы хотим, чтобы каждая `книга` отображалась внутри `<li>`.
 
 ```tsx
 <For each={books()}>
@@ -217,178 +351,514 @@ Inside the `For` component, we use a _callback function_ that will be applied to
 </For>
 ```
 
-<FrameworkAside framework="react">
-In React, we'd use `array.map`:
-```jsx
-{books.map(book => <li key={book.title}>{book.title} ({book.author}</li>)}
-```
+???react "react"
 
-If we used `array.map` here in Solid, _every element_ inside the book would have to rerender whenever the `books` signal changes.
-The `For` component checks the array when it changes, and only updates the necessary element. It's the same kind of checking that React's VDOM rendering system does for us when we use `.map`.
+    В React мы бы использовали `array.map`:
 
-Note that, unlike in React, we don't need to provide a `key` to the `For` component: it compares each element by reference.
-</FrameworkAside>
+    ```jsx
+    {
+    	books.map((book) => (
+    		<li key={book.title}>
+    			{book.title} ({book.author})
+    		</li>
+    	));
+    }
+    ```
 
-<FrameworkAside framework="vue">
-The above would be written as the following in Vue:
+    Если бы мы использовали здесь `array.map` в Solid, то _каждый элемент_ внутри книги пришлось бы перерисовывать при каждом изменении сигнала `books`.
 
-```html
-<li v-for="book of books" key="book.title">
-    {{book.title}} ({{book.author}})
-</li>
-```
+    Компонент `For` проверяет массив при его изменении и обновляет только необходимый элемент. Это та же самая проверка, которую выполняет система рендеринга VDOM в React, когда мы используем `.map`.
 
-Note that, unlike in Vue, we don't need to provide a `key` to the `For` component: it compares each element by reference.
-</FrameworkAside>
+    Обратите внимание, что, в отличие от React, нам не нужно указывать `ключ` компоненту `For`: он сравнивает каждый элемент по ссылке.
 
-<FrameworkAside framework="svelte">
-The above would be written as the following in Svelte:
+???vue "vue"
 
-```svelte
-{#each books as book (book.title) }
-  <li>{book.title} ({book.author})</li>
-{#each}
-```
+    В Vue вышеописанное будет выглядеть следующим образом:
 
-Note that, unlike in Svelte, we don't need to provide a `key` to the `For` component: it compares each element by reference.
-</FrameworkAside>
+    ```html
+    <li v-for="book of books" key="book.title">
+    	{{book.title}} ({{book.author}})
+    </li>
+    ```
 
-Our `BookList` component now looks like this:
+    Обратите внимание, что, в отличие от Vue, нам не нужно указывать `key` компоненту `For`: он сравнивает каждый элемент по ссылке.
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App2js },
-{ name: "AddBook.jsx", component: AddBook1 },
-{ name: "BookList.jsx", component: BookList3js, default: true },
+???svelte "svelte"
 
-]}ts={[
-{ name: "App.tsx", component: App2ts },
-{ name: "AddBook.tsx", component: AddBook1 },
-{ name: "BookList.tsx", component: BookList3ts, default: true },
-]}
-/>
+    В Svelte вышеизложенное будет выглядеть следующим образом:
 
-## Derived state
+    ```svelte
+    {#each books as book (book.title) }
+    <li>{book.title} ({book.author})</li>
+    {#each}
+    ```
 
-Solid makes it easy to track _derived state_. You can think of derived state as a computation based only on other information you're already tracking in state. In our Bookshelf application, an example of derived state would be the number of books on our list: it's the length of our `books` array at any point in time.
+    Обратите внимание, что, в отличие от Svelte, нам не нужно предоставлять 'key' компоненту `For`: он сравнивает каждый элемент по ссылке.
 
-In Solid, all we have to do to compute derived state is to create a _derived signal_: a function that relies on another signal:
+Теперь наш компонент `BookList` выглядит следующим образом:
+
+=== "App.tsx"
+
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    import { createSignal, For } from 'solid-js';
+    type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    export function BookList() {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<ul>
+    			<For each={books()}>
+    				{(book) => {
+    					return (
+    						<li>
+    							{book.title}
+    							<span
+    								style={{
+    									'font-style': 'italic',
+    								}}
+    							>
+    								{' '}
+    								({book.author})
+    							</span>
+    						</li>
+    					);
+    				}}
+    			</For>
+    		</ul>
+    	);
+    }
+    ```
+
+## Производное состояние
+
+Solid позволяет легко отслеживать _производное состояние_. Вы можете представить себе производное состояние как вычисления, основанные только на другой информации, которую вы уже отслеживаете в состоянии. В нашем приложении "Книжная полка" примером производного состояния может служить количество книг в списке: это длина массива `books` в любой момент времени.
+
+В Solid для вычисления производного состояния достаточно создать _производный сигнал_: функцию, которая опирается на другой сигнал:
 
 ```tsx
 const totalBooks = () => books().length;
 ```
 
-Now, whenever we call `totalBooks()`, Solid will register the underlying signal (`books`) as a dependency, so the computed value will always stay up-to-date.
+Теперь при каждом вызове `totalBooks()` Solid будет регистрировать базовый сигнал (`books`) как зависимость, поэтому вычисляемое значение всегда будет актуальным.
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App2js },
-{ name: "AddBook.jsx", component: AddBook1 },
-{ name: "BookList.jsx", component: BookList4js, default: true },
+=== "App.tsx"
 
-]}ts={[
-{ name: "App.tsx", component: App2ts },
-{ name: "AddBook.tsx", component: AddBook1 },
-{ name: "BookList.tsx", component: BookList4ts, default: true },
-]}
-/>
+    ```ts
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
 
-<FrameworkAside framework="vue">
-  In Vue, you might write:
+=== "AddBook.tsx"
 
-```vue
-const totalBooks = computed(() => books.length)
-```
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
 
-This creates a spot in memory for the computed value, and that memory is continually updated as `books` changes.
-So, if you used `{{totalBooks}}` twice in your template, `books.length` would only be called once.
-Derived signals in Solid don't create a spot in memory; every time `totalBooks()` is called, it will rerun the code `books().length`.
-Solid has another feature for this: `createMemo`, which will only rerun the computation when the dependency changes.
+=== "BookList.tsx"
 
-```js
-import { createMemo } from 'solid-js';
+    ```ts
+    import { createSignal, For } from 'solid-js';
+    type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    export function BookList() {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	const totalBooks = () => books().length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={books()}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
 
-const totalBooks = createMemo(() => books().length);
-```
+???vue "vue"
 
-</FrameworkAside>
+    В Vue можно написать:
 
-<FrameworkAside framework="svelte">
-In Svelte, you might write:
-```svelte
-	$: totalBooks = books.length;
-```
-  This creates a spot in memory for the computed value, and that memory is continually updated as `books` changes. So, if you used `{totalBooks}` twice in your template, `books.length` would only be called once.
-  Derived signals in Solid don't create a spot in memory; every time `totalBooks()` is called, it will rerun the code `books().length`.
-  Solid has another feature for this: `createMemo`, which will only rerun the computation when the dependency changes.
+    ```js
+    const totalBooks = computed(() => books.length);
+    ```
 
-```js
-import { createMemo } from 'solid-js';
+    При этом в памяти создается место для вычисленного значения, которое постоянно обновляется при изменении `books`. Таким образом, если вы дважды использовали `{{totalBooks}}` в своем шаблоне, то `books.length` будет вызван только один раз. Производные сигналы в Solid не создают место в памяти; при каждом вызове `totalBooks()` будет повторно выполняться код `books().length`.
 
-const totalBooks = createMemo(() => books().length);
-```
+    Для этого в Solid есть другая функция: `createMemo`, которая будет повторно выполнять вычисления только при изменении зависимости.
 
-</FrameworkAside>
+    ```js
+    import { createMemo } from 'solid-js';
 
-## Lifting state up
+    const totalBooks = createMemo(() => books().length);
+    ```
 
-We want to add a book to the list using our `AddBook` component. There's one problem though: how do we make the `setBooks` setter available to the `AddBooks` component?
+???svelte "svelte"
 
-We know that parents can pass props to children, but how do _sibling_ components pass props to each other? This is a common problem in Solid and the solution is generally to _lift state up_ to a common parent. In this case, our `books` signal can live in the `Bookshelf` component. Then, the `BookList` component can be passed the data from the getter.
+    В Svelte можно написать:
 
-Let's start out by lifting our `books` signal up to `Bookshelf` and passing its value back down to the `BookList` component. You can see the changes we have made in both the `App.tsx` and `BookList.tsx` files.
+    ```js
+    	$: totalBooks = books.length;
+    ```
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App3js },
-{ name: "AddBook.jsx", component: AddBook1 },
-{ name: "BookList.jsx", component: BookList5js },
+    При этом в памяти создается место для вычисленного значения, которое постоянно обновляется при изменении `books`. Таким образом, если вы дважды использовали `{totalBooks}` в своем шаблоне, то `books.length` будет вызвана только один раз.
 
-]}ts={[
-{ name: "App.tsx", component: App3ts },
-{ name: "AddBook.tsx", component: AddBook1 },
-{ name: "BookList.tsx", component: BookList5ts },
-]}
-/>
+    Производные сигналы в Solid не создают место в памяти; при каждом вызове `totalBooks()` будет повторно выполняться код `books().length`.
 
-Our array of books now lives in the `Bookshelf` component. We then pass `books()` to the `BookList` component. We can now access our books within the `BookList` component by using `props.books`.
+    Для этого в Solid есть другая функция: `createMemo`, которая будет повторно выполнять вычисления только при изменении зависимости.
 
-<Aside type="note">
- You may have noticed that we called `books()` when we passed it to the `BookList` component&mdash;this is not a typo! In Solid, it's a best practice to call a signal accessor when you pass it to a component. In the background, Solid makes this a _reactive prop_ and reactivity will be tracked in the child component's JSX. (_TODO: good place to link to a discussion/guide on props and reactivity_).
-</Aside>
+    ```js
+    import { createMemo } from 'solid-js';
 
-## Adding books to the list
+    const totalBooks = createMemo(() => books().length);
+    ```
 
-Now that we have lifted state, we can add some books to the list. Let's pass our setter to the `AddBook` component and call `setBooks` when we click the `Add Book` button. You can see these changes in the `App.tsx` and `AddBook.tsx` files:
+## Поднятие состояния
 
-<CodeTabs
-js={[
-{ name: "App.jsx*", component: App4js },
-{ name: "AddBook.jsx*", component: AddBook2js },
-{ name: "BookList.jsx", component: BookList5js },
+Мы хотим добавить книгу в список с помощью компонента `AddBook`. Однако есть одна проблема: как сделать так, чтобы сеттер `setBooks` был доступен компоненту `AddBooks`?
 
-]}ts={[
-{ name: "App.tsx*", component: App4ts },
-{ name: "AddBook.tsx*", component: AddBook2ts },
-{ name: "BookList.tsx", component: BookList5ts },
-]}
-/>
+Мы знаем, что родители могут передавать пропсы дочерним компонентам, но как _родственные_ компоненты могут передавать пропсы друг другу? Это распространенная проблема в Solid, и решение обычно заключается в том, чтобы _поднимать состояние вверх_ до общего родителя. В данном случае наш сигнал `books` может находиться в компоненте `Bookshelf`. Затем компоненту `BookList` можно передать данные из геттера.
 
-Inside `AddBook`, we created a function called `addBook` that is used as the _click handler_ for our form's button. Since we're submitting a real HTML form, we use `event.preventDefault()` to prevent the default form behavior of executing a post request. Next, we call `props.setBooks`, but we don't quite know what to pass to our setter.
+Давайте начнем с того, что поднимем наш сигнал `books` в компонент `Bookshelf` и передадим его значение обратно в компонент `BookList`. Вы можете увидеть изменения, которые мы сделали в файлах `App.tsx` и `BookList.tsx`.
 
-We know we want to keep the existing books on the list and then add a new book that comes from our form input. To get the existing books, we could use two different approaches: we _could_ pass the `books` signal down to our `AddBook` component. While that would work, it's worth exploring the second option: using the _callback function_ form of the setter. We haven't used this yet, and the syntax is as follows:
+=== "App.tsx"
 
-```tsx
+    ```ts
+    import { createSignal } from 'solid-js';
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    export type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList books={books()} />
+    			<AddBook />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    export function AddBook() {
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit">Add book</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    import { For } from 'solid-js';
+    import { Book } from './App';
+    interface BookListProps {
+    	books: Book[];
+    }
+    export function BookList(props: BookListProps) {
+    	const totalBooks = () => props.books.length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={props.books}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
+
+Теперь наш массив книг находится в компоненте `Bookshelf`. Затем мы передаем `books()` компоненту `BookList`. Теперь мы можем получить доступ к нашим книгам внутри компонента `BookList` с помощью пропса `props.books`.
+
+!!!note ""
+
+    Вы, наверное, заметили, что при передаче компоненту `BookList` сигнала `books()` мы вызвали `books()` &mdash; это не опечатка! В Solid принято вызывать аксессор сигнала при передаче его компоненту. В фоновом режиме Solid делает это _реактивным реквизитом_, и реактивность будет отслеживаться в JSX дочернего компонента. (_TODO: хорошее место для ссылки на обсуждение/руководство по пропсам и реактивности_).
+
+## Добавление книг в список
+
+Теперь, когда у нас есть поднятое состояние, мы можем добавить несколько книг в список. Передадим наш сеттер компоненту `AddBook` и вызовем `setBooks` при нажатии на кнопку `Add Book`. Эти изменения можно увидеть в файлах `App.tsx` и `AddBook.tsx`:
+
+=== "App.tsx\*"
+
+    ```ts
+    import { createSignal } from 'solid-js';
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    export type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList books={books()} />
+    			<AddBook setBooks={setBooks} />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="Solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx\*"
+
+    ```ts
+    import { Setter, JSX } from 'solid-js';
+    import { Book } from './App';
+    export interface AddBookProps {
+    	setBooks: Setter<Book[]>;
+    }
+    export function AddBook(props: AddBookProps) {
+    	const addBook: JSX.EventHandler<
+    		HTMLButtonElement,
+    		MouseEvent
+    	> = (event) => {
+    		event.preventDefault();
+    		props.setBooks([]);
+    	};
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input id="title" />
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input id="author" />
+    			</div>
+    			<button type="submit" onClick={addBook}>
+    				Add book
+    			</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    import { For } from 'solid-js';
+    import { Book } from './App';
+    interface BookListProps {
+    	books: Book[];
+    }
+    export function BookList(props: BookListProps) {
+    	const totalBooks = () => props.books.length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={props.books}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
+
+Внутри `AddBook` мы создали функцию `addBook`, которая используется в качестве обработчика _клик_ для кнопки нашей формы. Поскольку мы отправляем настоящую HTML-форму, мы используем `event.preventDefault()`, чтобы предотвратить стандартное поведение формы, заключающееся в выполнении post-запроса. Далее мы вызываем `props.setBooks`, но мы не совсем понимаем, что передать нашему сеттеру.
+
+Мы знаем, что хотим сохранить существующие книги в списке, а затем добавить новую книгу, полученную из нашей формы. Чтобы получить существующие книги, мы могли бы использовать два различных подхода: мы могли бы _передать_ сигнал `books` нашему компоненту `AddBook`. Хотя это и сработает, стоит рассмотреть второй вариант: использование формы _callback function_ в сеттере. Мы его еще не использовали, а синтаксис выглядит следующим образом:
+
+```ts
 setCount((currentCount) => {
     return currentCount + 1;
 });
 ```
 
-By using this form, our setter has access to the current value of the signal.
+Используя эту форму, наш сеттер получает доступ к текущему значению сигнала.
 
-This form for our `setBooks` function solves the first problem: our `addBook` function can be written as follows:
+Такая форма для нашей функции `setBooks` решает первую проблему: наша функция `addBook` может быть записана следующим образом:
 
-```jsx
+```js
 const addBook = (event) => {
     event.preventDefault();
     props.setBooks((books) => {
@@ -397,29 +867,148 @@ const addBook = (event) => {
 };
 ```
 
-Now, we need to append the text from our form inputs to this list. To do so, we can create a new signal inside the `AddBook` component to track the value of the inputs. We'll make sure this signal is always equal to the inputs' values by using its `onInput` handler. Additionally, we'll _bind_ the `newBook()` to the `value` attribute of our `input` to make sure our `input` always reflects the value of the signal.
+Теперь нам необходимо добавить в этот список текст из вводимых форм. Для этого мы можем создать новый сигнал внутри компонента `AddBook`, который будет отслеживать значения вводимых данных. Для того чтобы этот сигнал всегда был равен значениям вводимых данных, мы используем его обработчик `onInput`. Кроме того, мы _привяжем_ сигнал `newBook()` к атрибуту `value` нашего `input`, чтобы убедиться, что наш `input` всегда отражает значение сигнала.
 
-Finally, we want to add the `newBook` to our books list and then clear the input field in case our user has more books to enter.
+Наконец, мы хотим добавить `newBook` в список книг, а затем очистить поле ввода на случай, если пользователь захочет ввести еще несколько книг.
 
-<CodeTabs
-js={[
-{ name: "App.jsx", component: App4js },
-{ name: "AddBook.jsx\*", component: AddBook3js, default: true },
-{ name: "BookList.jsx", component: BookList5js },
+=== "App.tsx"
 
-]}ts={[
-{ name: "App.tsx", component: App4ts },
-{ name: "AddBook.tsx*", component: AddBook3ts, default: true },
-{ name: "BookList.tsx", component: BookList5ts },
-]}
-/>
+    ```ts
+    import { createSignal } from 'solid-js';
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    export type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList books={books()} />
+    			<AddBook setBooks={setBooks} />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="Solid" />;
+    }
+    export default App;
+    ```
 
-<Aside type="note">
-We used the spread operator to create an new books array inside our books setter. This is a common pattern in Solid and helps to make sure we create a new array rather than update (or _mutate_) the existing signal array. By default, Solid uses referential equality checks when determining if a signal has updated.
-</Aside>
+=== "AddBook.tsx\*"
 
-## Test-driving our app
+    ```ts
+    import { createSignal, Setter, JSX } from 'solid-js';
+    import { Book } from './App';
+    export interface AddBookProps {
+    	setBooks: Setter<Book[]>;
+    }
+    const emptyBook: Book = { title: '', author: '' };
+    export function AddBook(props: AddBookProps) {
+    	const [newBook, setNewBook] = createSignal(emptyBook);
+    	const addBook: JSX.EventHandler<
+    		HTMLButtonElement,
+    		MouseEvent
+    	> = (event) => {
+    		event.preventDefault();
+    		props.setBooks((books) => [...books, newBook()]);
+    		setNewBook(emptyBook);
+    	};
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input
+    					id="title"
+    					value={newBook().title}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							title: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input
+    					id="author"
+    					value={newBook().author}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							author: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<button type="submit" onClick={addBook}>
+    				Add book
+    			</button>
+    		</form>
+    	);
+    }
+    ```
 
-We now have a dynamic Bookshelf application! Try it out yourself: you should be able to add books using the `AddBook` component and see those books added to the list in the `BookList` component.
+=== "BookList.tsx"
 
-<BasicBookshelf name="Solid" />
+    ```ts
+    import { For } from 'solid-js';
+    import { Book } from './App';
+    interface BookListProps {
+    	books: Book[];
+    }
+    export function BookList(props: BookListProps) {
+    	const totalBooks = () => props.books.length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={props.books}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
+
+!!!note ""
+
+    Мы использовали оператор spread для создания нового массива books внутри нашего сеттера books. Это общий паттерн для Solid, который позволяет убедиться в том, что мы создаем новый массив, а не обновляем (или _мутируем_) существующий массив сигналов. По умолчанию Solid использует проверку ссылочного равенства при определении обновления сигнала.
+
+## Тестирование нашего приложения
+
+Теперь у нас есть динамическое приложение "Книжная полка"! Попробуйте сами: вы должны иметь возможность добавлять книги с помощью компонента `AddBook` и видеть, как эти книги добавляются в список в компоненте `BookList`.
+
+## Ссылки
+
+-   [Adding Interactivity with State](https://docs.solidjs.com/guides/tutorials/getting-started-with-solid/adding-interactivity-with-state#rendering-with-signals)

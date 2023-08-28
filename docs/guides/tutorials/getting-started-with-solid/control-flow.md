@@ -1,191 +1,454 @@
-import { PrevSection, NextSection, PrevNextSection } from "~/components/NextSection";
-import { FrameworkAside } from "~/components/configurable/Aside";
-import { CodeTabs } from "~/components/Tabs";
-import { BasicBookshelfShow } from "./components/BasicBookshelfShow";
-import Dashboardjs from "./snippets/Dashboardjs.mdx";
-import Dashboardts from "./snippets/Dashboardts.mdx";
-import App4js from "./snippets/bookshelf/App4js.mdx";
-import App4ts from "./snippets/bookshelf/App4ts.mdx";
-import App5js from "./snippets/bookshelf/App5js.mdx";
-import App5ts from "./snippets/bookshelf/App5ts.mdx";
-import AddBook3js from "./snippets/bookshelf/AddBook3js.mdx";
-import AddBook3ts from "./snippets/bookshelf/AddBook3ts.mdx";
-import BookList5js from "./snippets/bookshelf/BookList5js.mdx";
-import BookList5ts from "./snippets/bookshelf/BookList5ts.mdx";
+---
+description: В динамических внешних приложениях обычно требуется отображать различные пользовательские интерфейсы, когда приложение находится в разных состояниях
+---
 
-<title>Conditional UI Display</title>
+# Условное отображение пользовательского интерфейса
 
-# Conditional User Interface Display
+В динамических внешних приложениях обычно требуется отображать различные пользовательские интерфейсы, когда приложение находится в разных состояниях. Примером может служить отображение приветственного сообщения для гостя или аутентифицированного пользователя.
 
-In dynamic front-end applications, we typically want to show different user interfaces when the application is in different states. An example of this is displaying a welcome message to either a guest or an authenticated user.
+Для гостя мы можем отобразить общее приветственное сообщение и форму регистрации:
 
-For a guest, we might want to display a generic welcome message alongside a sign-in form:
-
-```tsx
+```ts
 <div>Welcome to the application. Please sign in to continue.</div>
 <SignInForm />
 ```
 
-For an authenticated user, we might want to greet them by their name and provide them with their custom dashboard:
+Для аутентифицированного пользователя мы, возможно, захотим поприветствовать его по имени и предоставить ему его пользовательскую панель:
 
-```tsx
+```ts
 <div>Welcome back, Jessica!</div>
 <Dashboard />
 ```
 
-## Conditionally showing content
+## Условный показ содержимого
 
-In Solid, we can use the `<Show />` component to conditionally show content. The `<Show />` component takes a `when` prop and an optional `fallback` prop.
+В Solid мы можем использовать компонент `<Show />` для условного показа содержимого. Компонент `<Show />` принимает пропс `when` и необязательный пропс `fallback`.
 
-- When the `when` prop is `true`, the JSX inside `<Show />` is displayed
-- When the `when` prop is `false`, the JSX inside `fallback` is displayed (if provided)
+-   Когда параметр `when` имеет значение `true`, JSX внутри компонента `<Show />` отображается
+-   Если параметр `when` равен `false`, то отображается JSX внутри `fallback` (если он задан).
 
-The following example shows how we would use the `<Show />` component to conditionally display a sign-in or dashboard page:
+В следующем примере показано, как можно использовать компонент `<Show />` для условного отображения страницы входа в систему или приборной панели:
 
-<CodeTabs
-  js={[{ name: "Home.jsx", component: Dashboardjs }]}
-  ts={[{ name: "Home.tsx", component: Dashboardts }]}
-/>
-
-When `props.isLoggedIn` is `true`, we welcome the user back and show the `<Dashboard />`. When `props.isLoggedIn` is `false`, we display the `fallback` content, which is our generic greeting message and the `<SignInForm />`.
-
-<FrameworkAside framework="react">
-In React, it's a common pattern to handle control flow by returning early from a component function. For example, you might have done the following to accomplish our conditional authentication display:
-
-```jsx
-function Home(props) {
-  if (props.isLoggedIn) {
+```ts
+import { Show } from 'solid-js';
+interface IHomeProps {
+    isLoggedIn: boolean;
+    firstName: string;
+}
+function Home(props: IHomeProps) {
     return (
-      <>
-        <div>Welcome back, {props.firstName}!</div>
-        <Dashboard />
-      </>
+        <Show
+            when={props.isLoggedin}
+            fallback={
+                <>
+                    <div>
+                        Welcome to the application. Please
+                        sign in to continue.
+                    </div>
+                    <SignInForm />
+                </>
+            }
+        >
+            <div>Welcome back, {props.firstName}!</div>
+            <Dashboard />
+        </Show>
     );
-  }
-
-  return (
-    <>
-      <div>Welcome to the application. Please sign in to continue.</div>
-      <SignInForm />
-    </>
-  );
 }
 ```
 
-However, **this won't work in Solid!**
+Когда значение `props.isLoggedIn` равно `true`, мы приветствуем вернувшегося пользователя и показываем `<Dashboard />`. Когда значение `props.isLoggedIn` равно `false`, мы отображаем содержимое `fallback`, которое представляет собой наше общее приветствие и форму `<SignInForm />`.
 
-In the [Building UI with Components](../building-ui-with-components) section of this tutorial, we noted that component functions _run only once_ in Solid. This means the JSX returned from that initial function return is the only JSX that will ever be returned from the function.
+???react "react"
 
-In Solid, if we want to conditionally display JSX in a component, we need that condition to reside within the returned JSX. While this takes some adjustment when coming from React, we have found that the fine-grained control afforded by Solid's reactive system is worth the trade-off.
+    В React это распространенный паттерн для обработки потока управления путем раннего возврата из функции компонента. Например, для выполнения условного отображения аутентификации можно было бы сделать следующее:
 
-</FrameworkAside>
-<FrameworkAside framework="angular">
-Instead of `Show`, Angular might use `ngIf`. Similarly,  instead of `fallback`, `ngIf` would use the `else` clause alongside
-an `ng-template`.
+    ```js
+    function Home(props) {
+    	if (props.isLoggedIn) {
+    		return (
+    			<>
+    				<div>Welcome back, {props.firstName}!</div>
+    				<Dashboard />
+    			</>
+    		);
+    	}
 
-```html
-<ng-container *ngIf="isLoggedin; else notLoggedIn">
-  <div>Welcome back, {{firstName}}!</div>
-  <dashboard></dashboard>
-</ng-container>
-<ng-template #notLoggedIn>
-  <div>Welcome to the application. Please sign in to continue.</div>
-  <sign-in-form></sign-in-form>
-</ng-template>
-```
+    	return (
+    		<>
+    			<div>
+    				Welcome to the application. Please sign in
+    				to continue.
+    			</div>
+    			<SignInForm />
+    		</>
+    	);
+    }
+    ```
 
-</FrameworkAside>
-<FrameworkAside framework="vue">
+    Однако **это не будет работать в Solid!**.
 
-The above would be written as the following in Vue:
+    В разделе [Building UI with Components](building-ui-with-components.md) этого руководства мы отметили, что функции компонентов _работают только один раз_ в Solid. Это означает, что JSX, возвращаемый при первоначальном возврате функции, является единственным JSX, который когда-либо будет возвращен функцией.
 
-```html
-<template v-if="isLoggedIn">
-  <div>Welcome to the application. Please sign in to continue.</div>
-  <SignInForm />
-</template>
-<template v-else>
-  <div>Welcome back, {{firstName}}!</div>
-  <Dashboard />
-</template>
-```
+    В Solid, если мы хотим условно отобразить JSX в компоненте, нам нужно, чтобы это условие находилось в возвращаемом JSX. Хотя это требует некоторой адаптации при переходе с React, мы пришли к выводу, что тонкий контроль, предоставляемый реактивной системой Solid, стоит того, чтобы пойти на этот компромисс.
 
-</FrameworkAside>
+???angular "angular"
 
-## Iterating over data with `<For />`
+    Вместо `Show` в Angular может использоваться `ngIf`. Аналогично, вместо `fallback` в `ngIf` будет использоваться предложение `else`, а также `ng-template`.
 
-User interfaces often require us to display lists of data. These lists can typically be of any length, and therefore we can't just hardcode each element. Instead, Solid gives us the `<For />` component. If you have been coding along with the Bookshelf app example, you'll notice we already had to use this component.
+    ```html
+    <ng-container *ngIf="isLoggedin; else notLoggedIn">
+    	<div>Welcome back, {{firstName}}!</div>
+    	<dashboard></dashboard>
+    </ng-container>
+    <ng-template #notLoggedIn>
+    	<div>
+    		Welcome to the application. Please sign in to
+    		continue.
+    	</div>
+    	<sign-in-form></sign-in-form>
+    </ng-template>
+    ```
 
-The `<For />` component takes the array you want to loop over in the `each` prop:
+???vue "vue"
 
-```jsx
-const books = ["Book 1", "Book 2"];
+    В Vue вышеописанное будет выглядеть следующим образом:
+
+    ```html
+    <template v-if="isLoggedIn">
+    	<div>
+    		Welcome to the application. Please sign in to
+    		continue.
+    	</div>
+    	<SignInForm />
+    </template>
+    <template v-else>
+    	<div>Welcome back, {{firstName}}!</div>
+    	<Dashboard />
+    </template>
+    ```
+
+## Итерация данных с помощью `<For />`
+
+В пользовательских интерфейсах часто требуется отображать списки данных. Такие списки могут быть любой длины, и поэтому мы не можем просто жестко закодировать каждый элемент. Вместо этого Solid предоставляет нам компонент `<For />`. Если вы кодили по примеру приложения "Книжная полка", то заметили, что нам уже приходилось использовать этот компонент.
+
+Компонент `<For />` принимает массив, по которому нужно выполнить цикл, в пропсе `each`:
+
+```js
+const books = ['Book 1', 'Book 2'];
 
 <For each={books}>...</For>;
 ```
 
-Inside the `<For />` component, you use a _callback function_ to loop over the items. In this case, we create a new list item `<li>` for each book in our `books` array:
+Внутри компонента `<For />` используется функция _callback_ для перебора элементов. В данном случае мы создаем новый элемент списка `<li>` для каждой книги в нашем массиве `books`:
 
-```jsx
-const books = ["Book 1", "Book 2"];
+```js
+const books = ['Book 1', 'Book 2'];
 
 <For each={books}>
-  {(book) => {
-    return <li>{book}</li>;
-  }}
+    {(book) => {
+        return <li>{book}</li>;
+    }}
 </For>;
 ```
 
-<FrameworkAside framework="react">
+??react "react"
 
-In React, you iterate over arrays in JSX using the array `map` method:
+    В React итерация по массивам в JSX осуществляется с помощью метода массива `map`:
 
-```jsx
-<>
-  {books.map((book) => {
-    return <li key={book}>{book}</li>;
-  })}
-</>
-```
+    ```js
+    <>
+    	{books.map((book) => {
+    		return <li key={book}>{book}</li>;
+    	})}
+    </>
+    ```
 
-While this would work in Solid, it's not optimal. You can think of `<For />` as an optimized version of `map`. When using `<For /> `, Solid is able to intelligently determine which array elements to update. This is why we don't have to use a `key` like we would in React.
-
-</FrameworkAside>
+    Хотя это и работает в Solid, но не является оптимальным. Можно рассматривать `<For />` как оптимизированную версию `map`. При использовании `<For />` Solid способен интеллектуально определить, какие элементы массива необходимо обновить. Именно поэтому нам не нужно использовать `key`, как в React.
 
 ## Revisiting the bookshelf
 
-In the [Adding Interactivity with State](../adding-interactivity-with-state) section of this tutorial, we found ourselves already needing the `<For />` component. This allowed us to iterate over any number of books in on our bookshelf:
+In the [Adding Interactivity with State](adding-interactivity-with-state.md) section of this tutorial, we found ourselves already needing the `<For />` component. This allowed us to iterate over any number of books in on our bookshelf:
 
-<CodeTabs
-  js={[
-    { name: "App.jsx", component: App4js },
-    { name: "AddBook.jsx", component: AddBook3js },
-    { name: "BookList.jsx", component: BookList5js, default: true },
-  ]}
-  ts={[
-    { name: "App.tsx", component: App4ts },
-    { name: "AddBook.tsx", component: AddBook3ts },
-    { name: "BookList.tsx", component: BookList5ts, default: true },
-  ]}
-/>
+=== "App.tsx"
 
-Let's now use the `<Show />` component. We will only show our `AddBook` form if the user wants to add a book.
+    ```ts
+    import { createSignal } from 'solid-js';
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    export type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList books={books()} />
+    			<AddBook setBooks={setBooks} />
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="Solid" />;
+    }
+    export default App;
+    ```
 
-We will create a boolean signal in the `Bookshelf` component that tracks whether or not the form is open and add buttons to open and close the form. We will use the `<Show />` component to conditionally display the form.
+=== "AddBook.tsx"
 
-<CodeTabs
-  js={[
-    { name: "App.jsx*", component: App5js },
-    { name: "AddBook.jsx", component: AddBook3js },
-    { name: "BookList.jsx", component: BookList5js },
-  ]}
-  ts={[
-    { name: "App.tsx*", component: App5ts },
-    { name: "AddBook.tsx", component: AddBook3ts },
-    { name: "BookList.tsx", component: BookList5ts },
-  ]}
-/>
+    ```ts
+    import { createSignal, Setter, JSX } from 'solid-js';
+    import { Book } from './App';
+    export interface AddBookProps {
+    	setBooks: Setter<Book[]>;
+    }
+    const emptyBook: Book = { title: '', author: '' };
+    export function AddBook(props: AddBookProps) {
+    	const [newBook, setNewBook] = createSignal(emptyBook);
+    	const addBook: JSX.EventHandler<
+    		HTMLButtonElement,
+    		MouseEvent
+    	> = (event) => {
+    		event.preventDefault();
+    		props.setBooks((books) => [...books, newBook()]);
+    		setNewBook(emptyBook);
+    	};
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input
+    					id="title"
+    					value={newBook().title}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							title: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input
+    					id="author"
+    					value={newBook().author}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							author: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<button type="submit" onClick={addBook}>
+    				Add book
+    			</button>
+    		</form>
+    	);
+    }
+    ```
 
-When `showForm()` is `true`, the app displays the `<AddBook />` form and a button that allows us to hide the form again. When `showForm()` is `false`, the `fallback` component is displayed&mdash;a button to show the `<AddBook />` form.
+=== "BookList.tsx"
 
-<BasicBookshelfShow name="Solid" />
+    ```ts
+    import { For } from 'solid-js';
+    import { Book } from './App';
+    interface BookListProps {
+    	books: Book[];
+    }
+    export function BookList(props: BookListProps) {
+    	const totalBooks = () => props.books.length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={props.books}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
+
+Теперь воспользуемся компонентом `<Show />`. Мы будем показывать нашу форму `AddBook` только в том случае, если пользователь хочет добавить книгу.
+
+Мы создадим в компоненте `Bookshelf` булевый сигнал, который будет отслеживать, открыта форма или нет, и добавим кнопки для открытия и закрытия формы. Для условного отображения формы мы будем использовать компонент `<Show />`.
+
+=== "App.tsx\*"
+
+    ```ts
+    import { createSignal, Show } from 'solid-js';
+    import { BookList } from './BookList';
+    import { AddBook } from './AddBook';
+    export type Book = {
+    	title: string;
+    	author: string;
+    };
+    const initialBooks: Book[] = [
+    	{ title: 'Code Complete', author: 'Steve McConnell' },
+    	{ title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    	{
+    		title: 'Living a Feminist Life',
+    		author: 'Sarah Ahmed',
+    	},
+    ];
+    interface BookshelfProps {
+    	name: string;
+    }
+    function Bookshelf(props: BookshelfProps) {
+    	const [books, setBooks] = createSignal(initialBooks);
+    	const [showForm, setShowForm] = createSignal(false);
+    	const toggleForm = () => setShowForm(!showForm());
+    	return (
+    		<div>
+    			<h1>{props.name}'s Bookshelf</h1>
+    			<BookList books={books()} />
+    			<Show
+    				when={showForm()}
+    				fallback={
+    					<button onClick={toggleForm}>
+    						Add a book
+    					</button>
+    				}
+    			>
+    				<AddBook setBooks={setBooks} />
+    				<button onClick={toggleForm}>
+    					Finished adding books
+    				</button>
+    			</Show>
+    		</div>
+    	);
+    }
+    function App() {
+    	return <Bookshelf name="Solid" />;
+    }
+    export default App;
+    ```
+
+=== "AddBook.tsx"
+
+    ```ts
+    import { createSignal, Setter, JSX } from 'solid-js';
+    import { Book } from './App';
+    export interface AddBookProps {
+    	setBooks: Setter<Book[]>;
+    }
+    const emptyBook: Book = { title: '', author: '' };
+    export function AddBook(props: AddBookProps) {
+    	const [newBook, setNewBook] = createSignal(emptyBook);
+    	const addBook: JSX.EventHandler<
+    		HTMLButtonElement,
+    		MouseEvent
+    	> = (event) => {
+    		event.preventDefault();
+    		props.setBooks((books) => [...books, newBook()]);
+    		setNewBook(emptyBook);
+    	};
+    	return (
+    		<form>
+    			<div>
+    				<label for="title">Book name</label>
+    				<input
+    					id="title"
+    					value={newBook().title}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							title: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<div>
+    				<label for="author">Author</label>
+    				<input
+    					id="author"
+    					value={newBook().author}
+    					onInput={(e) => {
+    						setNewBook({
+    							...newBook(),
+    							author: e.currentTarget.value,
+    						});
+    					}}
+    				/>
+    			</div>
+    			<button type="submit" onClick={addBook}>
+    				Add book
+    			</button>
+    		</form>
+    	);
+    }
+    ```
+
+=== "BookList.tsx"
+
+    ```ts
+    import { For } from 'solid-js';
+    import { Book } from './App';
+    interface BookListProps {
+    	books: Book[];
+    }
+    export function BookList(props: BookListProps) {
+    	const totalBooks = () => props.books.length;
+    	return (
+    		<>
+    			<h2>My books ({totalBooks()})</h2>
+    			<ul>
+    				<For each={props.books}>
+    					{(book) => {
+    						return (
+    							<li>
+    								{book.title}
+    								<span
+    									style={{
+    										'font-style':
+    											'italic',
+    									}}
+    								>
+    									{' '}
+    									({book.author})
+    								</span>
+    							</li>
+    						);
+    					}}
+    				</For>
+    			</ul>
+    		</>
+    	);
+    }
+    ```
+
+Когда `showForm()` имеет значение `true`, приложение отображает форму `<AddBook />` и кнопку, позволяющую снова скрыть форму. Когда `showForm()` имеет значение `false`, отображается компонент `fallback` &mdash; кнопка для показа формы `<AddBook />`.
+
+## Ссылки
+
+-   [Conditional User Interface Display](https://docs.solidjs.com/guides/tutorials/getting-started-with-solid/control-flow)
