@@ -5,4 +5,4 @@ nav:
     - building-ui-with-components.md
     - adding-interactivity-with-state.md
     - control-flow.md
-    #- fetching-data.md
+    - fetching-data.md

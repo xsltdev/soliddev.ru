@@ -1,124 +1,132 @@
-<Title>FAQ - Frequently Asked Questions</Title>
+---
+description: Ответы на частые вопросы
+---
 
-## JSX without a virtual DOM? Is this vaporware? I've heard prominent voices say that this isn't possible.
+# FAQ - Часто задаваемые вопросы
 
-It is possible when you don't have React's update model. JSX is a template language like those in Svelte or Vue—just one that is more flexible in certain ways. Inserting arbitrary JavaScript can be challenging at times, but no different than supporting spread operators. So, no: this isn't vaporware, but an approach proven to be one of the most performant.
+## JSX без виртуального DOM? Является ли это пародийной идеей? Я слышал, как известные люди говорили, что это невозможно.
 
-The real benefit comes in how extensible it is. We have a compiler working for you to give you optimal native DOM updates, but you have all the freedom of a library like React. You can write components using standard techniques like [render props](https://reactjs.org/docs/render-props.html) and higher order components along side your reactive "hooks". Don't like how Solid's control flow works? Write your own.
+Это возможно, если у вас нет модели обновления React. JSX - это шаблонный язык, такой же, как в Svelte или Vue, только более гибкий в некоторых отношениях. Вставка произвольного JavaScript иногда может быть сложной, но ничем не отличается от поддержки операторов разделения. Так что нет: это не пародия, а подход, доказавший свою эффективность.
 
-## How is Solid so performant?
+Реальное преимущество заключается в том, насколько он расширяем. У нас есть компилятор, работающий на вас, чтобы обеспечить оптимальное обновление нативного DOM, но у вас есть вся свобода библиотеки типа React. Вы можете писать компоненты, используя стандартные техники, такие как [render props](https://reactjs.org/docs/render-props.html), а также компоненты более высокого порядка наряду с реактивными "хуками". Не нравится, как работает поток управления Solid? Напишите свой собственный.
 
-We wish we could point to a single thing, but it really is the combination of several important design decisions:
+## Почему Solid настолько производителен?
 
-1. Explicit reactivity, so only the things that should be reactive are tracked.
-2. Compilation with initial creation in mind. Solid uses heuristics and combines the right expressions to reduce the number of computations, but keep key updates granular and performant.
-3. Reactive expressions are just functions. This enables "vanishing components" with lazy prop evaluation removing unnecessary wrappers and synchronization overhead.
+Мы хотели бы указать на какую-то одну особенность, но на самом деле это комбинация нескольких важных проектных решений:
 
-These are currently unique techniques in a combination that gives Solid an edge over the competition.
+1.  Явная реактивность, поэтому отслеживаются только те действия, которые должны быть реактивными.
+2.  Компиляция с учетом первоначального создания. Solid использует эвристику и комбинирует нужные выражения, чтобы уменьшить количество вычислений, но сохранить гранулярность и производительность обновления ключей.
+3.  Реактивные выражения - это просто функции. Это позволяет использовать "исчезающие компоненты" с ленивой оценкой пропсов, устраняя ненужные обертки и накладные расходы на синхронизацию.
 
-## Is there React-Compat, or some way to use my React libraries in Solid?
+Это уникальные на сегодняшний день технологии в комбинации, которая дает Solid преимущество перед конкурентами.
 
-No. And there likely never will be. While the APIs are similar and components often can be moved across with minor edits, the update model is fundamentally different. React Components render over and over so code outside of Hooks works very differently. The closures and hook rules are not only unnecessary in Solid: they can prescribe code that does not work here.
+## Существует ли React-Compat, или способ использовать мои библиотеки React в Solid?
 
-Vue-Compat, on the other hand, would be doable, although there are no plans to implement it currently.
+Нет. И, скорее всего, никогда не будет. Несмотря на схожесть API и возможность переноса компонентов с незначительными правками, модель обновления принципиально отличается. Компоненты React отрисовываются снова и снова, поэтому код вне хуков работает совсем по-другому. Закрытия и правила хуков не только не нужны в Solid: они могут предписывать код, который здесь не работает.
 
-On the other hand, it is possible to run Solid within React. [React Solid State](https://github.com/solidjs/react-solid-state) makes the Solid API accessible in React function components. [reactjs-solidjs-bridge](https://github.com/Sawtaytoes/reactjs-solidjs-bridge) lets you render React components within Solid components and vice versa, which is useful when gradually porting an app.
+Vue-Compat, с другой стороны, был бы выполним, хотя в настоящее время его реализация не планируется.
 
-## Why shouldn't I use map in my template, and what's the difference between `<For>` and `<Index>`?
+С другой стороны, есть возможность запускать Solid в рамках React. [React Solid State](https://github.com/solidjs/react-solid-state) делает Solid API доступным в функциональных компонентах React. [reactjs-solidjs-bridge](https://github.com/Sawtaytoes/reactjs-solidjs-bridge) позволяет рендерить компоненты React внутри компонентов Solid и наоборот, что полезно при постепенном переносе приложения.
 
-If your array is static, there's nothing wrong with using map. But if you're looping over a signal or reactive property, map is inefficient: if the array changes for any reason, **the entire map** will rerun and all of the nodes will be recreated.
+## Почему я не должен использовать map в своем шаблоне, и в чем разница между `<For>` и `<Index>`?
 
-`<For>` and `<Index>` both provide a loop solution that is smarter than this. They couple each rendered node with an element in the array, so when an array element changes, only the corresponding node will rerender.
+Если ваш массив статичен, то нет ничего плохого в использовании map. Но если вы выполняете цикл по сигналу или реактивному свойству, то использование map неэффективно: если массив по какой-либо причине изменится, то **вся карта** будет запущена заново, и все узлы будут созданы заново.
 
-`<Index>` will do this by index: each node corresponds to an index in the array; `<For>` will do this by value: each node corresponds to a piece of data in the array. This is why, in the callback, `<Index>` gives you a signal for the item: the index for each item is considered fixed, but the data at that index can change. On the other hand, `<For>` gives you a signal for the index: the content of the item is considered fixed, but it can move around if elements get moved in the array.
+Циклы `<For>` и `<Index>` предлагают более умное решение. Они связывают каждый отрисованный узел с элементом массива, поэтому при изменении элемента массива будет перерисовываться только соответствующий узел.
 
-For example, if two elements in the array are swapped, `<For>` will reposition the two corresponding DOM nodes and update their index() signals along the way. `<Index>` won't reposition any DOM nodes, but will update the item() signals for the two DOM nodes and cause them to rerender.
+`<Index>` делает это по индексу: каждому узлу соответствует индекс в массиве; `<For>` делает это по значению: каждому узлу соответствует часть данных в массиве. Именно поэтому в обратном вызове `<Index>` выдает сигнал для элемента: индекс для каждого элемента считается фиксированным, но данные по этому индексу могут меняться. С другой стороны, `<For>` дает сигнал для индекса: содержимое элемента считается фиксированным, но оно может перемещаться, если в массиве перемещаются элементы.
 
-For an in-depth demonstration of the difference, see [this segment](https://www.youtube.com/watch?v=YxroH_MXuhw&t=2164s) of Ryan's stream.
+Например, если поменять местами два элемента в массиве, то `<For>` переместит два соответствующих узла DOM и попутно обновит их сигналы index(). А `<Index>` не переместит ни одного узла DOM, но обновит сигналы item() для двух узлов DOM и вызовет их рендеринг.
 
-## Why do I lose reactivity when I destructure props?
+Для более детальной демонстрации разницы смотрите [этот сегмент](https://www.youtube.com/watch?v=YxroH_MXuhw&t=2164s) потока Райана.
 
-With a props object, reactivity is enabled by tracking on property access. If you access the property within a tracking scope like a JSX expression or an effect, then the JSX expression will rerender or the effect will rerun when that property changes.
+## Почему я теряю реактивность при деструктуризации пропсов?
 
-When you destructure, you access the properties of the object. If this takes place outside of a tracking scope, Solid won't track and rerun your code.
+В пропсах реактивность обеспечивается отслеживанием доступа к свойствам. Если вы обращаетесь к свойству в отслеживаемой области, например в JSX-выражении или эффекте, то при изменении этого свойства JSX-выражение или эффект будут перезапущены.
 
-In this example, the property access happens within the JSX template, so it's tracked and the span contents update when the signal changes:
+При деструктуризации происходит доступ к свойствам объекта. Если это происходит вне области отслеживания, Solid не будет отслеживать и повторно выполнять ваш код.
 
-```jsx 
+В данном примере обращение к свойствам происходит внутри JSX-шаблона, поэтому оно отслеживается, и содержимое span обновляется при изменении сигнала:
+
+```js
 function BlueText(props) {
-  return (
-    <span style="color: blue">{props.text}</span> // 👈 tracked
-  );
+    return (
+        <span style="color: blue">{props.text}</span> // 👈 tracked
+    );
 }
-...
-<BlueText text={mySignal()}/>
+// ...
+<BlueText text={mySignal()} />;
 ```
 
-But neither of these examples will update the span text because the property access happens outside of the template:
+Но ни в одном из этих примеров текст `span` не будет обновлен, поскольку обращение к свойству происходит вне шаблона:
 
-```jsx 
+```js
 function BlueText(props) {
-  const text = props.text; // 👈 not tracked
-  return (
-    <span style="color: blue">{text}</span>
-  );
+    const text = props.text; // 👈 not tracked
+    return <span style="color: blue">{text}</span>;
 }
-...
-<BlueText text={mySignal()}/>
+// ...
+<BlueText text={mySignal()} />;
 ```
 
-```jsx
-function BlueText({text}) {
-  return (
-    <span style="color: blue">{text}</span> // 👈 not tracked
-  );
+---
+
+```js
+function BlueText({ text }) {
+    return (
+        <span style="color: blue">{text}</span> // 👈 not tracked
+    );
 }
-...
-<BlueText text={mySignal()}/>
+// ...
+<BlueText text={mySignal()} />;
 ```
 
-If you prefer the style of early destructuring, though, there are two different Babel transforms you can use to make (certain styles of) destructuring reactive again: [babel-plugin-solid-undestructure](https://github.com/orenelbaum/babel-plugin-solid-undestructure) and [Solid Labels' object features](https://github.com/LXSMNSYC/solid-labels).
+Если же вы предпочитаете стиль ранней деструктуризации, то есть два различных преобразования Babel, которые можно использовать для того, чтобы сделать (определенные стили) деструктуризации снова реактивными: [babel-plugin-solid-undestructure](https://github.com/orenelbaum/babel-plugin-solid-undestructure) и [Solid Labels' object features](https://github.com/LXSMNSYC/solid-labels).
 
-## Why isn't my onChange event handler firing on time?
+## Почему мой обработчик события onChange не срабатывает вовремя?
 
-In some frameworks, the `onChange` event for inputs is modified so that it fires on every key press. But this isn't how the `onChange` event [works natively](https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onchange): it is meant to reflect a _committed_ change to the input and will usually fire when the input loses focus. To handle all changes to the value of an input, use `onInput`.
+В некоторых фреймворках событие `onChange` для ввода изменяется таким образом, что оно срабатывает при каждом нажатии клавиши. Однако событие `onChange` работает не так [https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onchange]: оно предназначено для отражения _фиксированного_ изменения значения ввода и обычно срабатывает, когда ввод теряет фокус. Для обработки всех изменений значения ввода используйте `onInput`.
 
-## Can you add support for class components? I find the lifecycles are easier to reason about.
+## Можете ли вы добавить поддержку компонентов классов? Я считаю, что жизненные циклы проще для рассуждений.
 
-We don't intend to support class components. The lifecycles of components in Solid are tied to the scheduling of the reactive system and are artificial. You could make a class out of it, but effectively all of the non-event handler code would be run in the constructor, including the render function. It's just more syntax for an excuse to make your data less granular.
+Мы не собираемся поддерживать компоненты классов. Жизненные циклы компонентов в Solid привязаны к расписанию реактивной системы и являются искусственными. Вы можете сделать из него класс, но фактически весь код, не относящийся к обработчикам событий, будет выполняться в конструкторе, включая функцию рендеринга. Это просто синтаксис для оправдания того, что ваши данные менее гранулированы.
 
-Group data and its behaviors together, rather than lifecycles. This is a reactive best practice that has worked for decades.
+Группируйте данные и их поведение вместе, а не по жизненным циклам. Это лучшая реактивная практика, которая работает уже несколько десятилетий.
 
-## I really dislike JSX, any chance of a different template language? Oh, I see you have Tagged Template Literals/HyperScript. Maybe I will use those...
+## Мне очень не нравится JSX, есть ли возможность использовать другой язык шаблонов? О, я вижу у вас есть Tagged Template Literals/HyperScript. Может быть, я буду использовать их...
 
-We use JSX the way Svelte uses their templates, to create optimized DOM instructions. The Tagged Template Literal and HyperScript solutions may be really impressive in their own right, but unless you have a real reason like a no-build requirement they are inferior in every way. Larger bundles, slower performance, and the need for manual workaround wrapping values.
+Мы используем JSX так же, как Svelte использует свои шаблоны, для создания оптимизированных инструкций DOM. Решения Tagged Template Literal и HyperScript могут быть действительно впечатляющими сами по себе, но если у вас нет реальной причины, например, требования запрета на сборку, они уступают во всех отношениях. Более крупные пакеты, более низкая производительность, необходимость ручного обхода обертки значений.
 
-It's good to have options, but Solid's JSX is really the best solution here. A Template DSL would be great as well, albeit more restrictive, but JSX gives us so much for free. Existing Parsers, Syntax Highlighting, Prettier, Code Completion, and last but not least TypeScript.
+Хорошо, когда есть выбор, но JSX от Solid - это действительно лучшее решение. Шаблонный DSL тоже был бы хорош, хотя и более ограничен, но JSX дает нам так много бесплатно. Существующие парсеры, подсветка синтаксиса, Prettier, завершение кода и, наконец, TypeScript.
 
-Other libraries have been adding support for these features but that has been an enormous effort and is still imperfect and a constant maintenance headache. This is really taking a pragmatic stance.
+Другие библиотеки добавляют поддержку этих возможностей, но это требует огромных усилий и до сих пор остается несовершенным, а его поддержка - постоянной головной болью. Это действительно прагматичная позиция.
 
-## When do I use a Signal vs Store? Why are these different?
+## Когда использовать сигнал или магазин? Почему они отличаются?
 
-Stores automatically wrap nested values making it ideal for deep data structures, and for things like models. For most other things Signals are lightweight and do the job wonderfully.
+Хранилища автоматически оборачивают вложенные значения, что делает их идеальными для глубоких структур данных, а также для таких вещей, как модели. Для большинства других вещей сигналы являются легкими и прекрасно справляются со своей задачей.
 
-As much we would love to wrap these together as a single thing, you can't proxy primitive values, so in this case we use functions. Any reactive expression (including state access) can be wrapped in a function on transport, so this provides a universal API. You can name your signals and state as you choose and it stays minimal. Last thing we'd want to do is force typing `.get()` `.set()` on the end-user or even worse `.value`. At least the former can be aliased for brevity, whereas the latter is just the least terse way to call a function.
+Как бы нам ни хотелось объединить их в одно целое, вы не можете проксировать примитивные значения, поэтому в данном случае мы используем функции. Любое реактивное выражение (включая доступ к состоянию) может быть обернуто в функцию на транспорте, так что это обеспечивает универсальный API. Вы можете называть свои сигналы и состояния по своему усмотрению, и все это останется минимальным. Последнее, что нам хотелось бы сделать, - это заставить конечного пользователя набирать `.get()` `.set()` или, еще хуже, `.value`. По крайней мере, первые могут быть псевдонимами для краткости, в то время как вторые - это просто наименее лаконичный способ вызова функции.
 
-## Why can I not just assign a value to Solid's Store as I can in Vue, Svelte, or MobX? Where is the 2-way binding?
+## Почему я не могу просто присвоить значение магазину Solid, как это можно сделать в Vue, Svelte или MobX? Где двусторонняя привязка?
 
-Reactivity is a powerful tool but also a dangerous one. MobX knows this and introduced Strict mode and Actions to limit where/when updates occur. In Solid, which deals with whole Component trees of data, it became apparent that we can learn something from React here. You don't need to be actually immutable as long as you provide the means to have the same contract.
+Реактивность - мощный, но и опасный инструмент. MobX знает это и ввел строгий режим и Actions, чтобы ограничить, где/когда происходят обновления. В Solid, который имеет дело с целыми деревьями данных Component, стало очевидно, что здесь мы можем кое-что перенять у React. Вам не нужно быть фактически неизменяемым, если вы предоставляете средства для того, чтобы иметь тот же контракт.
 
-Being able to pass the ability to update state is arguably even more important than deciding to pass the state. So being able to separate it is important, and only possible if reading is immutable. We also don't need to pay the cost of immutability if we can still granularly update. Luckily there are tons of prior art here between ImmutableJS and Immer. Ironically Solid acts mostly as a reverse Immer with its mutable internals and immutable interface.
+Возможность передать возможность обновления состояния, пожалуй, даже более важна, чем решение передать состояние. Поэтому возможность разделить их очень важна и возможна только в том случае, если чтение является неизменяемым. Нам также не нужно платить за неизменяемость, если мы по-прежнему можем гранулярно обновлять состояние. К счастью, между ImmutableJS и Immer есть множество предшествующих разработок. По иронии судьбы Solid выступает в основном как обратный Immer с его мутабельными внутренностями и неизменяемым интерфейсом.
 
-## Can I use Solid's reactivity on its own?
+## Могу ли я использовать реактивность Solid самостоятельно?
 
-Of course. While we haven't exported a standalone package it is easy to install Solid without the compiler and just use the reactive primitives. One of the benefits of granular reactivity is it is library agnostic. For that matter, almost every reactive library works this way. That is what inspired [Solid](https://github.com/solidjs/solid) and its underlying [DOM Expressions library](https://github.com/ryansolid/dom-expressions) in the first place to make a renderer purely from the reactive system.
+Конечно. Хотя мы не экспортировали отдельный пакет, можно легко установить Solid без компилятора и просто использовать реактивные примитивы. Одно из преимуществ гранулярной реактивности заключается в том, что она не зависит от библиотек. По сути, почти каждая реактивная библиотека работает таким образом. Именно это и вдохновило разработчиков [Solid](https://github.com/solidjs/solid) и лежащей в его основе библиотеки [DOM Expressions](https://github.com/ryansolid/dom-expressions) на создание рендерера исключительно на основе реактивной системы.
 
-To list a few to try: [Solid](https://github.com/solidjs/solid), [MobX](https://github.com/mobxjs/mobx), [Knockout](https://github.com/knockout/knockout), [Svelte](https://github.com/sveltejs/svelte), [S.js](https://github.com/adamhaile/S), [CellX](https://github.com/Riim/cellx), [Derivable](https://github.com/ds300/derivablejs), [Sinuous](https://github.com/luwes/sinuous), and even recently [Vue](https://github.com/vuejs/vue). Much more goes into making a reactive library than tagging it onto a renderer like, lit-html for example, but it's a good way to get a feel.
+Перечислим некоторые из них: [Solid](https://github.com/solidjs/solid), [MobX](https://github.com/mobxjs/mobx), [Knockout](https://github.com/knockout/knockout), [Svelte](https://github.com/sveltejs/svelte), [S.js](https://github.com/adamhaile/S), [CellX](https://github.com/Riim/cellx), [Derivable](https://github.com/ds300/derivablejs), [Sinuous](https://github.com/luwes/sinuous), и даже недавно [Vue](https://github.com/vuejs/vue). Создание реактивной библиотеки требует гораздо больше усилий, чем навешивание тегов на рендерер, например, lit-html, но это хороший способ получить представление.
 
-## Does Solid have a Next.js or Material Components like library I can use?
+## Есть ли у Solid библиотека, подобная Next.js или Material Components, которую я могу использовать?
 
-We're working on [SolidStart](https://github.com/solidjs/solid-start), which is our SSR starter solution similar to Next.js or SvelteKit.
+Мы работаем над [SolidStart](https://github.com/solidjs/solid-start), который является нашим стартовым решением для SSR, аналогичным Next.js или SvelteKit.
 
-For component libraries, we've got [SUID](https://suid.io/) a Material UI port for Solid, [Hope UI](https://hope-ui.com/) for a Chakra-like solution, [Solid Bootstrap](https://solid-libs.github.io/solid-bootstrap/) and plenty more! Check out our [rapidly growing ecosystem of libraries and tools](https://www.solidjs.com/ecosystem).
+Что касается библиотек компонентов, то у нас есть [SUID](https://suid.io/) - порт Material UI для Solid, [Hope UI](https://hope-ui.com/) - решение, похожее на Chakra, [Solid Bootstrap](https://solid-libs.github.io/solid-bootstrap/) и многие другие! Ознакомьтесь с нашей [быстро растущей экосистемой библиотек и инструментов](https://www.solidjs.com/ecosystem).
 
-If you are interested in building your own ecosystem tool, we are readily available on our [Discord](https://discord.com/invite/solidjs), where you can join existing ecosystem efforts or start your own.
+Если вы заинтересованы в создании собственного инструмента для экосистемы, мы всегда готовы помочь вам в [Discord](https://discord.com/invite/solidjs), где вы можете присоединиться к существующим усилиям по созданию экосистемы или начать свою собственную.
+
+## Ссылки
+
+-   [FAQ - Frequently Asked Questions](https://docs.solidjs.com/guides/troubleshooting-and-faq/faq)
