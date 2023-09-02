@@ -2,11 +2,11 @@ title: Справочник API
 nav:
     - index.md
     - basic-reactivity
-    - lifecycles
-    - reactive-utilities
-    - stores
-    - component-apis
-    - secondary-primitives
-    - rendering
-    - control-flow
-    - special-jsx-attributes
+    #- lifecycles
+    #- reactive-utilities
+    #- stores
+    #- component-apis
+    #- secondary-primitives
+    #- rendering
+    #- control-flow
+    #- special-jsx-attributes

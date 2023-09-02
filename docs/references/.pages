@@ -2,4 +2,4 @@ title: Справочник
 nav:
     - index.md
     - concepts
-    #- api-reference
+    - api-reference

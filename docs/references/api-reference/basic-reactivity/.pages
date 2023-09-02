@@ -1,0 +1,7 @@
+title: Функции реактивности
+nav:
+    - index.md
+    - createSignal.md
+    - createEffect.md
+    - createMemo.md
+    - createResource.md

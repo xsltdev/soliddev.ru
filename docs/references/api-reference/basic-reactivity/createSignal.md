@@ -1,19 +1,19 @@
-import { Aside } from "~/components/configurable/Aside";
-import FunctionForm from "./snippets/createSignalFuncForm.mdx";
-import FunctionForm2 from "./snippets/createSignalFuncForm2.mdx";
+---
+description: Сигналы отслеживают одно значение (которым может быть любой объект JavaScript), изменяющееся с течением времени
+---
 
-<Title>createSignal</Title>
+# createSignal
 
-Signals are the most basic reactive primitive. They track a single value (which can be any JavaScript object) that changes over time.
+**Сигналы** - это самый простой реактивный примитив. Они отслеживают одно значение (которым может быть любой объект JavaScript), изменяющееся с течением времени.
 
 ```ts
 function createSignal<T>(
-  initialValue: T,
-  options?: {
-    equals?: false | ((prev: T, next: T) => boolean);
-    name?: string;
-    internal?: boolean;
-  }
+    initialValue: T,
+    options?: {
+        equals?: false | ((prev: T, next: T) => boolean);
+        name?: string;
+        internal?: boolean;
+    }
 ): [get: () => T, set: (v: T) => T];
 
 // available types for return value of createSignal:
@@ -22,18 +22,18 @@ type Accessor<T> = () => T;
 type Setter<T> = (v: T | ((prev?: T) => T)) => T;
 ```
 
-The Signal's value starts out equal to the passed first argument initialValue (or undefined if there are no arguments). The createSignal function returns a pair of functions as a two-element array: a getter (or accessor) and a setter. In typical use, you would destructure this array into a named Signal like so:
+Значение сигнала в начале равно переданному первому аргументу `initialValue` (или неопределено, если аргументов нет). Функция `createSignal` возвращает пару функций в виде двухэлементного массива: геттер (или аксессор) и сеттер. При обычном использовании этот массив можно деструктурировать в именованный сигнал следующим образом:
 
 ```ts
 const [count, setCount] = createSignal(0);
 const [ready, setReady] = createSignal(false);
 ```
 
-Calling the getter (e.g., `count()` or `ready()`) returns the current value of the Signal.
+Вызов геттера (например, `count()` или `ready()`) возвращает текущее значение Сигнала.
 
-Crucial to automatic dependency tracking, calling the getter within a tracking scope causes the calling function to depend on this Signal, so that function will rerun if the Signal gets updated.
+Важным для автоматического отслеживания зависимостей является то, что вызов геттера в области отслеживания приводит к тому, что вызывающая функция становится зависимой от этого Сигнала, поэтому при обновлении Сигнала эта функция будет запущена заново.
 
-Calling the setter (e.g., `setCount(nextCount)` or `setReady(nextReady)`) sets the Signal's value and updates the Signal (triggering dependents to rerun) if the value actually changed (see details below). The setter takes either the new value for the signal or a function that maps the last value of the signal to a new value as its only argument. The updated value is also returned by the setter. As an example:
+Вызов сеттера (например, `setCount(nextCount)` или `setReady(nextReady)`) устанавливает значение Сигнала и обновляет его (вызывая повторное выполнение зависимых функций), если значение действительно изменилось (подробнее см. ниже). В качестве единственного аргумента сеттер принимает либо новое значение сигнала, либо функцию, сопоставляющую последнее значение сигнала с новым значением. Обновленное значение также возвращается сеттером. В качестве примера:
 
 ```ts
 // read signal's current value, and
@@ -55,71 +55,91 @@ setReady(true);
 const newCount = setCount((prev) => prev + 1);
 ```
 
-<Aside>
-  If you want to store a function in a Signal you must use the function form:
-  <FunctionForm />
-  However, functions are not treated specially as the initialValue argument to
-  createSignal, so you can pass a function initial value as is:
-  <FunctionForm2 />
-</Aside>
+!!!note ""
 
-## Options
+    Если вы хотите сохранить функцию в Signal, вы должны использовать форму функции:
 
-| Name       | Type                                       | Default | Description                                                                                                                                                                                                                                                         |
-| ---------- | ------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `equals`   | `false \| ((prev: T, next: T) => boolean)` | `===`   | A function that determines whether the Signal's value has changed. If the function returns true, the Signal's value will not be updated and dependents will not rerun. If the function returns false, the Signal's value will be updated and dependents will rerun. |
-| `name`     | `string`                                   |         | A name for the Signal. This is useful for debugging.                                                                                                                                                                                                                |
-| `internal` | `boolean`                                  | `false` | If true, the Signal will not be accessible in the devtools.                                                                                                                                                                                                         |
+    ```ts
+    setValue(() => myFunction);
+    ```
+
+    Однако функции не рассматриваются специально как аргумент `initialValue` в `createSignal`, поэтому можно передавать начальное значение функции как есть:
+
+    ```ts
+    const [func, setFunc] = createSignal(myFunction);
+    ```
+
+## Параметры
+
+| Наименование | Тип                                                   | По умолчанию | Описание                                                                                                                                                                                                                                                                                 |
+| ------------ | ----------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `equals`     | <code>false \| ((prev: T, next: T) => boolean)</code> | `===`        | Функция, определяющая, изменилось ли значение Сигнала. Если функция возвращает true, то значение Сигнала не обновляется и зависимые элементы не запускаются повторно. Если функция возвращает `false`, то значение Сигнала будет обновлено и зависимые элементы будут запущены повторно. |
+| `name`       | `string`                                              |              | Имя для сигнала. Это полезно для отладки.                                                                                                                                                                                                                                                |
+| `internal`   | `boolean`                                             | `false`      | Если `true`, то Signal не будет доступен в devtools.                                                                                                                                                                                                                                     |
 
 ### `equals`
 
-The `equals` option can be used to customize the equality check used to determine whether the Signal's value has changed. By default, the equality check is a strict equality check (`===`). If you want to use a different equality check, you can pass a custom function as the `equals` option. The custom function will be called with the previous and next values of the Signal as arguments. If the function returns true, the Signal's value will not be updated and dependents will not rerun. If the function returns false, the Signal's value will be updated and dependents will rerun.
+Опция `equals` может быть использована для настройки проверки равенства, используемой для определения того, изменилось ли значение Signal. По умолчанию используется строгая проверка равенства (`===`). Если необходимо использовать другую проверку равенства, то в качестве опции `equals` можно передать пользовательскую функцию. Пользовательская функция будет вызвана с предыдущим и следующим значениями Signal в качестве аргументов. Если функция вернет `true`, то значение Signal не будет обновлено и зависимые функции не будут перезапускаться. Если функция вернет `false`, то значение Сигнала будет обновлено, а зависимые элементы будут повторно запущены.
 
 ```ts
 const [count, setCount] = createSignal(0, {
-  equals: (prev, next) => prev === next,
+    equals: (prev, next) => prev === next,
 });
 ```
 
-Here's are some examples of this option in use:
+Вот несколько примеров использования этого варианта:
 
 ```ts
 // use { equals: false } to allow modifying object in-place;
 // normally this wouldn't be seen as an update because the
 // object has the same identity before and after change
-const [object, setObject] = createSignal({ count: 0 }, { equals: false });
+const [object, setObject] = createSignal(
+    { count: 0 },
+    { equals: false }
+);
 setObject((current) => {
-  current.count += 1;
-  current.updated = new Date();
-  return current;
+    current.count += 1;
+    current.updated = new Date();
+    return current;
 });
 
 // use { equals: false } signal as trigger without value:
-const [depend, rerun] = createSignal(undefined, { equals: false });
+const [depend, rerun] = createSignal(undefined, {
+    equals: false,
+});
 // now calling depend() in a tracking scope
 // makes that scope rerun whenever rerun() gets called
 
 // define equality based on string length:
-const [myString, setMyString] = createSignal("string", {
-  equals: (oldVal, newVal) => newVal.length === oldVal.length,
+const [myString, setMyString] = createSignal('string', {
+    equals: (oldVal, newVal) =>
+        newVal.length === oldVal.length,
 });
 
-setMyString("string"); // considered equal to the last value and won't cause updates
-setMyString("stranger"); // considered different and will cause updates
+setMyString('string'); // considered equal to the last value and won't cause updates
+setMyString('stranger'); // considered different and will cause updates
 ```
 
 ### `name`
 
-The `name` option can be used to give the Signal a name. This is useful for debugging. The name will be displayed in the devtools.
+Опция `name` может быть использована для присвоения сигналу имени. Это полезно для отладки. Имя будет отображаться в devtools.
 
 ```ts
-const [count, setCount] = createSignal(0, { name: "count" });
+const [count, setCount] = createSignal(0, {
+    name: 'count',
+});
 ```
 
 ### `internal`
 
-The `internal` option can be used to hide the Signal from the devtools. This is useful for Signals that are used internally by a component and should not be exposed to the user.
+Опция `internal` может быть использована для скрытия сигнала от devtools. Это полезно для сигналов, которые используются внутри компонента и не должны быть доступны пользователю.
 
 ```ts
-const [count, setCount] = createSignal(0, { internal: true });
+const [count, setCount] = createSignal(0, {
+    internal: true,
+});
 ```
+
+## Ссылки
+
+-   [createSignal](https://docs.solidjs.com/references/api-reference/basic-reactivity/createSignal)

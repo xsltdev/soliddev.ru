@@ -1,58 +1,70 @@
-<Title>createMemo</Title>
+---
+description: Мемо позволяют эффективно использовать производное значение во многих реактивных вычислениях
+---
 
-Memos let you efficiently use a derived value in many reactive computations. `createMemo` creates a readonly reactive value equal to the return value of the given function and makes sure that function only gets executed when its dependencies change.
+# createMemo
+
+Мемо позволяют эффективно использовать производное значение во многих реактивных вычислениях. `createMemo` создает реактивное значение `readonly`, равное возвращаемому значению заданной функции, и следит за тем, чтобы эта функция выполнялась только при изменении ее зависимостей.
 
 ```ts
 function createMemo<T>(
-  fn: (v: T) => T,
-  value?: T,
-  options?: { equals?: false | ((prev: T, next: T) => boolean) }
+    fn: (v: T) => T,
+    value?: T,
+    options?: {
+        equals?: false | ((prev: T, next: T) => boolean);
+    }
 ): () => T;
 ```
 
-Here's an example of how createMemo can be used:
+Вот пример использования `createMemo`:
 
 ```ts
-const value = createMemo(() => computeExpensiveValue(a(), b()));
+const value = createMemo(() =>
+    computeExpensiveValue(a(), b())
+);
 
 //read the value
 value();
 ```
 
-In Solid, you often don't need to wrap functions in memos; you can alternatively just define and call a regular function to get similar reactive behavior. The main difference is when you call the function in multiple reactive settings. In this case, when the function's dependencies update, the function will get called multiple times unless it is wrapped in createMemo. For example:
+В Solid часто нет необходимости оборачивать функции в памятки; в качестве альтернативы можно просто определить и вызвать обычную функцию, чтобы получить аналогичное реактивное поведение. Основное различие заключается в том, что функция вызывается в нескольких реактивных настройках. В этом случае при обновлении зависимостей функция будет вызываться несколько раз, если она не обернута в `createMemo`. Например:
 
 ```ts
 const user = createMemo(() => searchForUser(username()));
 // compare with: const user = () => searchForUser(username());
 return (
-  <ul>
-    <li>Your name is `${user()?.name}`</li>
-    <li>
-      Your email is <code>{user()?.email}</code>
-    </li>
-  </ul>
+    <ul>
+        <li>Your name is `${user()?.name}`</li>
+        <li>
+            Your email is <code>{user()?.email}</code>
+        </li>
+    </ul>
 );
 ```
 
-When the username signal updates, searchForUser will get called just once. If the returned user actually changed, the user memo updates, and then both list items will update automatically.
+Когда сигнал имени пользователя обновляется, `searchForUser` будет вызван только один раз. Если возвращаемый пользователь действительно изменился, то обновляется памятка пользователя, и тогда оба элемента списка обновляются автоматически.
 
-If we had instead defined user as a plain function `() => searchForUser(username())`, then `searchForUser` would have been called twice, once when updating each list item.
+Если бы вместо этого мы определили `user` как простую функцию `() => searchForUser(username())`, то `searchForUser` вызывался бы дважды, по одному разу при обновлении каждого элемента списка.
 
-Another key difference is that a memo can shield dependents from updating when the memo's dependencies change but the resulting memo value doesn't. Like [createSignal](/references/api-reference/basic-reactivity/createSignal), the derived signal made by `createMemo` updates (and triggers dependents to rerun) only when the value returned by the memo function actually changes from the previous value, according to JavaScript's `===` operator. Alternatively, you can pass an options object with `equals` set to false to always update the memo when its dependencies change, or you can pass your own `equals` function for testing equality.
+Еще одно ключевое отличие заключается в том, что мемо может защитить зависимые элементы от обновления, когда изменяются зависимости мемо, но не изменяется результирующее значение мемо. Как и [createSignal](createSignal.md), производный сигнал, созданный `createMemo`, обновляется (и вызывает повторное выполнение зависимостей) только тогда, когда значение, возвращаемое функцией `memo`, действительно меняется по сравнению с предыдущим значением, в соответствии с оператором JavaScript `===`. В качестве альтернативы можно передать объект `options` с `equals`, установленным в `false`, чтобы всегда обновлять `memo` при изменении зависимостей, или передать собственную функцию `equals` для проверки равенства.
 
-The memo function is called with an argument equal to the value returned from the previous execution of the memo function, or, on the first call, equal to the optional second argument to `createMemo`. This is useful for reducing computations, such as:
+Функция `memo` вызывается с аргументом, равным значению, возвращенному при предыдущем выполнении функции `memo`, или, при первом вызове, равным необязательному второму аргументу функции `createMemo`. Это удобно для сокращения вычислений, таких как:
 
 ```ts
 // track the sum of all values taken on by input() as it updates
 const sum = createMemo((prev) => input() + prev, 0);
 ```
 
-The memo function should not change other signals by calling setters (it should be "pure"). This enables Solid to optimize the execution order of memo updates according to their dependency graph, so that all memos can update at most once in response to a dependency change.
+Функция memo не должна изменять другие сигналы путем вызова сеттеров (она должна быть "чистой"). Это позволяет Solid оптимизировать порядок выполнения обновлений мемов в соответствии с их графом зависимостей, так что все мемы могут обновляться не более одного раза в ответ на изменение зависимости.
 
-## Options and arguments
+## Параметры и аргументы
 
-| Name    | Type                                                    | Description                                                    |
-| :------ | :------------------------------------------------------ | :------------------------------------------------------------- |
-| fn      | `(v: T) => T`                                           | The function to memoize.                                       |
-| value   | `T`                                                     | The initial value of the memo.                                 |
-| options | `{ equals?: false \| ((prev: T, next: T) => boolean) }` | An optional object with an `equals` function to test equality. |
+| Наименование | Тип                                                                | Описание                                                          |
+| :----------- | :----------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `fn`         | `(v: T) => T`                                                      | Функция для мемоизации.                                           |
+| `value`      | `T`                                                                | Начальное значение мемо.                                          |
+| `options`    | <code>{ equals?: false \| ((prev: T, next: T) => boolean) }</code> | Необязательный объект с функцией `equals` для проверки равенства. |
+
+## Ссылки
+
+-   [createMemo](https://docs.solidjs.com/references/api-reference/basic-reactivity/createMemo)

@@ -1,10 +1,14 @@
-<Title>createEffect</Title>
+---
+description: Эффекты - это общий способ заставить произвольный код ("побочные эффекты") выполняться при изменении зависимостей, например, для ручной модификации DOM
+---
+
+# createEffect
 
 ```ts
 function createEffect<T>(fn: (v: T) => T, value?: T): void;
 ```
 
-Effects are a general way to make arbitrary code ("side effects") run whenever dependencies change, e.g., to modify the DOM manually. `createEffect` creates a new computation that runs the given function in a tracking scope, thus automatically tracking its dependencies, and automatically reruns the function whenever the dependencies update. For example:
+**Эффекты** - это общий способ заставить произвольный код ("побочные эффекты") выполняться при изменении зависимостей, например, для ручной модификации DOM. `createEffect` создает новое вычисление, которое запускает заданную функцию в отслеживаемой области видимости, таким образом автоматически отслеживая ее зависимости, и автоматически перевыполняет функцию при обновлении зависимостей. Например:
 
 ```ts
 const [a, setA] = createSignal(initialValue);
@@ -13,45 +17,45 @@ const [a, setA] = createSignal(initialValue);
 createEffect(() => doSideEffect(a()));
 ```
 
-The effect will run whenever `a` changes value.
+Эффект будет запускаться всякий раз, когда `a` будет менять значение.
 
-The effect will also run once, immediately after it is created, to initialize the DOM to the correct state. This is called the "mounting" phase. However, we recommend using `onMount` instead, which is a more explicit way to express this.
+Эффект также будет запущен один раз, сразу после его создания, для инициализации DOM до нужного состояния. Это называется фазой "монтирования". Однако мы рекомендуем использовать вместо этого `onMount`, который является более явным способом выражения этого.
 
-The effect callback can return a value, which will be passed as the `prev` argument to the next invocation of the effect. This is useful for memoizing values that are expensive to compute. For example:
+Обратный вызов эффекта может возвращать значение, которое будет передано в качестве аргумента `prev` при следующем вызове эффекта. Это полезно для запоминания значений, которые дорого вычислять. Например:
 
 ```ts
 const [a, setA] = createSignal(initialValue);
 
 // effect that depends on signal `a`
 createEffect((prevA) => {
-  // do something with `a` and `prevA`
-  const sum = a() + b();
-  if (sum !== prevA) console.log("sum changed to", sum);
-  return sum;
+    // do something with `a` and `prevA`
+    const sum = a() + b();
+    if (sum !== prevA) console.log('sum changed to', sum);
+    return sum;
 }, 0);
 // ^ the initial value of the effect is 0
 ```
 
-Effects are meant primarily for side effects that read but don't write to the reactive system: it's best to avoid setting signals in effects, which without care can cause additional rendering or even infinite effect loops. Instead, prefer using [createMemo](/references/api-reference/basic-reactivity/createMemo) to compute new values that depend on other reactive values, so the reactive system knows what depends on what, and can optimize accordingly.
+Эффекты предназначены в основном для побочных эффектов, которые читают, но не пишут в реактивную систему: лучше избегать установки сигналов в эффектах, которые при отсутствии осторожности могут вызвать дополнительный рендеринг или даже бесконечные циклы эффектов. Вместо этого лучше использовать [createMemo](createMemo.md) для вычисления новых значений, зависящих от других реактивных значений, чтобы реактивная система знала, что от чего зависит, и могла оптимизировать соответствующим образом.
 
-The first execution of the effect function is not immediate; it's scheduled to run after the current rendering phase (e.g., after calling the function passed to [render](/references/api-reference/rendering/render), [createRoot](/references/api-reference/reactive-utilities/createRoot), or [runWithOwner](/references/api-reference/reactive-utilities/runWithOwner)). If you want to wait for the first execution to occur, use [queueMicrotask](https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask) (which runs before the browser renders the DOM) or await Promise.resolve() or setTimeout(..., 0) (which runs after browser rendering).
+Первое выполнение функции эффекта происходит не сразу, а по расписанию после завершения текущей фазы рендеринга (например, после вызова функции, переданной в [render](../rendering/render.md), [createRoot](../reactive-utilities/createRoot.md) или [runWithOwner](../reactive-utilities/runWithOwner.md)). Если необходимо дождаться первого выполнения, используйте [queueMicrotask](https://developer.mozilla.org/docs/Web/API/queueMicrotask) (выполняется до рендеринга DOM браузером) или await Promise.resolve() или setTimeout(..., 0) (выполняется после рендеринга браузером).
 
 ```ts
 // assume this code is in a component function, so is part of a rendering phase
 const [count, setCount] = createSignal(0);
 
 // this effect prints count at the beginning and when it changes
-createEffect(() => console.log("count =", count()));
+createEffect(() => console.log('count =', count()));
 // effect won't run yet
-console.log("hello");
+console.log('hello');
 setCount(1); // effect still won't run yet
 setCount(2); // effect still won't run yet
 
 queueMicrotask(() => {
-  // now `count = 2` will print
-  console.log("microtask");
-  setCount(3); // immediately prints `count = 3`
-  console.log("goodbye");
+    // now `count = 2` will print
+    console.log('microtask');
+    setCount(3); // immediately prints `count = 3`
+    console.log('goodbye');
 });
 
 // --- overall output: ---
@@ -62,25 +66,31 @@ queueMicrotask(() => {
 // goodbye
 ```
 
-This delay in first execution is useful because it means an effect defined in a component scope runs after the JSX returned by the component gets added the DOM. In particular, [refs](/references/api-reference/special-jsx-attributes/ref) will already be set. Thus you can use an effect to manipulate the DOM manually, call vanilla JS libraries, or other side effects.
+Такая задержка первого выполнения полезна, поскольку означает, что эффект, определенный в области видимости компонента, запускается после того, как JSX, возвращаемый компонентом, будет добавлен в DOM. В частности, [refs](../special-jsx-attributes/ref.md) уже будет установлен. Таким образом, эффект можно использовать для ручного управления DOM, вызова библиотек vanilla JS или других побочных эффектов.
 
-Note that the first run of the effect still runs before the browser renders the DOM to the screen (similar to React's `useLayoutEffect`). If you need to wait until after rendering (e.g., to measure the rendering), you can use `await Promise.resolve()` (or `Promise.resolve().then(...)`), but note that subsequent use of reactive state (such as signals) will not trigger the effect to rerun, as tracking is not possible after an async function uses `await`. Thus you should use all dependencies before the promise.
+Обратите внимание, что первый запуск эффекта все равно выполняется до того, как браузер отрендерит DOM на экран (аналогично `useLayoutEffect` в React). Если необходимо дождаться окончания рендеринга (например, для измерения рендеринга), можно использовать `await Promise.resolve()` (или `Promise.resolve().then(...)`), но следует учитывать, что последующее использование реактивного состояния (например, сигналов) не вызовет повторного запуска эффекта, поскольку отслеживание невозможно после использования `await` в асинхронной функции. Таким образом, все зависимости следует использовать до промиса.
 
-If you'd rather an effect run immediately even for its first run, use [createRenderEffect](/references/api-reference/secondary-primitives/createRenderEffect) or [createComputed](/references/api-reference/secondary-primitives/createComputed).
+Если вы хотите, чтобы эффект выполнялся сразу, даже при первом запуске, используйте [createRenderEffect](../secondary-primitives/createRenderEffect.md) или [createComputed](../secondary-primitives/createComputed.md).
 
-You can clean up your side effects in between executions of the effect function by calling [onCleanup](/references/api-reference/lifecycles/onCleanup) inside the effect function. Such a cleanup function gets called both in between effect executions and when the effect gets disposed (e.g., the containing component unmounts). For example:
+Очистку побочных эффектов между выполнениями функции эффекта можно производить вызовом [onCleanup](../lifecycles/onCleanup.md) внутри функции эффекта. Такая функция очистки вызывается как между выполнениями эффекта, так и при его утилизации (например, при размонтировании содержащего компонента). Например:
 
 ```ts
 // listen to event dynamically given by eventName signal
 createEffect(() => {
-  const event = eventName();
-  const callback = (e) => console.log(e);
-  ref.addEventListener(event, callback);
-  onCleanup(() => ref.removeEventListener(event, callback));
+    const event = eventName();
+    const callback = (e) => console.log(e);
+    ref.addEventListener(event, callback);
+    onCleanup(() =>
+        ref.removeEventListener(event, callback)
+    );
 });
 ```
 
-## Arguments
+## Аргументы
 
-- `fn` - The function to run in a tracking scope. It can return a value, which will be passed as the `prev` argument to the next invocation of the effect.
-- `value` - The initial value of the effect. This is useful for memoizing values that are expensive to compute.
+-   `fn` - Функция для запуска в области отслеживания. Она может возвращать значение, которое будет передано в качестве аргумента `prev` при следующем вызове эффекта.
+-   `value` - Начальное значение эффекта. Это полезно для запоминания значений, которые дорого вычислять.
+
+## Ссылки
+
+-   [createEffect](https://docs.solidjs.com/references/api-reference/basic-reactivity/createEffect)
