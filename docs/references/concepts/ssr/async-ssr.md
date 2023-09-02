@@ -1,107 +1,121 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: Асинхронный SSR - это техника рендеринга на стороне сервера, используемая в большинстве метафреймворков javascript, таких как Next.js, Nuxt.js, Gatsby и др
+---
 
-<Title>Async SSR</Title>
+# Асинхронный SSR
 
-<Aside type="advanced">
-  This is a low level API intended for use by library authors. If you would like to use server side rendering in your application we suggest making use of <a href="https://start.solidjs.com/getting-started/what-is-solidstart">Solid Start</a> our meta-framework that makes adding server side rendering to your application extremely easy.
-</Aside>
+!!!note ""
 
-## What is Async SSR?
+    Это низкоуровневый API, предназначенный для использования авторами библиотек. Если вы хотите использовать рендеринг на стороне сервера в своем приложении, мы предлагаем воспользоваться [Solid Start](https://start.solidjs.com/getting-started/what-is-solidstart), нашим метафреймворком, который позволяет очень просто добавить рендеринг на стороне сервера в ваше приложение.
 
-Async SSR is a server side rendering technique used by most javascript meta-frameworks like Next.js, Nuxt.js, Gatsby, etc. It is a technique that allows you to completely render your application on the server and send the HTML to the client along with the appropriate asynchronous data already fetched. This allows the client to render the page without having to wait for the data to be fetched.
+## Что такое асинхронный SSR?
 
-Solid.js offers a similar technique through the use of the `renderToStringAsync` function. This function allows you to render your application on the server and send the HTML to the client along with all the asynchronous data already fetched. This allows your application to be completely client agnostic and not have to worry about client side data fetching.
+Асинхронный SSR - это техника рендеринга на стороне сервера, используемая в большинстве метафреймворков javascript, таких как Next.js, Nuxt.js, Gatsby и др. Это техника, которая позволяет полностью отрисовать приложение на сервере и отправить HTML клиенту вместе с соответствующими асинхронными данными. Это позволяет клиенту отрисовать страницу, не дожидаясь получения данных.
 
-## How does `renderToStringAsync` work?
+Solid.js предлагает аналогичную технику с помощью функции `renderToStringAsync`. Эта функция позволяет выполнить рендеринг приложения на сервере и отправить HTML клиенту вместе с уже полученными асинхронными данными. Это позволит вашему приложению быть полностью независимым от клиента и не беспокоиться о получении данных на стороне клиента.
 
-`renderToStringAsync` works by taking a component and returning a promise that resolves to a string of HTML. This string of HTML is the rendered component with all the asynchronous data already fetched and serialized. Therefore, the whole application is ready to be hydrated by the time it reaches the client.
+## Как работает `renderToStringAsync`?
+
+`renderToStringAsync` работает следующим образом: берется компонент и возвращается промис, который разрешается в строку HTML. Эта строка HTML является рендерингом компонента со всеми асинхронными данными, которые уже извлечены и сериализованы. Таким образом, к моменту передачи клиенту все приложение уже готово к работе.
 
 ```jsx
-import { renderToStringAsync } from 'solid-js/web'
-import {createResource} from 'solid-js'
+import { renderToStringAsync } from 'solid-js/web';
+import { createResource } from 'solid-js';
 
 const App = () => {
-  const [data] = createResource(getAsyncData)
+    const [data] = createResource(getAsyncData);
 
-  async function getAsyncData() {
-    const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-    const json = await response.json()
+    async function getAsyncData() {
+        const response = await fetch(
+            'https://jsonplaceholder.typicode.com/todos/1'
+        );
+        const json = await response.json();
 
-    return json
-  }
+        return json;
+    }
 
-  return (
-    <div>
-      <h1>Async SSR</h1>
-      <p>{data().title}</p>
-    </div>
-  )
-}
+    return (
+        <div>
+            <h1>Async SSR</h1>
+            <p>{data().title}</p>
+        </div>
+    );
+};
 
-renderToStringAsync(App).then(html => {
-  console.log(html)
-})
+renderToStringAsync(App).then((html) => {
+    console.log(html);
+});
 ```
 
-You'll notice that I didn't make use of a Suspense boundary before accessing the data in the template, that is because in Async SSR Suspense boundaries are not needed because data is prefetched on the server before rendering. The above code will render the `App` component on the server and return a promise that resolves to HTML once the asynchronous data has been fetched. The HTML will look something like this:
+Вы заметили, что я не использовал границу приостановки перед обращением к данным в шаблоне, так как в Async SSR границы приостановки не нужны, поскольку данные предварительно обрабатываются на сервере перед рендерингом. Приведенный выше код отрендерит компонент `App` на сервере и вернет промис, который разрешится в HTML после того, как асинхронные данные будут получены. HTML будет выглядеть примерно так:
 
 ```html
 <div>
-  <h1>Async SSR</h1>
-  <p>delectus aut autem</p>
+    <h1>Async SSR</h1>
+    <p>delectus aut autem</p>
 </div>
 ```
 
-## How to use `renderToStringAsync`?
+## Как использовать `renderToStringAsync`?
 
-In order to use `renderToStringAsync` you'll need a server which can run javascript. You can use any server you want, but for the sake of this example we'll use [Express](https://expressjs.com/).
+Для использования `renderToStringAsync` вам потребуется сервер, на котором может выполняться javascript. Вы можете использовать любой сервер, но для данного примера мы будем использовать [Express](https://expressjs.com/).
 
 ```js
 // server.js
-import express from 'express'
-import { renderToStringAsync } from 'solid-js/web'
-import App from './App'
+import express from 'express';
+import { renderToStringAsync } from 'solid-js/web';
+import App from './App';
 
-const app = express()
+const app = express();
 
 app.get('/', async (req, res) => {
-  const html = await renderToStringAsync(() => <App/>)
-  res.send(html)
-})
+    const html = await renderToStringAsync(() => <App />);
+    res.send(html);
+});
 
 app.listen(3000, () => {
-  console.log('Server running on port 3000')
-})
+    console.log('Server running on port 3000');
+});
 ```
+
+---
 
 ```jsx
 // App.js
-import {createResource} from 'solid-js'
+import { createResource } from 'solid-js';
 
 export default function App() {
-  const [data] = createResource(() => fetch('https://jsonplaceholder.typicode.com/todos/1').then(res => res.json()))
+    const [data] = createResource(() =>
+        fetch(
+            'https://jsonplaceholder.typicode.com/todos/1'
+        ).then((res) => res.json())
+    );
 
-  return (
-    <div>
-      <h1>Async SSR</h1>
-      <p>{data().title}</p>
-    </div>
-  )
+    return (
+        <div>
+            <h1>Async SSR</h1>
+            <p>{data().title}</p>
+        </div>
+    );
 }
 ```
 
-<Aside type="general">
-  Keep in mind that you will need a bundler like Vite, Webpack, or Rollup to bundle your application. Here's a fully functional example using rollup and express. <a href="https://github.com/ryansolid/solid-ssr-workbench">solid-ssr-workbench</a>. This repo contains examples of all 3 forms of SSR.
-</Aside>
+!!!note ""
 
-## Limitations and benefits of `renderToStringAsync`
+    Следует иметь в виду, что для сборки приложения потребуется пакетный компоновщик, например Vite, Webpack или Rollup. Вот полнофункциональный пример с использованием rollup и express. [solid-ssr-workbench](https://github.com/ryansolid/solid-ssr-workbench). Это репозиторий содержит примеры всех трех форм SSR.
 
-#### Limitations 
+## Ограничения и преимущества `renderToStringAsync`
 
-The main limitation of `renderToStringAsync` is that it is completely server dependent. This means that server speed and availability will directly affect the performance of your application. This is because the client will have to wait for the server to render the application before it can be hydrated. This is not a problem if you have a fast server and a lot of resources, but it can be a problem if you have a slow server or a lot of users. In this case, you may want to consider using `renderToString` instead.
+### Ограничения
 
-A slight disadvantage of `renderToStringAsync` is that the time to first paint is blocked by how long it takes to load data on the server. This is not a problem with fast servers but may be problematic with slow servers.
+Основным ограничением `renderToStringAsync` является то, что он полностью зависит от сервера. Это означает, что скорость и доступность сервера будет напрямую влиять на производительность вашего приложения. Это связано с тем, что клиенту придется ждать, пока сервер выполнит рендеринг приложения. Это не является проблемой, если у вас быстрый сервер и много ресурсов, но может стать проблемой, если у вас медленный сервер или много пользователей. В этом случае лучше использовать `renderToString`.
 
-#### Benefits
+Небольшим недостатком `renderToStringAsync` является то, что время до первой закраски блокируется временем загрузки данных на сервер. Это не является проблемой для быстрых серверов, но может быть проблематично для медленных серверов.
 
-The main benefit of `renderToStringAsync` is that it is completely client agnostic. This means that you can render your application on the server and send the HTML to the client without having to worry about client side data fetching. This is a huge benefit because it allows you to completely decouple your application from the client. This means that you can use any client you want without having to worry about data fetching.
+### Преимущества
+
+Основным преимуществом `renderToStringAsync` является то, что он полностью независим от клиента. Это означает, что вы можете рендерить свое приложение на сервере и отправлять HTML на клиент, не заботясь о получении данных на стороне клиента. Это огромное преимущество, поскольку позволяет полностью отделить приложение от клиента. Это означает, что вы можете использовать любой клиент, не беспокоясь о получении данных.
+
+## Ссылки
+
+-   [Async SSR](https://docs.solidjs.com/references/concepts/ssr/async-ssr)

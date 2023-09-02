@@ -1,156 +1,151 @@
-<Title>Tracking</Title>
+---
+description: Трекинг - это механизм, который Solid использует для "отслеживания" того, когда был получен доступ к сигналу. Так он узнает, какие эффекты следует повторно запустить при изменении сигнала
+---
 
-**Learn these first:** _signals_, _effects_, _props_
+# Трекинг
 
-**Tracking** is the mechanism that Solid uses to "keep track" of where a signal was accessed.
-This is how it knows which effects to rerun when a given signal changes.
+**Вначале изучите эти темы:** _сигналы_, _эффекты_, _предметы_.
 
-## What you need to know
+**Трекинг** - это механизм, который Solid использует для "отслеживания" того, когда был получен доступ к сигналу.
+Так он узнает, какие эффекты следует повторно запустить при изменении сигнала.
 
-1. The goal of tracking is to register subscriptions. When an effect "subscribes" to a signal, it will rerun when that signal changes.
-2. Tracking happens on access. Whenever a signal (or store value) is accessed inside an effect, the signal is "tracked" and the effect is subscribed to the signal.
-3. Tracking doesn't happen everywhere. If you access a signal outside an effect, no tracking will happen. That's because there's no effect to subscribe to the signal.
-4. The **tracking rule of thumb**: _access_ a reactive value at the same time that you _use_ it.
+## Что нужно знать
 
-This doesn't just apply to signals created with `createSignal` - props and stores work the same way.
+1.  Цель отслеживания - регистрация подписок. Когда эффект "подписывается" на сигнал, он будет повторно запускаться при изменении этого сигнала.
+2.  Отслеживание происходит при доступе. При обращении к сигналу (или хранимому значению) внутри эффекта сигнал "отслеживается", и эффект подписывается на него.
+3.  Отслеживание происходит не везде. Если обратиться к сигналу вне эффекта, то отслеживания не произойдет. Это связано с тем, что нет эффекта, который мог бы подписаться на этот сигнал.
+4.  Эмпирическое правило **отслеживания**: Обращайтесь к реактивному значению в то же время, когда вы его _используете_.
 
-## Example
+Это относится не только к сигналам, созданным с помощью `createSignal` - свойства и хранилища работают аналогичным образом.
+
+## Пример
 
 ```jsx
 function Counter() {
-  const [count, setCount] = createSignal(0);
-  const increment = () => setCount(count() + 1);
+    const [count, setCount] = createSignal(0);
+    const increment = () => setCount(count() + 1);
 
-  /* When count() is called, the "count" signal is tracked as a subscription of this effect,
+    /* When count() is called, the "count" signal is tracked as a subscription of this effect,
     so this code reruns when (and only when) count changes */
-  createEffect(() => {
-    console.log("My effect says " + count());
-  })
+    createEffect(() => {
+        console.log('My effect says ' + count());
+    });
 
-  /* This code isn't in a "tracking scope", so count()
+    /* This code isn't in a "tracking scope", so count()
      doesn't do anything special and this code never reruns */
-  console.log(count());
+    console.log(count());
 
-  return (
-    /*
+    return (
+        /*
       JSX is a tracking scope (it uses effects behind the scenes), so this code
       registers count as a subscription when count() is called
     */
-    <button type="button" onClick={increment}>
-      {count()}
-    </button>
-  );
+        <button type="button" onClick={increment}>
+            {count()}
+        </button>
+    );
 }
 ```
 
-## Tracking Gotchas
+## Проблемы с трекингом
 
-Let's look at some examples where we can apply **the tracking rule of thumb** to debug some code.
+Рассмотрим несколько примеров, в которых мы можем применить **элемент отслеживания** для отладки кода.
 
-### Derived State
+### Производное состояние
 
-In this example, the paragraph won't update when `count` changes, because `count` was accessed outside of a tracking scope.
+В этом примере абзац не будет обновляться при изменении `count`, поскольку доступ к `count` был получен вне области отслеживания.
 
 ```jsx
 function Counter() {
-  const [count, setCount] = createSignal(0);
-  const increment = () => setCount(count() + 1);
+    const [count, setCount] = createSignal(0);
+    const increment = () => setCount(count() + 1);
 
-  const doubleCount = count() * 2;
-  return (
-    <>
-      <p>Twice my count: {doubleCount}</p>
-      <button type="button" onClick={increment}>
-        {count()}
-      </button>
-    </>
-  );
+    const doubleCount = count() * 2;
+    return (
+        <>
+            <p>Twice my count: {doubleCount}</p>
+            <button type="button" onClick={increment}>
+                {count()}
+            </button>
+        </>
+    );
 }
 ```
 
-The solution is to turn `doubleCount` into a _function_. That way, when `doubleCount` is used
-in the JSX, `count()` will be called and a subscription will be registered.
+Решение заключается в том, чтобы превратить `doubleCount` в _функцию_. Таким образом, при использовании `doubleCount` в JSX будет вызываться `count()` и регистрироваться подписка.
 
 ```jsx
 function Counter() {
-  const [count, setCount] = createSignal(0);
-  const increment = () => setCount(count() + 1);
+    const [count, setCount] = createSignal(0);
+    const increment = () => setCount(count() + 1);
 
-  const doubleCount = () => count() * 2;
-  return (
-    <>
-      <p>Twice my count: {doubleCount()}</p>
-      <button type="button" onClick={increment}>
-        {count()}
-      </button>
-    </>
-  );
+    const doubleCount = () => count() * 2;
+    return (
+        <>
+            <p>Twice my count: {doubleCount()}</p>
+            <button type="button" onClick={increment}>
+                {count()}
+            </button>
+        </>
+    );
 }
 ```
 
-### Destructuring Props
+### Деструктуризация свойств
 
-In this example, the paragraph in DoubleCountView will never update.
+В этом примере абзац в `DoubleCountView` никогда не будет обновляться.
 
 ```jsx
 function DoubleCountView(props) {
-  const { value } = props;
-  const doubleCount = () => value * 2;
-  return <p>{doubleCount()}</p>;
+    const { value } = props;
+    const doubleCount = () => value * 2;
+    return <p>{doubleCount()}</p>;
 }
 
 function Counter() {
-  const [count, setCount] = createSignal(0);
-  const increment = () => setCount(count() + 1);
+    const [count, setCount] = createSignal(0);
+    const increment = () => setCount(count() + 1);
 
-  return (
-    <>
-      <DoubleCountView value={count()} />
-      <button type="button" onClick={increment}>
-        {count()}
-      </button>
-    </>
-  );
+    return (
+        <>
+            <DoubleCountView value={count()} />
+            <button type="button" onClick={increment}>
+                {count()}
+            </button>
+        </>
+    );
 }
 ```
 
-Here, the reactive value is the `value` prop, passed from the parent. Where is that value accessed?
+Здесь реактивным значением является свойство `value`, переданное от родителя. Где находится доступ к этому значению?
 
 ```jsx
 const { value } = props;
 ```
 
-This destructuring assignment is the only code that actually accesses `props.value`!
-After that, `value` just represents the static value that was accessed at that time.
+Это деструктурирующее присваивание является единственным кодом, который действительно обращается к свойствам `props.value`! После этого `value` просто представляет собой статическое значение, к которому обращались в данный момент.
 
-To fix this, we need to make sure we _access_ the value at the same time that we _use_ it.
-We can call `props.value` directly:
+Чтобы исправить это, нам необходимо убедиться, что мы _доступаем_ к значению одновременно с тем, как _используем_ его. Мы можем вызвать `props.value` напрямую:
 
 ```jsx
 function DoubleCountView(props) {
-  const doubleCount = () => props.value * 2;
-  return <p>{doubleCount()}</p>;
+    const doubleCount = () => props.value * 2;
+    return <p>{doubleCount()}</p>;
 }
 ```
 
-Alternatively, we could destructure `props` at the same time that we use it:
+В качестве альтернативы можно деструктурировать свойства `props` одновременно с их использованием:
 
 ```jsx
 function DoubleCountView(props) {
-  const doubleCount = () => {
-    const { value } = props;
-    return value * 2;
-  };
-  return <p>{doubleCount()}</p>;
+    const doubleCount = () => {
+        const { value } = props;
+        return value * 2;
+    };
+    return <p>{doubleCount()}</p>;
 }
 ```
 
-## Diving Deeper
+## Ссылки
 
-### How tracking works
-
-### Turning off tracking
-
-```
-
-```
+-   [Tracking](https://docs.solidjs.com/references/concepts/reactivity/tracking)

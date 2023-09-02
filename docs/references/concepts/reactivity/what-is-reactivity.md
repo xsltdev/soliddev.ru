@@ -1,46 +1,45 @@
-import { FrameworkAside, Aside } from "~/components/configurable/Aside";
-import increment from "./increment.gif";
+---
+description: Реактивность - это основа интерактивности приложений Solid. В этой статье мы рассмотрим основы реактивности и то, как она работает в Solid
+---
 
-# What is Reactivity
+# Что такое реактивность
 
-## Introduction
+## Введение
 
-Reactivity is the foundation for making a Solid app interactive. In this concept article, we'll discuss the basics of reactivity and how it works in Solid.
+**Реактивность** - это основа интерактивности приложений Solid. В этой статье мы рассмотрим основы реактивности и то, как она работает в Solid.
 
-Reactivity is a programming pattern that lets you set up behavior that "reacts" to data changes automatically.
+Реактивность - это шаблон программирования, позволяющий настроить поведение, которое автоматически "реагирует" на изменение данных.
 
-For example, you might make a shopping cart with a label that displays the total cost of the items. With reactivity, you can tell that label to automatically update whenever an item gets added or removed.
+Например, можно сделать корзину покупок с ярлыком, на котором отображается общая стоимость товаров. С помощью реактивности можно указать, чтобы эта метка автоматически обновлялась при добавлении или удалении товара.
 
-This way, you only have to manage the data (like adding an item to the cart). Once you wire up the UI elements (like the label) to the data, the UI updates (changing the label) are handled for you.
+Таким образом, вам придется управлять только данными (например, добавлять товар в корзину). Как только вы соедините элементы пользовательского интерфейса (например, метку) с данными, обновление пользовательского интерфейса (изменение метки) будет выполнено за вас.
 
-To get started in Solid, you need a basic understanding of reactive signals and effects. In this article, we'll teach you how those work behind the scenes. This deeper understanding of reactivity can help you optimize your code, debug issues, and build your own extensions to the reactive system.
+Чтобы начать работу с Solid, необходимо иметь базовое представление о реактивных сигналах и эффектах. В этой статье мы расскажем вам, как они работают за кулисами. Более глубокое понимание реактивности поможет вам оптимизировать код, отлаживать проблемы и создавать собственные расширения реактивной системы.
 
-## Reactive Primitives
+## Реактивные примитивы
 
-To use reactivity, you create _reactive primitives_. The most important primitives are _signals_ and _effects_. In the sections below, we'll explain what signals and effects are, and then implement a simple version of them ourselves.
+Чтобы использовать реактивность, вы создаете _реактивные примитивы_. Наиболее важными примитивами являются _сигналы_ и _эффекты_. В следующих разделах мы объясним, что такое сигналы и эффекты, а затем сами реализуем их простую версию.
 
-<Aside type="advanced" title="Other reactive primitives">
+!!!note "Другие реактивные примитивы"
 
-Solid has other reactive primitive, but they are derived from signals and effects. For example:
+    Solid имеет и другие реактивные примитивы, но они являются производными от сигналов и эффектов. Например:
 
-- _Stores_ are trees of signals
-- _Memos_ are signals that update like effects
-- _Resources_ are signals that update when data is fetched from a server
-- _Render effects_ are effects that initially run earlier
+    -   _Хранилища_ - это деревья сигналов.
+    -   _Память_ - это сигналы, которые обновляются подобно эффектам
+    -   _Ресурсы_ - это сигналы, которые обновляются при получении данных с сервера
+    -   _Эффекты рендеринга_ - это эффекты, которые первоначально запускаются раньше.
 
-</Aside>
+### Сигналы
 
-### Signals
+Сигнал представляет собой часть данных, которая может изменяться. Например, сигналом может быть имя пользователя или значение счетчика, которое мы можем увеличивать. Сигналы состоят из двух основных частей:
 
-A signal represents a piece of data that can change. For example, a signal could be a username or the value of a counter that we can increment. Signals consist of two main parts:
+-   _getter_ - функция, позволяющая получить доступ к текущему значению сигнала.
+-   _setter_ - функция, позволяющая установить текущее значение сигнала.
 
-- The _getter_, a function that lets you access the current value of the signal
-- The _setter_, a function that lets you set the current value of the signal.
-
-We create a signal using Solid's `createSignal` function. This returns the getter and the setter as a _two-element array_. We typically use _array destructuring_ to assign the getter and setter into variables with names of our choosing.
+Мы создаем сигнал с помощью функции Solid `createSignal`. Она возвращает геттер и сеттер в виде _двухэлементного массива_. Обычно мы используем _деструктуризацию массива_, чтобы присвоить геттеру и сеттеру переменные с выбранными нами именами.
 
 ```jsx
-import { createSignal } from "solid-js";
+import { createSignal } from 'solid-js';
 
 const [count, setCount] = createSignal(1);
 
@@ -49,35 +48,33 @@ console.log(count()); // prints "1"
 setCount(0); // Sets the count value to 0
 ```
 
-In this example, count is the getter and setCount is the setter.
+В этом примере `count` - это геттер, а `setCount` - сеттер.
 
-### Effects
+### Эффекты
 
-An effect represents the action we would like to take when the data in one or more signals change. Solid provides a `createEffect` function that itself takes in a function. Solid will run that function, and then rerun it whenever any signal inside that function changes value.
+Эффект представляет собой действие, которое мы хотим выполнить при изменении данных в одном или нескольких сигналах. Solid предоставляет функцию `createEffect`, которая сама принимает функцию. Solid запустит эту функцию, а затем повторно запустит ее всякий раз, когда любой сигнал внутри этой функции изменит значение.
 
-For example, the following effect will `console.log` the count whenever it updates:
+Например, следующий эффект будет `console.log` подсчитывать счетчик при каждом его обновлении:
 
 ```jsx
-import { createSignal, createEffect } from "solid-js";
+import { createSignal, createEffect } from 'solid-js';
 
 const [count, setCount] = createSignal(0);
 
 createEffect(() => {
-  console.log(count());
+    console.log(count());
 });
 ```
 
-<FrameworkAside framework="react">
+???react "react"
 
-Notice that you don't have to specify a _dependency array_ for an effect in Solid. This is a major difference between Solid and React&mdash;Solid will automatically _track_ dependencies whereas React will not. Therefore, React re-runs any effect when a component re-renders unless the developer explicitly specifies dependencies.
+    Обратите внимание, что в Solid не нужно указывать массив _зависимостей_ для эффекта. Это основное отличие Solid от React &mdash; Solid будет автоматически _отслеживать_ зависимости, а React - нет. Поэтому при повторном рендеринге компонента React повторно запускает любой эффект, если только разработчик явно не укажет зависимости.
 
-</FrameworkAside>
+## Создание реактивной системы
 
-## Creating a reactive system
+Один из лучших способов понять, как работает реактивность, - это реализовать ее самостоятельно. В этом разделе мы реализуем тот же реактивный паттерн, который использует Solid: паттерн _наблюдатель_. В паттерне наблюдателя данные (сигналы) хранят список своих подписчиков (эффектов). При изменении данных сигнал вызывает всех своих подписчиков.
 
-One of the best ways to understand how reactivity works is to implement it ourselves. In this section, we will implement the same reactive pattern Solid uses: the _observer pattern_. In the observer pattern, data (signals) maintain a list of their subscribers (effects). When its data changes, a signal triggers all of its subscribers.
-
-Let's use the same names, `createSignal` and `createEffect`, for our implementation:
+Используем для нашей реализации те же имена, `createSignal` и `createEffect`:
 
 ```jsx
 function createSignal() {}
@@ -87,139 +84,137 @@ function createEffect() {}
 const [count, setCount] = createSignal(0);
 
 createEffect(() => {
-  console.log("The count is " + count());
+    console.log('The count is ' + count());
 });
 ```
 
-First, let's handle the basics of the `createSignal` function. It needs to:
+Сначала разберемся с основами функции `createSignal`. Она должна:
 
-- initialize the `count` value to `0` (the argument provided to `createSignal`)
-- return a two-element array consisting of a _getter_ and a _setter_ function
+-   инициализировать значение `count` до `0` (аргумент, передаваемый функции `createSignal`)
+-   возвращать двухэлементный массив, состоящий из _getter_ и _setter_ функции
 
 ```jsx
 function createSignal(initialValue) {
-  let value = initialValue;
+    let value = initialValue;
 
-  function getter() {
-    return value;
-  }
+    function getter() {
+        return value;
+    }
 
-  function setter(newValue) {
-    value = newValue;
-  }
+    function setter(newValue) {
+        value = newValue;
+    }
 
-  return [getter, setter];
+    return [getter, setter];
 }
 ```
 
-We can now get the current value of our signal by calling the getter and we can set the value by using the setter. This is great, but there is no reactivity yet.
+Теперь мы можем получить текущее значение нашего сигнала, вызвав геттер, и установить его, используя сеттер. Это замечательно, но реактивности пока нет.
 
-Next, let's set up `createEffect`. We know it takes a function and runs it:
+Далее давайте настроим `createEffect`. Мы знаем, что он берет функцию и запускает ее:
 
 ```jsx
 function createEffect(fn) {
-  fn();
+    fn();
 }
 ```
 
-The key to reactivity is establishing the relationship between `createSignal` and `createEffect`.
+Ключом к реактивности является установление взаимосвязи между `createSignal` и `createEffect`.
 
-To do this, we give each signal a subscriber list. When we give `createEffect` a function and run it, we want a way to tell any signals that are called along the way to add that function to their subscriber list. Our next steps:
+Для этого мы даем каждому сигналу список подписчиков. Когда мы даем `createEffect` функцию и запускаем ее, мы хотим найти способ сказать всем сигналам, которые будут вызваны по пути, добавить эту функцию в их список подписчиков. Наши следующие шаги:
 
-- Create a global `currentSubscriber` that can keep track of the function we pass to `createEffect`
-- Register the function we pass to `createEffect` as the current subscriber
-- When we access a signal, add the current listener to a list of subscribers
-- When we set the signal to a new value, run all subscribers
+-   Создать глобальный `currentSubscriber`, который будет следить за функцией, передаваемой в `createEffect`.
+-   Зарегистрировать функцию, которую мы передаем в `createEffect`, в качестве текущего подписчика
+-   Когда мы обращаемся к сигналу, добавляем текущего слушателя в список подписчиков
+-   Когда мы устанавливаем сигнал в новое значение, запускаем всех подписчиков
 
 ```jsx
 let currentSubscriber = null;
 
 function createSignal(initialValue) {
-  let value = initialValue;
-  // Maintain a list of a signal's own subscribers
-  const subscribers = new Set();
+    let value = initialValue;
+    // Maintain a list of a signal's own subscribers
+    const subscribers = new Set();
 
-  function getter() {
-    // Add to subscriber list
-    if (currentSubscriber) {
-      subscribers.add(currentSubscriber);
+    function getter() {
+        // Add to subscriber list
+        if (currentSubscriber) {
+            subscribers.add(currentSubscriber);
+        }
+
+        return value;
     }
 
-    return value;
-  }
-
-  function setter(newValue) {
-    value = newValue;
-    // Notify all subscribers of the value change
-    for (const subscriber of subscribers) {
-      subscriber();
+    function setter(newValue) {
+        value = newValue;
+        // Notify all subscribers of the value change
+        for (const subscriber of subscribers) {
+            subscriber();
+        }
     }
-  }
 
-  return [getter, setter];
+    return [getter, setter];
 }
 
 function createEffect(fn) {
-  // Add function as subscriber in global scope
-  currentSubscriber = fn;
-  // Run function to trigger the accessor of any signals that are called
-  fn();
-  // Remove the function as the current subscriber
-  currentSubscriber = null;
+    // Add function as subscriber in global scope
+    currentSubscriber = fn;
+    // Run function to trigger the accessor of any signals that are called
+    fn();
+    // Remove the function as the current subscriber
+    currentSubscriber = null;
 }
 ```
 
-This is all the code needed to create a basic reactive system. We can demonstrate that it works by incrementing the `count` value every second and watching the console.
+Это весь код, необходимый для создания базовой реактивной системы. Мы можем продемонстрировать, что она работает, увеличивая значение `count` каждую секунду и наблюдая за консолью.
 
 ```jsx
 const [count, setCount] = createSignal(0);
 
 createEffect(() => {
-  console.log("The count is " + count());
+    console.log('The count is ' + count());
 });
 
 setInterval(() => {
-  setCount(count() + 1);
+    setCount(count() + 1);
 }, 1000);
 ```
 
-<img
-  style="max-width: 30rem; margin-bottom: 3rem; border-radius: 5px;"
-  src={increment}
-  alt="Incrementing counter"
-/>
+![Incrementing counter](increment.gif)
 
-We have just implemented the most basic form of Solid's reactivity system!
+Мы только что реализовали самую базовую форму системы реактивности Solid!
 
-## Effect tracking is synchronous
+## Отслеживание эффектов синхронно
 
-One observation we should note about our reactivity system is that it's synchronous. It registers the subscriber globally, runs the effect, and unregisters the subscriber.
+Следует отметить, что наша система реактивности является синхронной. Она глобально регистрирует подписчика, запускает эффект и снимает подписчика с регистрации.
 
-So what happens if our `createEffect` function looks like this?
+Что же произойдет, если наша функция `createEffect` будет выглядеть следующим образом?
 
 ```jsx
 createEffect(() => {
-  setTimeout(() => {
-    console.log(count());
-  }, 1000);
+    setTimeout(() => {
+        console.log(count());
+    }, 1000);
 });
 ```
 
-Our `createEffect` implementation doesn't wait around for this `setTimeout` callback to execute, so by the time we call our `count` getter, there is no subscriber in the global scope. The `count` signal won't register this callback as one of its subscribers.
+Наша реализация `createEffect` не ждет выполнения этого обратного вызова `setTimeout`, поэтому к моменту вызова нашего геттера `count` в глобальной области видимости нет подписчика. Сигнал `count` не зарегистрирует этот обратный вызов в качестве одного из своих подписчиков.
 
-<Aside type="advanced" title="Handling asynchronous effects">
+!!!note "Работа с асинхронными эффектами"
 
-Solid gives you some options for handling asynchronous effects. For example, you can use the [`on`](/references/api-reference/reactive-utilities/on) function to manually specify effect dependencies.
+    Solid предоставляет некоторые возможности для работы с асинхронными эффектами. Например, можно использовать функцию [`on`](../../api-reference/reactive-utilities/on.md) для ручного указания зависимостей эффектов.
 
-To learn more about Solid-specific tracking mechanisms, see the [Tracking Concept documentation](/references/concepts/reactivity/tracking).
+    Более подробно о механизмах отслеживания, специфичных для Solid, можно узнать из документации [Tracking Concept documentation](../../concepts/reactivity/tracking.md).
 
-</Aside>
+## Узнать больше
 
-## Learning more
+Мы надеемся, что вам понравилось это введение в реактивность! Если вы хотите углубиться в эту тему, ознакомьтесь со следующими ресурсами:
 
-We hope you enjoyed this introduction to reactivity! If you would like to dive deeper, please check out the following resources:
+-   Our [Tracking Concept](/references/concepts/reactivity/tracking) article
+-   [A Hands-on Introduction to Fine-Grained Reactivity](https://dev.to/ryansolid/a-hands-on-introduction-to-fine-grained-reactivity-3ndf)
+-   [Building a Reactive Library from Scratch](https://dev.to/ryansolid/building-a-reactive-library-from-scratch-1i0p)
+-   [SolidJS: Reactivity to Rendering](https://indepth.dev/posts/1289/solidjs-reactivity-to-rendering)
 
-- Our [Tracking Concept](/references/concepts/reactivity/tracking) article
-- [A Hands-on Introduction to Fine-Grained Reactivity](https://dev.to/ryansolid/a-hands-on-introduction-to-fine-grained-reactivity-3ndf)
-- [Building a Reactive Library from Scratch](https://dev.to/ryansolid/building-a-reactive-library-from-scratch-1i0p)
-- [SolidJS: Reactivity to Rendering](https://indepth.dev/posts/1289/solidjs-reactivity-to-rendering)
+## Ссылки
+
+-   [What is Reactivity](https://docs.solidjs.com/references/concepts/reactivity)

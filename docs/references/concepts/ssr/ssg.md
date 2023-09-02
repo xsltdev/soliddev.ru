@@ -1,163 +1,198 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: В этом разделе мы поговорим о генерации статических сайтов и о том, как ее можно реализовать в Solid
+---
 
-<Title>Static Site Generation (SSG)</Title>
+# Генерация статических сайтов (SSG)
 
-<Aside type="advanced">
-  This is a low level API intended for use by library authors. If you would like to use static site generation in your application we suggest making use of [Solid Start](https://start.solidjs.com/getting-started/what-is-solidstart) our meta-framework that makes adding server side rendering to your application extremely easy.
-</Aside>
+!!!note ""
 
-In this section we will be talking about static site generation and how you can implement it in Solid.
+    Это низкоуровневый API, предназначенный для использования авторами библиотек. Если вы хотите использовать рендеринг на стороне сервера в своем приложении, мы предлагаем воспользоваться [Solid Start](https://start.solidjs.com/getting-started/what-is-solidstart), нашим метафреймворком, который позволяет очень просто добавить рендеринг на стороне сервера в ваше приложение.
 
-## What is Static Site Generation?
+В этом разделе мы поговорим о генерации статических сайтов и о том, как ее можно реализовать в Solid.
 
-Static site generation is the process of generating a static (never changing) HTML website based on raw data through the use of web development frameworks like Solid.
+## Что такое статическая генерация сайта?
 
-Static sites are made up of HTML that loads up the same way every time, in opposition to dynamic website where data on the site can change based on the user input or changes in fetched data.
+Генерация статических сайтов - это процесс создания статического (никогда не меняющегося) HTML-сайта на основе исходных данных с помощью таких фреймворков веб-разработки, как Solid.
 
-## How does Solid implement SSG?
+Статические сайты состоят из HTML, который загружается каждый раз одинаково, в отличие от динамических сайтов, где данные на сайте могут меняться в зависимости от ввода пользователя или изменений в получаемых данных.
 
-Solid makes use of the [`renderToStringAsync`](/references/concepts/ssr/async-ssr) function in order to load all the asynchronous data and generate the HTML required.
+## Как Solid реализует SSG?
 
-You might be wondering what makes this any different from Async SSR then? Well the key difference between this and Async SSR is that in Async SSR the server runs the Solid app while in SSG the Solid app is compiled and has it's ouput stored ahead of time. Meaning the Solid code isn't touched again aside from in build time during updates.
+Solid использует функцию [`renderToStringAsync`](async-ssr.md) для загрузки всех асинхронных данных и генерации необходимого HTML.
 
-This might sound a little vague and hard to understand so here's an example of how it looks in action.
+Возможно, вы зададитесь вопросом, чем же это отличается от Async SSR? Ключевое отличие от Async SSR заключается в том, что в Async SSR сервер запускает приложение Solid, а в SSG приложение Solid компилируется и сохраняет результат заранее. Это означает, что код Solid больше не трогается, кроме как во время сборки и обновления.
 
-## How to use SSG in Solid?
+Возможно, это звучит несколько туманно и сложно для понимания, поэтому вот пример того, как это выглядит в действии.
 
-<Aside type="general"> This process of implementing SSG in Solid is more complicated when compared to implementing other forms of SSR in Solid, so please follow along carefully </Aside>
+## Как использовать SSG в Solid?
 
-In order to make use of SSG in Solid you'll need to have a compiler that helps in compiling JS code. In this example we will be making use of Rollup.
+!!!note ""
+
+    Данный процесс реализации SSG в Solid является более сложным по сравнению с реализацией других форм SSR в Solid, поэтому внимательно следите за его выполнением
+
+Для того чтобы использовать SSG в Solid, необходимо иметь компилятор, который помогает компилировать JS-код. В данном примере мы будем использовать Rollup.
 
 ```js
 // rollup.config.js
-import path from "path";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import babel from "@rollup/plugin-babel";
-import json from "@rollup/plugin-json";
-import copy from "rollup-plugin-copy";
-import { terser } from "rollup-plugin-terser";
-import manifest from "rollup-route-manifest";
+import path from 'path';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
+import json from '@rollup/plugin-json';
+import copy from 'rollup-plugin-copy';
+import { terser } from 'rollup-plugin-terser';
+import manifest from 'rollup-route-manifest';
 
 export default [
-  {
-    input: "App.jsx",
-    output: [
-      {
-        dir: "public/js",
-        format: "esm"
-      }
-    ],
-    preserveEntrySignatures: false,
-    plugins: [
-      nodeResolve({ exportConditions: ["solid"], extensions: [".js", ".jsx", ".ts", ".tsx"] }),
-      babel({
-        babelHelpers: "bundled",
-        presets: [["solid", { generate: "dom", hydratable: true }]]
-      }),
-      terser()
-    ]
-  },
-  {
-    input: "index.js",
-    output: [
-      {
-        dir: "lib",
-        exports: "auto",
-        format: "cjs"
-      }
-    ],
-    external: ["solid-js", "solid-js/web", "node-fetch"],
-    plugins: [
-      nodeResolve({
-        preferBuiltins: true,
-        exportConditions: ["solid"],
-        extensions: [".js", ".jsx", ".ts", ".tsx"]
-      }),
-      babel({
-        babelHelpers: "bundled",
-        presets: [["solid", { generate: "ssr", hydratable: true, async: true }]]
-      }),
-      json()
-    ]
-  }
+    {
+        input: 'App.jsx',
+        output: [
+            {
+                dir: 'public/js',
+                format: 'esm',
+            },
+        ],
+        preserveEntrySignatures: false,
+        plugins: [
+            nodeResolve({
+                exportConditions: ['solid'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            }),
+            babel({
+                babelHelpers: 'bundled',
+                presets: [
+                    [
+                        'solid',
+                        {
+                            generate: 'dom',
+                            hydratable: true,
+                        },
+                    ],
+                ],
+            }),
+            terser(),
+        ],
+    },
+    {
+        input: 'index.js',
+        output: [
+            {
+                dir: 'lib',
+                exports: 'auto',
+                format: 'cjs',
+            },
+        ],
+        external: [
+            'solid-js',
+            'solid-js/web',
+            'node-fetch',
+        ],
+        plugins: [
+            nodeResolve({
+                preferBuiltins: true,
+                exportConditions: ['solid'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            }),
+            babel({
+                babelHelpers: 'bundled',
+                presets: [
+                    [
+                        'solid',
+                        {
+                            generate: 'ssr',
+                            hydratable: true,
+                            async: true,
+                        },
+                    ],
+                ],
+            }),
+            json(),
+        ],
+    },
 ];
 ```
 
-In the code above we're setting up rollup to help us compile our code by turning all the jsx we have into compiled javascript that we'll be able to later run using `node`
+В приведенном выше коде мы настраиваем rollup для помощи в компиляции нашего кода, превращая все имеющиеся у нас jsx в скомпилированный javascript, который впоследствии мы сможем запустить с помощью `node`.
 
-Next let's create our `App.jsx`
+Далее создадим наш `App.jsx`.
 
 ```jsx
 // App.jsx
 export default function App() {
-  return (
-    <div>
-      <h1>This is a header</h1>
-      <p>This is a simple description</p>
-    </div>
-  )
+    return (
+        <div>
+            <h1>This is a header</h1>
+            <p>This is a simple description</p>
+        </div>
+    );
 }
 ```
 
-Above is a simple component. You can make use of asynchronous data if you would like to since we'll be making use of the `renderToStringAsync` function all asynchronous data will be fetched and put in place before building the site.
+Выше представлен простой компонент. При желании можно использовать асинхронные данные, так как мы будем использовать функцию `renderToStringAsync`, все асинхронные данные будут получены и помещены на место до создания сайта.
 
-Now we'll be creating an index.js file which rollup will be compiling and turning into a CommonJS file with all the jsx and tsx code transformed, compiled and ready to run.
+Теперь мы создадим файл `index.js`, который rollup скомпилирует и превратит в файл CommonJS со всем jsx- и tsx-кодом, преобразованным, скомпилированным и готовым к запуску.
 
 ```js
 // index.js
-import fetch from "node-fetch";
-import { renderToStringAsync } from "solid-js/web";
-import App from "./App";
+import fetch from 'node-fetch';
+import { renderToStringAsync } from 'solid-js/web';
+import App from './App';
 
 globalThis.fetch = fetch;
 
 // entry point for server render
-export default req => {
-  return renderToStringAsync(() => <App/>);
+export default (req) => {
+    return renderToStringAsync(() => <App />);
 };
 ```
 
-In the above code we're taking in our Solid component and rendering it into a string using the `renderToStringAsync` function.
+В приведенном выше коде мы принимаем наш компонент Solid и преобразуем его в строку с помощью функции `renderToStringAsync`.
 
-Last but not least we will be creating a script that will help us generate and organize our static files.
+В заключение мы создадим скрипт, который поможет нам генерировать и организовывать наши статические файлы.
 
 ```js
 // generate.js
-const path = require("path");
-const renderStatic = require("solid-ssr/static");
+const path = require('path');
+const renderStatic = require('solid-ssr/static');
 
-const PAGES = ["index"];
-const pathToServer = path.resolve(__dirname, "lib/index.js");
-const pathToPublic = path.resolve(__dirname, "public");
+const PAGES = ['index'];
+const pathToServer = path.resolve(
+    __dirname,
+    'lib/index.js'
+);
+const pathToPublic = path.resolve(__dirname, 'public');
 
 renderStatic(
-  PAGES.map(p => ({
-    entry: pathToServer,
-    output: path.join(pathToPublic, `${p}.html`),
-    url: p === "index" ? `/` : `/${p}`
-  }))
+    PAGES.map((p) => ({
+        entry: pathToServer,
+        output: path.join(pathToPublic, `${p}.html`),
+        url: p === 'index' ? `/` : `/${p}`,
+    }))
 );
 ```
 
-This will help us generate our static files using the `renderStatic` function provided by the `solid-ssr` package.
+Это поможет нам сгенерировать статические файлы с помощью функции `renderStatic`, предоставляемой пакетом `solid-ssr`.
 
-Now all that's left is to compile our code, run our script and serve our static site.
+Теперь осталось скомпилировать наш код, запустить скрипт и обслужить наш статический сайт.
 
 ```bash
 npx rollup -c rollup.config.js && node generate.js #compile and generate the site
 npx serve public -l 8080 #serve the site
 ```
 
-<Aside type="general">
-  For more information on SSG and SSR with solid check out the [solid-ssr-workbench](https://github.com/ryansolid/solid-ssr-workbench) repo and the [solid-ssr](https://github.com/solidjs/solid/tree/main/packages/solid-ssr) repo.
-</Aside>
+!!!note ""
 
-## Limitations and benefits of SSG
+    Более подробную информацию о SSG и SSR в Solid можно найти в репо [solid-ssr-workbench](https://github.com/ryansolid/solid-ssr-workbench) и репо [solid-ssr](https://github.com/solidjs/solid/tree/main/packages/solid-ssr).
 
-#### Limitations
+## Ограничения и преимущества SSG
 
-The main limitation of SSG in general is that it is completely static, meaning that there will be little to no user interactions and site data can only be updated if the site is completely rebuilt. This is why it is advised to use static site generation only in cases where a user will not be interacting with the site or if user interactions will be minimal.
+### Ограничения
 
-#### Benefits
+Основным ограничением SSG в целом является то, что он полностью статичен, т.е. взаимодействия с пользователем практически не будет, а обновление данных сайта возможно только при его полной перестройке. Поэтому рекомендуется использовать статическую генерацию сайта только в тех случаях, когда пользователь не будет взаимодействовать с сайтом или его взаимодействие будет минимальным.
 
-The main benefit of SSG is that static sites load significantly faster than dynamic sites due to the fact that they do not run any javascript and are pure HTML and CSS. Another benefit is that you won't have to worry about search engine crawling and indexing since there's no javascript to run and your site renders the same way everytime with the same data everytime, which makes it extremely good for blogs.
+### Преимущества
+
+Основное преимущество SSG заключается в том, что статические сайты загружаются значительно быстрее, чем динамические, благодаря тому, что на них не используется javascript, а есть только HTML и CSS. Другим преимуществом является то, что вам не нужно беспокоиться о наполнении и индексации поисковыми системами, поскольку нет необходимости запускать javascript, и ваш сайт каждый раз отображается одинаково, с одними и теми же данными, что делает его чрезвычайно удобным для блогов.
+
+## Ссылки
+
+-   [Static Site Generation (SSG)](https://docs.solidjs.com/references/concepts/ssr/ssg)

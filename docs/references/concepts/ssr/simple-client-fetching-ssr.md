@@ -1,85 +1,91 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: В этом разделе мы обсудим рендеринг на стороне сервера, что он означает, как Solid его реализует, как его использовать и каковы его ограничения
+---
 
-<Title>Simple/Client-Fetching SSR</Title>
+# Простой/клиентский SSR
 
 <iframe width="100%" height="415" src="https://www.youtube.com/embed/0zadjVUV7zM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-<Aside type="advanced">
-  This is a low level API intended for use by library authors. If you would like to add server-side rendering to your application we suggest making use of <a href="https://start.solidjs.com/getting-started/what-is-solidstart">Solid Start</a> our meta-framework that makes adding things like server-side to your application extremely easier.
-</Aside>
+!!!note ""
 
-In this section we will discuss server side rendering, what it means, how Solid implements it, how to use it and it's limitations. For a more in-depth explanation from Ryan, checkout the video above.
+    Это низкоуровневый API, предназначенный для использования авторами библиотек. Если вы хотите использовать рендеринг на стороне сервера в своем приложении, мы предлагаем воспользоваться [Solid Start](https://start.solidjs.com/getting-started/what-is-solidstart), нашим метафреймворком, который позволяет очень просто добавить рендеринг на стороне сервера в ваше приложение.
 
-## What is Server Side Rendering?
+В этом разделе мы обсудим рендеринг на стороне сервера, что он означает, как Solid его реализует, как его использовать и каковы его ограничения. Для получения более подробного объяснения от Райана посмотрите видеоролик выше.
 
-Server side rendering is simply the process of rendering your application on the server then sending the HTML to the client. This is opposed to the client rendering the application in their browser otherwise known as client-side rendering. Server side rendering has many benefits, but the most important two are that it allows search engines to crawl your application and it allows for your application to be client agnostic. 
+## Что такое рендеринг на стороне сервера?
 
-Server side rendering is good for search engine crawlers because they can't run Javascript code, so if your application is rendered on the client(browser) then search engines will not be able to crawl your application.
+**Рендеринг на стороне сервера** - это просто процесс рендеринга приложения на сервере с последующей отправкой HTML на клиент. Это противоположно тому, как если бы клиент отображал приложение в своем браузере, что называется рендерингом на стороне клиента. Рендеринг на стороне сервера имеет много преимуществ, но наиболее важными являются следующие: он позволяет поисковым системам просматривать ваше приложение и делает его независимым от клиента.
 
-## How does Solid implement SSR?
+Рендеринг на стороне сервера полезен для поисковых систем, поскольку они не могут выполнять Javascript-код, поэтому если ваше приложение отображается на клиенте (браузере), то поисковые системы не смогут просмотреть его.
 
-Solid.js implements SSR in 3 different ways depending on the type of application you are building. The 3 different ways are:
+## Как Solid реализует SSR?
 
-- `renderToString`: This is used to render a component to a string of HTML. 
-- [`renderToStringAsync`](/references/concepts/ssr/async-ssr): This is used to render a component to a string of HTML asynchronously.
-- [`renderToStream`](/references/concepts/ssr/streaming): This is used to render a component to a stream of HTML.
+Solid.js реализует SSR тремя различными способами в зависимости от типа приложения, которое вы создаете. Эти три способа следующие:
 
-In this section we will only be talking about the most basic of the 3, `renderToString`. The other 2 will be covered in the coming sections.
+-   `renderToString`: Используется для рендеринга компонента в строку HTML.
+-   [`renderToStringAsync`](async-ssr.md): Используется для асинхронного преобразования компонента в строку HTML.
+-   [`renderToStream`](streaming.md): Используется для рендеринга компонента в поток HTML.
 
-## How does `renderToString` work?
+В этом разделе мы будем говорить только о самой простой из этих трех функций - `renderToString`. Остальные две будут рассмотрены в следующих разделах.
 
-The concept behind `renderToString` is very simple. It takes in a component and renders it to a string of HTML. The component that is passed in is called a root component. It renders what it can on the server (elements outside the suspense boundary) and hydrates top level components on the client. Asynchronous data is fetched and rendered on the client without hydration.
+## Как работает `renderToString`?
 
-In this form of SSR, the client will be in charge of carrying out data fetching while the server is in charge of rendering the application. This is called client fetching SSR. This is the most basic form of SSR and is the easiest to implement.
+Концепция `renderToString` очень проста. Он принимает компонент и преобразует его в строку HTML. Компонент, который передается, называется корневым компонентом. Он отображает на сервере все, что может (элементы за границей suspense), а на клиенте - компоненты верхнего уровня. Асинхронные данные извлекаются и отображаются на клиенте без гидратации.
 
-`renderToString` is a function that takes in a component and renders it to a string of HTML. 
+При такой форме SSR клиент отвечает за выборку данных, а сервер - за рендеринг приложения. Это называется SSR с клиентской выборкой. Это самая базовая форма SSR и наиболее простая в реализации.
+
+`renderToString` - это функция, которая принимает компонент и преобразует его в строку HTML.
 
 ```jsx
-import { renderToString } from "solid-js/web";
+import { renderToString } from 'solid-js/web';
 
 function App() {
-  return <h1>Hello World</h1>;
+    return <h1>Hello World</h1>;
 }
 
 const html = renderToString(() => <App />);
 ```
 
-The above example will render the `App` component to a string of HTML, `<h1>Hello World</h1>`. This string of HTML can then be sent to the client and displayed there.
+В приведенном примере компонент `App` будет преобразован в строку HTML, `<h1>Hello World</h1>`. Эта строка HTML может быть отправлена клиенту и отображена на нем.
 
-## How to use `renderToString`?
+## Как использовать `renderToString`?
 
-In order to use `renderToString` properly you'll need to have it run on the server. This can be done by creating a server using one of Node.js's many server frameworks. The most popular one is [Express](https://expressjs.com/). 
+Для того чтобы правильно использовать `renderToString`, необходимо, чтобы она выполнялась на сервере. Это можно сделать, создав сервер с помощью одного из многочисленных серверных фреймворков Node.js. Наиболее популярным из них является [Express](https://expressjs.com/).
 
 ```jsx
-import express from "express";
-import { renderToString } from "solid-js/web";
+import express from 'express';
+import { renderToString } from 'solid-js/web';
 
 function App() {
-  return <h1>Hello World</h1>;
+    return <h1>Hello World</h1>;
 }
 
 const app = express();
 
-app.get("/", (req, res) => {
-  const html = renderToString(() => <App />);
-  res.send(html);
+app.get('/', (req, res) => {
+    const html = renderToString(() => <App />);
+    res.send(html);
 });
 
 app.listen(3000, () => {
-  console.log("Server started on port 3000");
+    console.log('Server started on port 3000');
 });
 ```
 
-The above example will create a server using Express and render the `App` component to a string of HTML. This string of HTML will then be sent to the client and displayed there.
+В приведенном примере с помощью Express будет создан сервер, на котором компонент `App` будет преобразован в строку HTML. Затем эта строка HTML будет отправлена клиенту и отображена на нем.
 
-<Aside type="general">
-  Keep in mind that you will need a bundler like Vite, Webpack, or Rollup to bundle your application. Here's a fully functional example using rollup and express. <a href="https://github.com/ryansolid/solid-ssr-workbench">solid-ssr-workbench</a>. This repo contains examples on how to use Solid with all 3 forms of SSR.
-</Aside>
+!!!note ""
 
-## Limitations and benefits of `renderToString`
+    Следует иметь в виду, что для сборки приложения потребуется пакетный компоновщик, например Vite, Webpack или Rollup. Вот полнофункциональный пример с использованием rollup и express. [solid-ssr-workbench](https://github.com/ryansolid/solid-ssr-workbench). Это репозиторий содержит примеры использования Solid со всеми тремя формами SSR.
 
-There are a few limitations to `renderToString`. The first one is that it is synchronous. This means that if you have any asynchronous code in your application, it will have to be run on the client side. This is because `renderToString` will not wait for the asynchronous code to finish before rendering the application. This can be solved by using `renderToStringAsync` instead.
+## Ограничения и преимущества `renderToString`
 
-A nice benefit to this approach to SSR is that it is very easy to implement. You simply need to create a server and use `renderToString` to render your application to a string of HTML. This string of HTML can then be sent to the client and rendered there.
+У `renderToString` есть несколько ограничений. Первое из них заключается в том, что он является синхронным. Это означает, что если в вашем приложении есть асинхронный код, то его придется выполнять на стороне клиента. Это связано с тем, что `renderToString` не будет ждать завершения работы асинхронного кода перед рендерингом приложения. Эту проблему можно решить, используя вместо этого `renderToStringAsync`.
 
-Another benefit is that it is very fast. This is because the application is rendered on the server, so the client doesn't have to render it, which can be a very expensive process. However, in cases where asynchronous data is required, the client will need to fetch the data after the application has been rendered, which can cause the longest contentful paint to take longer.
+Приятным преимуществом такого подхода к SSR является то, что он очень прост в реализации. Достаточно создать сервер и использовать `renderToString` для рендеринга приложения в строку HTML. Затем эта строка HTML может быть отправлена на клиент и отрисована там.
+
+Еще одним преимуществом является высокая скорость работы. Это связано с тем, что приложение создается на сервере, поэтому клиенту не нужно его рендерить, что может быть очень дорогостоящим процессом. Однако в тех случаях, когда требуются асинхронные данные, клиенту придется получать их уже после рендеринга приложения, что может привести к увеличению времени работы самого длинного contentful paint.
+
+## Ссылки
+
+-   [Simple/Client-Fetching SSR](https://docs.solidjs.com/references/concepts/ssr/simple-client-fetching-ssr)
