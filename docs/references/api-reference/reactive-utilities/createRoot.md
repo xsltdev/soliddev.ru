@@ -1,9 +1,17 @@
-<Title>createRoot</Title>
+---
+description: Создает новую не отслеживаемую область видимости владельца, которая не подвергается автоудалению
+---
+
+# createRoot
 
 ```ts
 function createRoot<T>(fn: (dispose: () => void) => T): T;
 ```
 
-Creates a new non-tracked owner scope that doesn't auto-dispose. This is useful for nested reactive scopes that you do not wish to release when the parent re-evaluates.
+Создает новую не отслеживаемую область видимости владельца, которая не подвергается автоудалению. Это полезно для вложенных реактивных областей, которые вы не хотите освобождать при повторном вычислении родительской области.
 
-All Solid code should be wrapped in one of these top level as they ensure that all memory/computations are freed up. Normally you do not need to worry about this as createRoot is embedded into all render entry functions.
+Весь код Solid должен быть обернут в одну из таких областей верхнего уровня, поскольку они гарантируют освобождение всей памяти/вычислений. Обычно об этом не нужно беспокоиться, поскольку createRoot встроен во все функции входа в рендеринг.
+
+## Ссылки
+
+-   [createRoot](https://docs.solidjs.com/references/api-reference/reactive-utilities/createRoot)

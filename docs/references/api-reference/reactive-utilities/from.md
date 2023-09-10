@@ -1,37 +1,47 @@
-<Title>from</Title>
+---
+description: Помощник, облегчающий взаимодействие с внешними производителями, такими как наблюдаемые значения RxJS или Svelte Stores
+---
+
+# from
 
 ```ts
 function from<T>(
-  producer:
-    | ((setter: (v: T) => T) => () => void)
-    | {
-        subscribe: (
-          fn: (v: T) => void
-        ) => (() => void) | { unsubscribe: () => void };
-      }
+    producer:
+        | ((setter: (v: T) => T) => () => void)
+        | {
+              subscribe: (
+                  fn: (v: T) => void
+              ) =>
+                  | (() => void)
+                  | { unsubscribe: () => void };
+          }
 ): () => T | undefined;
 ```
 
-A helper to make it easier to interop with external producers like RxJS observables or with Svelte Stores. This basically turns any subscribable (object with a subscribe method) into a Signal and manages subscription and disposal.
+Помощник, облегчающий взаимодействие с внешними производителями, такими как наблюдаемые значения RxJS или Svelte Stores. По сути, он превращает любой подписываемый объект (объект с методом `subscribe`) в Signal и управляет подпиской и отменой.
 
 ```ts
 const signal = from(obsv$);
 ```
 
-It can also take a custom producer function where the function is passed a setter function that returns a unsubscribe function:
+Также может быть использована пользовательская функция-производитель, которой передается функция-сеттер, возвращающая функцию-отписку:
 
 ```ts
 const clock = from((set) => {
-  const interval = setInterval(() => {
-    set((v) => v + 1);
-  }, 1000);
+    const interval = setInterval(() => {
+        set((v) => v + 1);
+    }, 1000);
 
-  return () => clearInterval(interval);
+    return () => clearInterval(interval);
 });
 ```
 
-## Arguments
+## Аргументы
 
-| Name     | Type                                                                                                                           | Description                                  |
-| :------- | :----------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
-| producer | `((setter: (v: T) => T) => () => void) \| { subscribe: (fn: (v: T) => void) => (() => void) \| { unsubscribe: () => void }; }` | The producer function or subscribable object |
+| Имя        | Тип                                                                                                                                       | Описание                                    |
+| :--------- | :---------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
+| `producer` | <code>((setter: (v: T) => T) => () => void) \| { subscribe: (fn: (v: T) => void) => (() => void) \| { unsubscribe: () => void }; }</code> | Функция `producer` или подписываемый объект |
+
+## Ссылки
+
+-   [from](https://docs.solidjs.com/references/api-reference/reactive-utilities/from)

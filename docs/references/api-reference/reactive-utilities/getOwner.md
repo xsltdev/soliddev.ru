@@ -1,14 +1,21 @@
-<Title>getOwner</Title>
+---
+description: Получает реактивную область видимости, которая является владельцем выполняемого в данный момент кода, например, для передачи в последующий вызов runWithOwner вне текущей области видимости
+---
+
+# getOwner
 
 ```ts
 function getOwner(): Owner;
 ```
 
-Gets the reactive scope that owns the currently running code, e.g., for passing into a later call to `runWithOwner` outside of the current scope.
+Получает реактивную область видимости, которая является владельцем выполняемого в данный момент кода, например, для передачи в последующий вызов `runWithOwner` вне текущей области видимости.
 
-Internally, computations (effects, memos, etc.) create owners which are children of their owner, all the way up to the root owner created by `createRoot` or `render`. In particular, this ownership tree lets Solid automatically clean up a disposed computation by traversing its subtree and calling all `onCleanup` callbacks. For example, when a createEffect's dependencies change, the effect calls all descendant `onCleanup` callbacks before running the effect function again. Calling `getOwner` returns the current owner node that is responsible for disposal of the current execution block.
+Внутри Solid вычисления (эффекты, заметки и т.д.) создают владельцев, которые являются дочерними по отношению к своему владельцу, вплоть до корневого владельца, созданного с помощью `createRoot` или `render`. В частности, это дерево владельцев позволяет Solid автоматически очищать удаленные вычисления, обходя их поддеревья и вызывая все обратные вызовы `onCleanup`. Например, когда изменяются зависимости createEffect, эффект вызывает все последующие вызовы `onCleanup` перед повторным запуском функции эффекта. Вызов `getOwner` возвращает текущий узел-владелец, отвечающий за утилизацию текущего блока выполнения.
 
-Components are not computations, so do not create an owner node, but they are typically rendered from a `createEffect` which does, so the result is similar: when a component gets unmounted, all descendant `onCleanup` callbacks get called. Calling `getOwner` from a component scope returns the owner that is responsible for rendering and unmounting that component.
+Компоненты не являются вычислениями, поэтому не создают узла-владельца, но они обычно выводятся из `createEffect`, который это делает, поэтому результат будет аналогичным: когда компонент размонтируется, вызываются все последующие вызовы `onCleanup`. Вызов `getOwner` из области видимости компонента возвращает владельца, который отвечает за рендеринг и размонтирование этого компонента.
 
-Note that the owning reactive scope isn't necessarily tracking. For example, untrack turns off tracking for the duration of a function (without creating a new reactive scope), as do components created via JSX (`<Component ...>`).
+Обратите внимание, что владелец реактивной области видимости не обязательно отслеживает. Например, untrack отключает отслеживание на время работы функции (без создания нового реактивного диапазона), как и компоненты, созданные с помощью JSX (`<Component ...>`).
 
+## Ссылки
+
+-   [getOwner](https://docs.solidjs.com/references/api-reference/reactive-utilities/getOwner)

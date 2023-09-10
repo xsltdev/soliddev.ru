@@ -1,43 +1,43 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+description: on предназначен для передачи в вычисление, чтобы сделать его зависимости явными
+---
 
-
-<Title>on</Title>
+# on
 
 ```ts
 function on<T extends Array<() => any> | (() => any), U>(
-  deps: T,
-  fn: (input: T, prevInput: T, prevValue?: U) => U,
-  options: { defer?: boolean } = {}
+    deps: T,
+    fn: (input: T, prevInput: T, prevValue?: U) => U,
+    options: { defer?: boolean } = {}
 ): (prevValue?: U) => U | undefined;
 ```
 
-`on` is designed to be passed into a computation to make its dependencies explicit. If an array of dependencies is passed, `input` and `prevInput` are arrays.
+`on` предназначен для передачи в вычисление, чтобы сделать его зависимости явными. Если передается массив зависимостей, то `input` и `prevInput` являются массивами.
 
 ```ts
 createEffect(on(a, (v) => console.log(v, b())));
 
 // is equivalent to:
 createEffect(() => {
-  const v = a();
-  untrack(() => console.log(v, b()));
+    const v = a();
+    untrack(() => console.log(v, b()));
 });
 ```
 
-You can also not run the computation immediately and instead opt in for it to only run on change by setting the defer option to true.
+Вы также можете не запускать вычисления сразу, а сделать так, чтобы они выполнялись только при изменении, установив опцию `defer` в `true`.
 
 ```ts
 // doesn't run immediately
 createEffect(on(a, (v) => console.log(v), { defer: true }));
 
-setA("new"); // now it runs
+setA('new'); // now it runs
 ```
 
-## Using `on` with stores
+## Использование `on` с хранилищами
 
-<Aside>
-  Please note that on stores and mutable, adding or removing a property from the parent object will 
-  trigger an effect. See <a href="/references/api-reference/stores/store-utilities/#createMutable">createMutable</a>
-</Aside>
+!!!note ""
+
+    Обратите внимание, что для магазинов и mutable добавление или удаление свойства из родительского объекта вызывает эффект. См. раздел [createMutable](../stores/store-utilities.md).
 
 ```ts
 const [state, setState] = createStore({ a: 1, b: 2 });
@@ -45,20 +45,27 @@ const [state, setState] = createStore({ a: 1, b: 2 });
 // this will not work
 createEffect(on(state.a, (v) => console.log(v)));
 
-setState({ a: 3 }) // logs nothing
+setState({ a: 3 }); // logs nothing
 
+// instead, use an arrow function
+createEffect(
+    on(
+        () => state.a,
+        (v) => console.log(v)
+    )
+);
 
-// instead, use an arrow function 
-createEffect(on(() => state.a, (v) => console.log(v)));
-
-setState({ a: 4 }) // logs 4
+setState({ a: 4 }); // logs 4
 ```
 
+## Аргументы и опции
 
-## Arguments and Options
+| Аргумент  | Тип                                            | Описание                                                     |
+| :-------- | :--------------------------------------------- | :----------------------------------------------------------- |
+| `deps`    | `T`                                            | Зависимости, за которыми нужно следить.                      |
+| `fn`      | `(input: T, prevInput: T, prevValue?: U) => U` | Функция, которую нужно запускать при изменении зависимостей. |
+| `options` | `{ defer?: boolean }`                          | Параметры для настройки эффекта.                             |
 
-| Argument | Type                                           | Description                                       |
-| :------- | :--------------------------------------------- | :------------------------------------------------ |
-| deps     | `T`                                            | The dependencies to watch.                        |
-| fn       | `(input: T, prevInput: T, prevValue?: U) => U` | The function to run when the dependencies change. |
-| options  | `{ defer?: boolean }`                          | Options to configure the effect.                  |
+## Ссылки
+
+-   [on](https://docs.solidjs.com/references/api-reference/reactive-utilities/on)

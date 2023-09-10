@@ -1,15 +1,19 @@
-<Title>indexArry</Title>
+---
+description: Аналогичен mapArray, за исключением сопоставления по индексу. Элемент является сигналом, а индекс - константой
+---
+
+# indexArry
 
 ```ts
 function indexArray<T, U>(
-  list: () => readonly T[],
-  mapFn: (v: () => T, i: number) => U
+    list: () => readonly T[],
+    mapFn: (v: () => T, i: number) => U
 ): () => U[];
 ```
 
-Similar to `mapArray` except it maps by index. The item is a signal and the index is now the constant.
+Аналогичен `mapArray`, за исключением сопоставления по индексу. Элемент является сигналом, а индекс - константой.
 
-Underlying helper for the `<Index>` control flow.
+Основной помощник для потока управления `<Index>`.
 
 ```ts
 const mapped = indexArray(source, (model) => {
@@ -27,9 +31,13 @@ const mapped = indexArray(source, (model) => {
 });
 ```
 
-## Arguments
+## Аргументы
 
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| list | `() => readonly T[]` | The list to map. |
-| mapFn | `(v: () => T, i: number) => U` | The mapping function. |
+| Имя     | Тип                           | Описание                |
+| :------ | :---------------------------- | :---------------------- |
+| `list`  | `() => readonly T[]`          | Список для отображения. |
+| `mapFn` | `(v: () => T, i: число) => U` | Функция отображения.    |
+
+## Ссылки
+
+-   [indexArry](https://docs.solidjs.com/references/api-reference/reactive-utilities/indexArray)

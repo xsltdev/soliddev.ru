@@ -1,38 +1,48 @@
-<Title>mapArray</Title>
+---
+description: Реактивный помощник карты, который кэширует каждый элемент по ссылке для уменьшения ненужного отображения при обновлении
+---
+
+# mapArray
 
 ```ts
 function mapArray<T, U>(
-  list: () => readonly T[],
-  mapFn: (v: T, i: () => number) => U
+    list: () => readonly T[],
+    mapFn: (v: T, i: () => number) => U
 ): () => U[];
 ```
 
-Reactive map helper that caches each item by reference to reduce unnecessary mapping on updates. It only runs the mapping function once per value and then moves or removes it as needed. The index argument is a signal. The map function itself is not tracking.
+Реактивный помощник карты, который кэширует каждый элемент по ссылке для уменьшения ненужного отображения при обновлении. Функция отображения выполняется только один раз для каждого значения, а затем перемещается или удаляется по мере необходимости. Аргумент `index` является сигналом. Сама функция `map` не отслеживается.
 
-Underlying helper for the `<For>` control flow.
+Базовый помощник для потока управления `<For>`.
 
 ```ts
 const mapped = mapArray(source, (model) => {
-  const [name, setName] = createSignal(model.name);
-  const [description, setDescription] = createSignal(model.description);
+    const [name, setName] = createSignal(model.name);
+    const [description, setDescription] = createSignal(
+        model.description
+    );
 
-  return {
-    id: model.id,
-    get name() {
-      return name();
-    },
-    get description() {
-      return description();
-    },
-    setName,
-    setDescription,
-  };
+    return {
+        id: model.id,
+        get name() {
+            return name();
+        },
+        get description() {
+            return description();
+        },
+        setName,
+        setDescription,
+    };
 });
 ```
 
-## Arguments
+## Аргументы
 
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| list | `() => readonly T[]` | The source array to map. |
-| mapFn | `(v: T, i: () => number) => U` | The mapping function. |
+| Имя     | Тип                           | Описание                         |
+| :------ | :---------------------------- | :------------------------------- |
+| `list`  | `() => readonly T[]`          | Исходный массив для отображения. |
+| `mapFn` | `(v: T, i: () => число) => U` | Функция отображения.             |
+
+## Ссылки
+
+-   [mapArray](https://docs.solidjs.com/references/api-reference/reactive-utilities/mapArray)

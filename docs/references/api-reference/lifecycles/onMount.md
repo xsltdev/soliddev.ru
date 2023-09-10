@@ -1,35 +1,41 @@
-<Title>onMount</Title>
+---
+description: Метод жизненного цикла, запускаемый в браузере, который регистрирует функцию, выполняемую после первоначального рендеринга и монтажа элементов
+---
 
-Lifecycle method run in the browser that registers a function that runs after the initial render and elements have been mounted.
-Ideal for using refs and managing other one-time side effects.
+# onMount
 
-You can be confident that this method will run only once after initial rendering is done and won't run on the server.
+Метод жизненного цикла, запускаемый в браузере, который регистрирует функцию, выполняемую после первоначального рендеринга и монтажа элементов. Идеально подходит для использования ссылок и управления другими одноразовыми побочными эффектами.
 
-It's an alias for an effect that is non-tracking, meaning that it is equivalent to a `createEffect` with no dependencies.
+Вы можете быть уверены, что этот метод будет запущен только один раз после завершения начального рендеринга и не будет выполняться на сервере.
 
-While it can be used to perform data fetching, it is best to use Solid's resources with `createResource` for that task.
+Это псевдоним для эффекта, который не отслеживается, что означает, что он эквивалентен `createEffect` без зависимостей.
 
-## TypeScript Function Signature
+Хотя его можно использовать для получения данных, для этой задачи лучше всего использовать ресурсы Solid с помощью `createResource`.
+
+## Сигнатура функции TypeScript
 
 ```typescript
 function onMount(fn: () => void): void;
 ```
 
-### Example
+### Пример
 
-Imagine we would like to attach an event listener to our window and listen to the resize event.
-We only want to attach it once, so onMount will be helpful in this case.
+Представьте, что мы хотим прикрепить к нашему окну слушатель событий и слушать событие изменения размера. Мы хотим прикрепить его только один раз, поэтому onMount будет полезен в этом случае.
 
 ```jsx
-import { onMount } from "solid-js";
+import { onMount } from 'solid-js';
 
 const handleResize = () => {
-  //...
+    //...
 };
 
 const App = () => {
-  onMount(() => {
-    window.addEventListener("resize", handleResize);
-  });
+    onMount(() => {
+        window.addEventListener('resize', handleResize);
+    });
 };
 ```
+
+## Ссылки
+
+-   [onMount](https://docs.solidjs.com/references/api-reference/lifecycles/onMount)

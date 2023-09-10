@@ -1,48 +1,56 @@
-<Title>splitProps</Title>
+---
+description: Разделяет реактивный объект по ключам
+---
+
+# splitProps
 
 ```ts
 function splitProps<T>(
-  props: T,
-  ...keys: Array<(keyof T)[]>
+    props: T,
+    ...keys: Array<(keyof T)[]>
 ): [...parts: Partial<T>];
 ```
 
-Splits a reactive object by keys.
+Разделяет реактивный объект по ключам.
 
-It takes a reactive object and any number of arrays of keys; for each array of keys, it will return a reactive object with just those properties of the original object. The last reactive object in the returned array will have any leftover properties of the original object.
+Принимает реактивный объект и любое количество массивов ключей; для каждого массива ключей возвращает реактивный объект, содержащий только те свойства, которые были у исходного объекта. Последний реактивный объект в возвращаемом массиве будет иметь все оставшиеся свойства исходного объекта.
 
-This can be useful if you want to consume a subset of props and pass the rest to a child.
+Это может быть полезно, если вы хотите потреблять некоторое количество свойств, а остальные передавать дочернему объекту.
 
 ```tsx
 function MyComponent(props) {
-  const [local, others] = splitProps(props, ["children"]);
+    const [local, others] = splitProps(props, ['children']);
 
-  return (
-    <>
-      <div>{local.children}</div>
-      <Child {...others} />
-    </>
-  );
+    return (
+        <>
+            <div>{local.children}</div>
+            <Child {...others} />
+        </>
+    );
 }
 ```
 
-Because `splitProps` takes any number of arrays, we can split a props object as much as we wish (if, for example, we had multiple child components that each required a subset of the props).
+Поскольку `splitProps` принимает любое количество массивов, мы можем разделить объект реквизита на сколько угодно частей (например, если у нас есть несколько дочерних компонентов, каждому из которых требуется свое подмножество свойств).
 
-Let's say a component was passed six props:
+Допустим, компоненту было передано шесть свойств:
 
 ```tsx
 <MyComponent a={1} b={2} c={3} d={4} e={5} foo="bar" />;
 // ...
 
 function MyComponent(props) {
-  console.log(props); // {a: 1, b: 2, c: 3, d: 4, e: 5, foo: "bar"}
-  const [vowels, consonants, leftovers] = splitProps(
-    props,
-    ["a", "e"],
-    ["b", "c", "d"]
-  );
-  console.log(vowels); // {a: 1, e: 5}
-  console.log(consonants); // {b: 2, c: 3, d: 4}
-  console.log(leftovers.foo); // bar
+    console.log(props); // {a: 1, b: 2, c: 3, d: 4, e: 5, foo: "bar"}
+    const [vowels, consonants, leftovers] = splitProps(
+        props,
+        ['a', 'e'],
+        ['b', 'c', 'd']
+    );
+    console.log(vowels); // {a: 1, e: 5}
+    console.log(consonants); // {b: 2, c: 3, d: 4}
+    console.log(leftovers.foo); // bar
 }
 ```
+
+## Ссылки
+
+-   [splitProps](https://docs.solidjs.com/references/api-reference/reactive-utilities/splitProps)

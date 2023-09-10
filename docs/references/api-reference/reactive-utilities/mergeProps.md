@@ -1,16 +1,20 @@
-<Title>mergeProps</Title>
+---
+description: Используется для установки свойств по умолчанию для компонентов в случае, если вызывающая сторона их не предоставила
+---
+
+# mergeProps
 
 ```ts
 function mergeProps(...sources: any): any;
 ```
 
-A reactive object __merge__ method. Useful for setting default props for components in case caller doesn't provide them. Or cloning the props object including reactive properties.
+Метод **merge** реактивного объекта. Используется для установки свойств по умолчанию для компонентов в случае, если вызывающая сторона их не предоставила. Или клонировать объект свойств, включая реактивные свойства.
 
-This method works by using a proxy and resolving properties in reverse order. This allows for dynamic tracking of properties that aren't present when the prop object is first merged.
+Этот метод работает за счет использования прокси и разрешения свойств в обратном порядке. Это позволяет динамически отслеживать свойства, которые не присутствуют при первом объединении объекта props.
 
-```ts 
+```ts
 // default props
-props = mergeProps({ name: "Smith" }, props);
+props = mergeProps({ name: 'Smith' }, props);
 
 // clone props
 newProps = mergeProps(props);
@@ -18,3 +22,7 @@ newProps = mergeProps(props);
 // merge props
 props = mergeProps(props, otherProps);
 ```
+
+## Ссылки
+
+-   [mergeProps](https://docs.solidjs.com/references/api-reference/reactive-utilities/mergeProps)

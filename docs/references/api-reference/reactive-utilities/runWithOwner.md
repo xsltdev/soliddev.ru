@@ -1,30 +1,38 @@
-<Title>runWithOwner</Title>
+---
+description: Выполняет заданную функцию под указанным владельцем, вместо владельца внешней области видимости и не затрагивая его
+---
+
+# runWithOwner
 
 ```ts
 function runWithOwner<T>(owner: Owner, fn: (() => void) => T): T;
 ```
 
-Executes the given function under the provided owner, instead of (and without affecting) the owner of the outer scope. By default, computations created by `createEffect`, `createMemo`, etc. are owned by the owner of the currently executing code (the return value of `getOwner`), so in particular these will get disposed when their owner does. Calling `runWithOwner` provides a way to override this default to a manually specified owner (typically, the return value from a previous call to `getOwner`), enabling more precise control of when computations get disposed.
+Выполняет заданную функцию под указанным владельцем, вместо владельца внешней области видимости (и не затрагивая его). По умолчанию вычисления, созданные функциями `createEffect`, `createMemo` и т.д., принадлежат владельцу текущего выполняющегося кода (возвращаемое значение `getOwner`), поэтому, в частности, они будут утилизированы, когда это сделает их владелец. Вызов `runWithOwner` дает возможность переопределить это значение по умолчанию на указанного вручную владельца (обычно это возвращаемое значение предыдущего вызова `getOwner`), что позволяет более точно контролировать момент утилизации вычислений.
 
-Having a (correct) owner is important for two reasons:
+Наличие (правильного) владельца важно по двум причинам:
 
-* Computations without an owner cannot be cleaned up. For example, if you call `createEffect` without an owner (e.g., in the global scope), the effect will continue running forever, instead of being disposed when its owner gets disposed.
-* useContext obtains context by walking up the owner tree to find the nearest ancestor providing the desired context. So without an owner you cannot look up any provided context (and with the wrong owner, you might obtain the wrong context).
+-   Вычисления без владельца не могут быть очищены. Например, если вызвать `createEffect` без владельца (например, в глобальной области видимости), то эффект будет работать вечно, а не будет утилизирован, когда его владелец избавится от него.
+-   `UseContext` получает контекст, проходя по дереву владельцев в поисках ближайшего предка, предоставляющего нужный контекст. Таким образом, не имея владельца, вы не сможете найти ни одного предоставленного контекста (а при неправильном владельце вы можете получить неправильный контекст).
 
-Manually setting the owner is especially helpful when doing reactivity outside of any owner scope. In particular, asynchronous computation (via either `async` functions or callbacks like `setTimeout`) lose their automatically set owner, so remembering the original owner via `getOwner` and restoring it via `runWithOwner` is necessary in these cases. For example:
+Ручная установка владельца особенно полезна при выполнении реактивных действий вне области действия владельца. В частности, при асинхронных вычислениях (через функции `async` или обратные вызовы типа `setTimeout`) автоматически установленный владелец теряется, поэтому запоминание первоначального владельца через `getOwner` и восстановление его через `runWithOwner` в таких случаях необходимо. Например:
 
-```ts 
+```ts
 const owner = getOwner();
 setTimeout(() => {
-  // This callback gets run without owner.
-  // Restore owner via runWithOwner:
-  runWithOwner(owner, () => {
-    const foo = useContext(FooContext);
-    createEffect(() => {
-      console.log(foo);
+    // This callback gets run without owner.
+    // Restore owner via runWithOwner:
+    runWithOwner(owner, () => {
+        const foo = useContext(FooContext);
+        createEffect(() => {
+            console.log(foo);
+        });
     });
-  });
 }, 1000);
 ```
 
-Note that owners are not what determines dependency tracking, so `runWithOwner` does not help with tracking in asynchronous functions; use of reactive state in the asynchronous part (e.g. after the first `await`) will not be tracked as a dependency.
+Обратите внимание, что владельцы не определяют отслеживание зависимостей, поэтому `runWithOwner` не поможет с отслеживанием в асинхронных функциях; использование реактивного состояния в асинхронной части (например, после первого `await`) не будет отслеживаться как зависимость.
+
+## Ссылки
+
+-   [runWithOwner](https://docs.solidjs.com/references/api-reference/reactive-utilities/runWithOwner)

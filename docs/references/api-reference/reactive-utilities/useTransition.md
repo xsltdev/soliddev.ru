@@ -1,13 +1,17 @@
-<Title>useTransition</Title>
+---
+description: Используется для пакетной обработки async-обновлений в транзакции, откладывая фиксацию до завершения всех async-процессов
+---
+
+# useTransition
 
 ```ts
 function useTransition(): [
-  pending: () => boolean,
-  startTransition: (fn: () => void) => Promise<void>
+    pending: () => boolean,
+    startTransition: (fn: () => void) => Promise<void>
 ];
 ```
 
-Used to batch async updates in a transaction deferring commit until all async processes are complete. This is tied into Suspense and only tracks resources read under Suspense boundaries.
+Используется для пакетной обработки async-обновлений в транзакции, откладывая фиксацию до завершения всех async-процессов. Эта функция привязана к `Suspense` и отслеживает только ресурсы, прочитанные в границах `Suspense`.
 
 ```ts
 const [isPending, start] = useTransition();
@@ -18,3 +22,7 @@ isPending();
 // wrap in transition
 start(() => setSignal(newValue), () => /* transition is done */)
 ```
+
+## Ссылки
+
+-   [useTransition](https://docs.solidjs.com/references/api-reference/reactive-utilities/useTransition)

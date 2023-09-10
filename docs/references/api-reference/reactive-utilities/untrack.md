@@ -1,7 +1,15 @@
-<Title>untrack</Title>
+---
+description: Игнорирует отслеживание любых зависимостей в выполняющемся блоке кода и возвращает значение
+---
+
+# untrack
 
 ```ts
 function untrack<T>(fn: () => T): T;
 ```
 
-Ignores tracking any of the dependencies in the executing code block and returns the value.
+Игнорирует отслеживание любых зависимостей в выполняющемся блоке кода и возвращает значение.
+
+## Ссылки
+
+-   [untrack](https://docs.solidjs.com/references/api-reference/reactive-utilities/untrack)

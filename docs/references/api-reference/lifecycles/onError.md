@@ -1,15 +1,21 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+status: deprecated
+---
 
-<Title>onError</Title>
+# onError
 
-<Aside>
-Deprecated for `catchError` in v1.7
-</Aside>
+!!!danger "Устарело"
+
+    Утрачена в версии 1.7 для `catchError`.
 
 ```ts
-import { onError } from "solid-js";
+import { onError } from 'solid-js';
 
 function onError(fn: (err: any) => void): void;
-````
+```
 
-Registers an error handler method that executes when child scope errors. Only the nearest scope error handlers execute. Rethrow to trigger up the line.
+Регистрирует метод-обработчик ошибок, который выполняется при ошибках дочерней области видимости. Выполняются только обработчики ошибок ближайшей области видимости. Выброс для запуска вверх по строке.
+
+## Ссылки
+
+-   [onError](https://docs.solidjs.com/references/api-reference/lifecycles/onError)

@@ -1,15 +1,19 @@
-<Title>observable</Title>
+---
+description: Этот метод принимает сигнал и выдает наблюдаемое значение
+---
+
+# observable
 
 ```ts
 function observable<T>(input: () => T): Observable<T>;
 ```
 
-This method takes a signal and produces an Observable. You can consume it from another Observable library of your choice, typically with the `from` operator.
+Этот метод принимает сигнал и выдает наблюдаемое значение. Вы можете использовать его из другой библиотеки наблюдаемых значений по вашему выбору, обычно с помощью оператора `from`.
 
-```ts 
+```ts
 // How to integrate rxjs with a Solid signal
-import { observable } from "solid-js";
-import { from } from "rxjs";
+import { observable } from 'solid-js';
+import { from } from 'rxjs';
 
 const [s, set] = createSignal(0);
 
@@ -18,4 +22,8 @@ const obsv$ = from(observable(s));
 obsv$.subscribe((v) => console.log(v));
 ```
 
-You can also use `from` without rxjs; check out this [page](/references/api-reference/reactive-utilities/from).
+Вы также можете использовать `from` без `rxjs`; посмотрите эту [страницу](from.md).
+
+## Ссылки
+
+-   [observable](https://docs.solidjs.com/references/api-reference/reactive-utilities/observable)

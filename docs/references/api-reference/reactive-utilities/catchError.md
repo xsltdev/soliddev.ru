@@ -1,15 +1,24 @@
-import {Aside} from '~/components/configurable/Aside'
+---
+description: Обертывает tryFn обработчиком ошибок, который срабатывает при возникновении ошибки ниже этой точки
+---
 
-<Title>catchError</Title>
+# catchError
 
-<Aside>
-**New in v1.7.0**
-</Aside>
+!!!tip ""
+
+    **Новое с версии v1.7.0**
 
 ```ts
-import { catchError } from "solid-js";
+import { catchError } from 'solid-js';
 
-function catchError<T>(tryFn: () => T, onError: (err: any) => void): T;
+function catchError<T>(
+    tryFn: () => T,
+    onError: (err: any) => void
+): T;
 ```
 
-Wraps a `tryFn` with an error handler that fires if an error occurs below that point. Only the nearest scope error handlers execute. Rethrow to trigger up the line.
+Обертывает `tryFn` обработчиком ошибок, который срабатывает при возникновении ошибки ниже этой точки. Выполняются только обработчики ошибок ближайшей области видимости. Сброс для запуска вверх по строке.
+
+## Ссылки
+
+-   [catchError](https://docs.solidjs.com/references/api-reference/reactive-utilities/catchError)

@@ -1,7 +1,15 @@
-<Title>batch</Title>
+---
+description: Это низкоуровневый API, который используется Solid для пакетного обновления. Он задерживает выполнение последующих вычислений внутри блока до конца, чтобы предотвратить ненужные пересчеты
+---
+
+# batch
 
 ```ts
 function batch<T>(fn: () => T): T;
 ```
 
-This is a low level API that is used by Solid to batch updates. It holds executing downstream computations within the block until the end to prevent unnecessary recalculation. Solid Store's set method, Mutable Store's array methods, and Effects automatically wrap their code in a batch. This is useful for when you want to batch a set of computations that are not wrapped in a batch already.
+Это низкоуровневый API, который используется Solid для пакетного обновления. Он задерживает выполнение последующих вычислений внутри блока до конца, чтобы предотвратить ненужные пересчеты. Метод set в Solid Store, методы массивов в Mutable Store и Effects автоматически оборачивают свой код в пакет. Это удобно в тех случаях, когда требуется пакетно выполнить набор вычислений, которые еще не обернуты в пакет.
+
+## Ссылки
+
+-   [batch](https://docs.solidjs.com/references/api-reference/reactive-utilities/batch)
